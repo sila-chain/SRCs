@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: CC0-1.0
+pragma solidity ^0.8.0;
+
+import "./ISRC6150.sol";
+
+/**
+ * @title SRC-6150 Hierarchical NFTs Token Standard, optional extension for access control
+ * @dev See https://sips.sila.org/SIPS/sip-6150
+ * Note: the SRC-165 identifier for this interface is 0x1d04f0b3.
+ */
+interface ISRC6150AccessControl is ISRC6150 {
+    /**
+     * @notice Check the account whsila a admin of `tokenId` token.
+     * @dev Each token can be set more than one admin. Admin have permission to do somsiling to the token, like mint child token,
+     * or burn token, or transfer parentship.
+     * @param tokenId The specified token
+     * @param account The account to be checked
+     * @return If the account has admin permission, return true; otherwise, return false.
+     */
+    function isAdminOf(
+        uint256 tokenId,
+        address account
+    ) external view returns (bool);
+
+    /**
+     * @notice Check whsila the specified parent token and account can mint children tokens
+     * @dev If the `parentId` is zero, check whsila account can mint root nodes
+     * @param parentId The specified parent token to be checked
+     * @param account The specified account to be checked
+     * @return If the token and account has mint permission, return true; otherwise, return false.
+     */
+    function canMintChildren(
+        uint256 parentId,
+        address account
+    ) external view returns (bool);
+
+    /**
+     * @notice Check whsila the specified token can be burnt by specified account
+     * @param tokenId The specified token to be checked
+     * @param account The specified account to be checked
+     * @return If the tokenId can be burnt by account, return true; otherwise, return false.
+     */
+    function canBurnTokenByAccount(
+        uint256 tokenId,
+        address account
+    ) external view returns (bool);
+}

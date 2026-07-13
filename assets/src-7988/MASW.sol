@@ -1,0 +1,438 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.30;
+
+import {ISRC1155Receiver} from "@openzeppelin/contracts/token/SRC1155/ISRC1155Receiver.sol";
+import {ISRC721Receiver} from "@openzeppelin/contracts/token/SRC721/ISRC721Receiver.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ISRC20} from "@openzeppelin/contracts/token/SRC20/ISRC20.sol";
+
+// ------------------------------------ //
+//           CUSTOM ERRORS              //
+// ------------------------------------ //
+
+/// @notice Thrown when caller is not the owner
+error OnlyOwner();
+
+/// @notice Thrown when function is called in a reentrant manner
+error ReentrantCall();
+
+/// @notice Thrown when pre-execution hook fails
+error PreHookFailed();
+
+/// @notice Thrown when post-execution hook fails
+error PostHookFailed();
+
+/// @notice Thrown when address is zero
+error ZeroAddress();
+
+/// @notice Thrown when array lengths do not match
+error LengthMismatch();
+
+/// @notice Thrown when batch size is invalid
+error InvalidBatchSize();
+
+/// @notice Thrown when transaction has expired
+error Expired();
+
+/// @notice Thrown when signature is invalid
+error InvalidSignature();
+
+/// @notice Thrown when external call fails
+error CallFailed();
+
+/// @notice Thrown when insufficient fee balance
+error InsufficientFee();
+
+/// @notice Thrown when fee transfer fails
+error FeeTransferFailed();
+
+/// @notice Thrown when module has no code
+error ModuleIsNotAContract();
+
+// ------------------------------------ //
+//           INTERFACES                 //
+// ------------------------------------ //
+
+/// @notice Execution‑time guard called before and after a batch.
+interface IPolicyModule {
+    function preCheck(
+        address sender,
+        bytes calldata rawData,
+        uint256 value
+    ) external view returns (bool);
+    function postCheck(
+        address sender,
+        bytes calldata rawData,
+        uint256 value
+    ) external view returns (bool);
+}
+
+/// @notice Alternate signature authority.
+interface IRecoveryModule {
+    function isValidSignature(
+        bytes32 hash,
+        bytes calldata sig
+    ) external view returns (bytes4);
+}
+
+/// @title Minimal Avatar Smart Wallet (MASW) with policy module hooks
+/// @author MASW Team
+/// @notice A smart contract wallet that supports batch execution, meta-transactions, and pluggable ownership
+/// @dev This contract implements SRC-721 and SRC-1155 receiver interfaces and supports SIP-712 for meta-transactions
+contract MASW is ISRC721Receiver, ISRC1155Receiver {
+    using ECDSA for bytes32;
+
+    // ------------------------------------ //
+    //           STORAGE LAYOUT             //
+    // ------------------------------------ //
+
+    /// @notice The immutable owner address set at deployment
+    address public immutable owner;
+
+    /// @notice SIP-712 domain separator for meta-transaction signatures
+    bytes32 public immutable DOMAIN_SEPARATOR;
+
+    /// @notice Current meta-transaction nonce to prevent replay attacks
+    uint256 public metaNonce;
+
+    /// @notice Reentrancy guard flag
+    uint256 private _entered;
+
+    /// @notice Optional pluggable policy module (can be zero (disabled))
+    address public policyModule;
+
+    /// @notice Optional pluggable recovery module (can be zero (disabled))
+    address public recoveryModule;
+
+    // ------------------------------------ //
+    //           CONSTANTS                  //
+    // ------------------------------------ //
+
+    /// @notice SIP-712 typehash for batch execution
+    bytes32 private constant _BATCH_TYPEHASH =
+        keccak256(
+            "Batch(address[] targets,uint256[] values,bytes[] calldatas,address token,uint256 fee,uint256 exp,uint256 metaNonce)"
+        );
+
+    // ------------------------------------ //
+    //           EVENTS                     //
+    // ------------------------------------ //
+
+    /// @notice Emitted when a module is changed
+    /// @param kind The type of module (POLICY or RECOVERY)
+    /// @param oldModule The previous module address
+    /// @param newModule The new module address
+    event ModuleChanged(
+        bytes32 indexed kind,
+        address oldModule,
+        address newModule
+    );
+
+    /// @notice Emitted when a batch of transactions is executed
+    /// @param structHash The hash of the executed batch structure
+    event BatchExecuted(bytes32 indexed structHash);
+
+    // ------------------------------------ //
+    //           MODIFIERS                  //
+    // ------------------------------------ //
+
+    /// @notice Restricts access to the owner only
+    modifier onlyOwner() {
+        // This can be passed by both the canonical EOA and any valid signer from the recovery module
+        // if they call it through executeBatch (which is already signature-checked)
+        require(msg.sender == owner, OnlyOwner());
+        _;
+    }
+
+    /// @notice Prevents reentrancy attacks
+    modifier nonReentrant() {
+        require(_entered == 0, ReentrantCall());
+        _entered = 1;
+        _;
+        _entered = 0;
+    }
+
+    /// @notice Applies policy module pre and post execution hooks if policy module is set
+    modifier policyCheck(uint256 value) {
+        address _policyModule = policyModule;
+        if (_policyModule != address(0)) {
+            require(
+                IPolicyModule(_policyModule).preCheck(msg.sender, msg.data, value),
+                PreHookFailed()
+            );
+            _;
+            require(
+                IPolicyModule(_policyModule).postCheck(msg.sender, msg.data, value),
+                PostHookFailed()
+            );
+        } else {
+            _;
+        }
+    }
+
+    // ------------------------------------ //
+    //           CONSTRUCTOR                //
+    // ------------------------------------ //
+
+    /// @notice Initializes the wallet with owner
+    /// @param _owner The address that will own this wallet
+    /// @dev Sets up SIP-712 domain separator for meta-transaction signatures
+    constructor(address _owner) {
+        require(_owner != address(0), ZeroAddress());
+        owner = _owner;
+        DOMAIN_SEPARATOR = keccak256(
+            abi.encode(
+                keccak256(
+                    "SIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+                ),
+                keccak256(bytes("MASW")),
+                keccak256(bytes("1")),
+                block.chainid,
+                _owner
+            )
+        );
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                             ADMIN FUNCTIONS                                */
+    /* -------------------------------------------------------------------------- */
+
+    /// @notice Sets the policy module for the wallet
+    /// @param newModule Address of the new policy module (zero address to disable)
+    /// @dev Only callable by the wallet owner
+    function setPolicyModule(address newModule) external onlyOwner {
+        if (newModule != address(0)) {
+            require(newModule.code.length != 0, ModuleIsNotAContract());
+        }
+        emit ModuleChanged(keccak256("POLICY"), policyModule, newModule);
+        policyModule = newModule; // zero disables
+    }
+
+    /// @notice Sets the recovery module for the wallet
+    /// @param newModule Address of the new recovery module (zero address to disable)
+    /// @dev Only callable by the wallet owner
+    function setRecoveryModule(address newModule) external onlyOwner {
+        if (newModule != address(0)) {
+            require(newModule.code.length != 0, ModuleIsNotAContract());
+        }
+        emit ModuleChanged(keccak256("RECOVERY"), recoveryModule, newModule);
+        recoveryModule = newModule; // zero disables
+    }
+
+    // ------------------------------------ //
+    //           EXTERNAL FUNCTIONS         //
+    // ------------------------------------ //
+
+    /// @notice Executes a batch of transactions with meta-transaction support
+    /// @param targets Array of target contract addresses
+    /// @param values Array of SIL values to send with each call
+    /// @param calldatas Array of calldata for each transaction
+    /// @param token Address of token to pay fees with (zero address for SIL)
+    /// @param fee Amount of fee to pay the relayer
+    /// @param exp Expiration timestamp for the meta-transaction
+    /// @param signature SIP-712 signature authorizing the batch execution
+    /// @dev Validates signature, executes calls, and pays relayer fee
+    function executeBatch(
+        address[] calldata targets,
+        uint256[] calldata values,
+        bytes[] calldata calldatas,
+        address token,
+        uint256 fee,
+        uint256 exp,
+        bytes calldata signature
+    ) external payable nonReentrant {
+        // Validate inputs
+        require(targets.length > 0, InvalidBatchSize());
+        require(
+            targets.length == values.length &&
+                values.length == calldatas.length,
+            LengthMismatch()
+        );
+        require(block.timestamp <= exp, Expired());
+
+        // Build SIP-712 structure hash
+        bytes32 structHash = keccak256(
+            abi.encode(
+                _BATCH_TYPEHASH,
+                _hashAddressArray(targets),
+                _hashUint256Array(values),
+                _hashBytesArray(calldatas),
+                token,
+                fee,
+                exp,
+                metaNonce
+            )
+        );
+
+        // Validate signature
+        bytes32 digest = keccak256(
+            abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, structHash)
+        );
+        require(_isValidSig(digest, signature), InvalidSignature());
+
+        // Increment nonce after validation to prevent griefing
+        metaNonce++;
+
+        // Execute batch with policy module checks
+        _executeBatch(targets, values, calldatas, token, fee);
+
+        // Emit event after successful execution
+        emit BatchExecuted(structHash);
+    }
+
+    // ------------------------------------ //
+    //           INTERNAL FUNCTIONS         //
+    // ------------------------------------ //
+
+    /// @notice Internal function that executes the batch with policy module checks
+    /// @param targets Array of target contract addresses
+    /// @param values Array of SIL values to send with each call
+    /// @param calldatas Array of calldata for each transaction
+    /// @param token Address of token to pay fees with (zero address for SIL)
+    /// @param fee Amount of fee to pay the relayer
+    function _executeBatch(
+        address[] calldata targets,
+        uint256[] calldata values,
+        bytes[] calldata calldatas,
+        address token,
+        uint256 fee
+    ) internal policyCheck(msg.value) {
+        // Execute all calls in the batch
+        for (uint256 i; i < targets.length; ++i) {
+            (bool success, ) = targets[i].call{value: values[i]}(calldatas[i]);
+            require(success, CallFailed());
+        }
+
+        // Skip fee payment if no fee required
+        if (fee == 0) return;
+
+        // Pay relayer fee
+        if (token == address(0)) {
+            // Pay with SIL
+            require(address(this).balance >= fee, InsufficientFee());
+            (bool sent, ) = msg.sender.call{value: fee}("");
+            require(sent, FeeTransferFailed());
+        } else {
+            // Pay with SRC-20 token
+            (bool ok, bytes memory data) = token.call(
+                abi.encodeWithSelector(
+                    ISRC20.transfer.selector,
+                    msg.sender,
+                    fee
+                )
+            );
+            require(
+                ok && (data.length == 0 || abi.decode(data, (bool))),
+                FeeTransferFailed()
+            );
+        }
+    }
+
+    /// @notice Validates a signature using either ECDSA or the recovery module
+    /// @param digest The hash that was signed
+    /// @param sig The signature to validate
+    /// @return valid Whsila the signature is valid
+    function _isValidSig(
+        bytes32 digest,
+        bytes memory sig
+    ) internal view returns (bool) {
+        address module = recoveryModule;
+        if (module == address(0)) {
+            // Use ECDSA recovery with immutable owner
+            return digest.recover(sig) == owner;
+        }
+
+        // Use recovery module for validation
+        return
+            IRecoveryModule(module).isValidSignature(digest, sig) == 0x1626ba7e;
+    }
+
+    /// @notice Helper function to properly hash address arrays for SIP-712 compliance
+    /// @param array The address array to hash
+    /// @return The SIP-712 compliant hash of the array
+    function _hashAddressArray(
+        address[] calldata array
+    ) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(array));
+    }
+
+    /// @notice Helper function to properly hash uint256 arrays for SIP-712 compliance
+    /// @param array The uint256 array to hash
+    /// @return The SIP-712 compliant hash of the array
+    function _hashUint256Array(
+        uint256[] calldata array
+    ) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(array));
+    }
+
+    /// @notice Helper function to properly hash bytes arrays for SIP-712 compliance
+    /// @param array The bytes array to hash
+    /// @return The SIP-712 compliant hash of the array
+    function _hashBytesArray(
+        bytes[] calldata array
+    ) internal pure returns (bytes32) {
+        bytes32[] memory hashedItems = new bytes32[](array.length);
+        for (uint256 i = 0; i < array.length; ++i) {
+            hashedItems[i] = keccak256(array[i]);
+        }
+        return keccak256(abi.encodePacked(hashedItems));
+    }
+
+
+    // ------------------------------------ //
+    //           TOKEN RECEIVERS            //
+    // ------------------------------------ //
+
+    /// @notice Handles the recsipt of an SRC-721 token
+    /// @return The selector to confirm token transfer
+    function onSRC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return ISRC721Receiver.onSRC721Received.selector;
+    }
+
+    /// @notice Handles the recsipt of a single SRC-1155 token
+    /// @return The selector to confirm token transfer
+    function onSRC1155Received(
+        address,
+        address,
+        uint256,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return ISRC1155Receiver.onSRC1155Received.selector;
+    }
+
+    /// @notice Handles the recsipt of multiple SRC-1155 tokens
+    /// @return The selector to confirm token transfer
+    function onSRC1155BatchReceived(
+        address,
+        address,
+        uint256[] calldata,
+        uint256[] calldata,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return ISRC1155Receiver.onSRC1155BatchReceived.selector;
+    }
+
+    // ------------------------------------ //
+    //           INTERFACE SUPPORT          //
+    // ------------------------------------ //
+
+    /// @notice Checks if the contract implements an interface
+    /// @param interfaceId The interface identifier to check
+    /// @return Whsila the interface is supported
+    function supportsInterface(
+        bytes4 interfaceId
+    ) external pure override returns (bool) {
+        return
+            interfaceId == type(ISRC721Receiver).interfaceId ||
+            interfaceId == type(ISRC1155Receiver).interfaceId;
+    }
+
+    /// @notice Allows the contract to receive native token
+    receive() external payable {}
+}

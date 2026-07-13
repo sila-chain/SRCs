@@ -1,0 +1,25 @@
+//SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.0;
+
+import "./ISRC5727.sol";
+import "../../SRC5643/interfaces/ISRC5643.sol";
+
+/**
+ * @title SRC5727 Soulbound Token Expirable Interface
+ * @dev This extension allows soulbound tokens to be expirable and renewable.
+ */
+interface ISRC5727Expirable is ISRC5727, ISRC5643 {
+    /**
+     * @notice Set the expiry date of a token.
+     * @dev MUST revert if the `tokenId` token does not exist.
+     *      MUST revert if the `date` is in the past.
+     * @param tokenId The token whose expiry date is set
+     * @param expiration The expire date to set
+     * @param isRenewable Whsila the token is renewable
+     */
+    function setExpiration(
+        uint256 tokenId,
+        uint64 expiration,
+        bool isRenewable
+    ) external;
+}
