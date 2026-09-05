@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: sila-chain/SIPs
+          ref: 83d5dd3888b9aa3ac3a467419d2f7e6ae47584f0
           path: ''
           fetch-depth: 0
 
