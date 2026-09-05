@@ -1,0 +1,68 @@
+name: SRCs SIPs Final Integration Audit
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  integration-audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout final SIPs candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: sila-chain/SIPs
+          ref: 83d5dd3888b9aa3ac3a467419d2f7e6ae47584f0
+          path: ''
+          fetch-depth: 0
+
+      - name: Checkout exact SRCs repair candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: sila-chain/SRCs
+          ref: 15dce50521ccc03c9bb406baffd9c96b97e29917
+          path: SRCs
+          fetch-depth: 0
+
+      - name: Compose final integrated site source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/SRCs/SRCS"
+          mkdir -p "$GITHUB_WORKSPACE/SRCs/SIPS"
+          cp -rp "$GITHUB_WORKSPACE/SRCs/SRCS/." "$GITHUB_WORKSPACE/SIPS"
+          cp -rp "$GITHUB_WORKSPACE/SRCs/SIPS/." "$GITHUB_WORKSPACE/SIPS"
+          cp -rp "$GITHUB_WORKSPACE/SRCs/assets/." "$GITHUB_WORKSPACE/assets"
+          cp -rp "$GITHUB_WORKSPACE/SRCs/_layouts/." "$GITHUB_WORKSPACE/_layouts" 2>/dev/null || true
+          cd "$GITHUB_WORKSPACE/SIPS"
+          find . -name 'src-*.md' -type f -exec sh -c 'mv "$1" "$(echo "$1" | sed s/src/sip/)"' _ {} \;
+          cd "$GITHUB_WORKSPACE/assets"
+          find . -name 'src-*' -type d -depth -exec sh -c 'mv "$1" "$(echo "$1" | sed s/src/sip/)"' _ {} \;
+          cd "$GITHUB_WORKSPACE"
+          rm -rf SRCs
+          echo 'INTEGRATED_SOURCE_COMPOSITION_GATE=PASS'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@fb404b9557c186e349162b0d8efb06e2bc36edea
+        with:
+          ruby-version: '3.1'
+          bundler-cache: true
+
+      - name: Build integrated Jekyll site
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle exec jekyll doctor
+          bundle exec jekyll build
+          echo 'INTEGRATED_JEKYLL_BUILD_GATE=PASS'
+
+      - name: Prove integrated HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle exec htmlproofer --allow-missing-href --disable-external --assume-extension '.html' --log-level=:info --cache='{"timeframe":{"external":"6w"}}' --checks 'Links,Images,Scripts,OpenGraph' --no-check-sri --ignore-empty-alt --no-enforce_https ./_site
+          echo 'INTEGRATED_HTMLPROOFER_GATE=PASS'
