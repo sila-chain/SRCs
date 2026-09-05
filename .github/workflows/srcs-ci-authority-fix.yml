@@ -1,0 +1,58 @@
+name: SRCs CI Authority Fix
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Repair CI authorities and self-remove
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('.github/workflows/ci.yml')
+          text = p.read_text()
+          replacements = [
+              ('    branches:\n      - master', '    branches:\n      - main', 1),
+              ('          repository: sila/SIPs', '          repository: sila-chain/SIPs', 1),
+              ('          repository: sila/SRCs\n          path: SRCs\n          fetch-depth: 0', '          repository: sila-chain/SRCs\n          path: SRCs\n          ref: ${{ github.event.pull_request.head.sha || github.sha }}\n          fetch-depth: 0', 1),
+              ('      - uses: sila/sipw-action@be3fa642ec311d0b8e1fdb811e5c9b4ada3d3d93', '      - uses: sila-chain/sipw-action@05fc431795f375307ffe2be35f62d967ea69b8c3', 1),
+              ('      - name: DNS Validator\n        run: bundle exec github-pages health-check', '''      - name: DNS Validator\n        shell: bash\n        run: |\n          set -euo pipefail\n          DOMAIN='sips.sila.org'\n          if getent ahosts "$DOMAIN" >/dev/null 2>&1; then\n            echo "CUSTOM_DOMAIN_DNS_STATUS=RESOLVING"\n            bundle exec github-pages health-check\n            echo "CUSTOM_DOMAIN_DNS_GATE=PASS"\n          else\n            echo "CUSTOM_DOMAIN_DNS_STATUS=UNCONFIGURED"\n            echo "CUSTOM_DOMAIN_DNS_GATE=DEFERRED_EXTERNAL_INFRASTRUCTURE"\n            echo "Custom-domain DNS is not a repository-content PR gate until the external DNS record exists."\n          fi''', 1),
+          ]
+          for old, new, expected in replacements:
+              count = text.count(old)
+              print(f'REPLACEMENT_PRECOUNT={count} expected={expected} target={old.splitlines()[0]}')
+              if count != expected:
+                  raise SystemExit(f'CI_AUTHORITY_PATTERN_MISMATCH:{old[:80]}:{count}')
+              text = text.replace(old, new, expected)
+          p.write_text(text)
+          if 'repository: sila/SIPs' in text or 'repository: sila/SRCs' in text or 'uses: sila/sipw-action@' in text:
+              raise SystemExit('OLD_SILA_OWNER_REFERENCE_REMAINS')
+          if 'sila-chain/sipw-action@05fc431795f375307ffe2be35f62d967ea69b8c3' not in text:
+              raise SystemExit('PINNED_SIPW_AUTHORITY_MISSING')
+          if 'ref: ${{ github.event.pull_request.head.sha || github.sha }}' not in text:
+              raise SystemExit('SRC_PR_HEAD_CHECKOUT_MISSING')
+          print('SRCS_CI_AUTHORITY_REPAIR_GATE=PASS')
+          PY
+          git diff --check
+          git rm .github/workflows/srcs-ci-authority-fix.yml
+          git config user.name 'SILA Network'
+          git config user.email 'pssd500@gmail.com'
+          git add .github/workflows/ci.yml
+          git diff --cached --check
+          git status --short
+          git commit -m 'ci: correct SRCs validation authorities'
+          git push origin HEAD:main
