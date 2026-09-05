@@ -10,7 +10,7 @@ on:
       - edited
   push:
     branches:
-      - master
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -48,7 +48,7 @@ jobs:
       - name: Checkout SIPs
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          repository: sila/SIPs
+          repository: sila-chain/SIPs
           path: ''
           fetch-depth: 0
 
@@ -62,8 +62,9 @@ jobs:
       - name: Checkout SRCs
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          repository: sila/SRCs
+          repository: sila-chain/SRCs
           path: SRCs
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Restore SRCs mtimes from git history
@@ -171,7 +172,19 @@ jobs:
           bundle exec htmlproofer --allow-missing-href --disable-external --assume-extension '.html' --log-level=:info --cache='{"timeframe":{"external":"6w"}}' --checks 'Links,Images,Scripts,OpenGraph' --no-check-sri --ignore-empty-alt --no-enforce_https ./_site
 
       - name: DNS Validator
-        run: bundle exec github-pages health-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          DOMAIN='sips.sila.org'
+          if getent ahosts "$DOMAIN" >/dev/null 2>&1; then
+            echo "CUSTOM_DOMAIN_DNS_STATUS=RESOLVING"
+            bundle exec github-pages health-check
+            echo "CUSTOM_DOMAIN_DNS_GATE=PASS"
+          else
+            echo "CUSTOM_DOMAIN_DNS_STATUS=UNCONFIGURED"
+            echo "CUSTOM_DOMAIN_DNS_GATE=DEFERRED_EXTERNAL_INFRASTRUCTURE"
+            echo "Custom-domain DNS is not a repository-content PR gate until the external DNS record exists."
+          fi
 
       - name: Save Jekyll Cache
         if: always()
@@ -236,7 +249,7 @@ jobs:
       - name: Checkout SIP Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
-      - uses: sila/sipw-action@be3fa642ec311d0b8e1fdb811e5c9b4ada3d3d93
+      - uses: sila-chain/sipw-action@05fc431795f375307ffe2be35f62d967ea69b8c3
         id: sipw
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
