@@ -112,7 +112,7 @@ jobs:
           cd $GITHUB_WORKSPACE/SIPS
           find . -name "src-*.md" -type f -exec sh -c 'echo mv "$1" "$(echo "$1" | sed s/src/sip/)"' _ {} \; | sh
           cd $GITHUB_WORKSPACE/assets
-          find . -name "src-*" -type d -exec sh -c 'echo mv "$1" "$(echo "$1" | sed s/src/sip/)"' _ {} \; | sh
+          find . -depth -name "src-*" -type d -exec sh -c 'echo mv "$1" "$(echo "$1" | sed s/src/sip/)"' _ {} \; | sh
           cd $GITHUB_WORKSPACE
           rm -rf SRCs
 
@@ -124,26 +124,29 @@ jobs:
           cache-version: 0
 
       - name: Restore Jekyll Cache
+        if: steps.changed.outputs.mode == 'incremental'
         id: cache
         uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: |
             _site
             .jekyll-metadata
-          # PR reruns can reuse their own cache via the current PR merge ref.
-          # If that misses, GitHub falls back to caches visible from the base/default branch.
           key: jekyll-${{ runner.os }}-sips-${{ steps.sips.outputs.sha }}
           restore-keys: |
             jekyll-${{ runner.os }}-
 
-      # See .github/workflows/README.md for how incremental builds and caching work.
-      # Always use --incremental: it creates .jekyll-metadata for future runs,
-      # and falls back to a full build when .jekyll-metadata is missing.
       - name: Build Website
         run: |
+          set -euo pipefail
           bundle exec jekyll doctor
-          echo "::notice::Jekyll incremental build (mode=${{ steps.changed.outputs.mode }})"
-          bundle exec jekyll build --incremental
+          if [ "${{ steps.changed.outputs.mode }}" = "incremental" ]; then
+            echo "::notice::Jekyll incremental build"
+            bundle exec jekyll build --incremental
+          else
+            echo "::notice::Jekyll clean full build"
+            rm -rf _site .jekyll-metadata
+            bundle exec jekyll build
+          fi
 
       - name: HTML Proofer
         run: |
@@ -187,7 +190,7 @@ jobs:
           fi
 
       - name: Save Jekyll Cache
-        if: always()
+        if: always() && steps.changed.outputs.mode == 'incremental'
         uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: |
