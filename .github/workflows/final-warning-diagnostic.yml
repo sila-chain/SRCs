@@ -1,0 +1,29 @@
+name: Final Warning Diagnostic
+
+on:
+  push:
+    branches:
+      - sila/srcs-final-warning-cleanup-20260905
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Diagnose Sila Research and Liquid warning sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '===== SILA_RESEARCH_OCCURRENCES ====='
+          grep -RIn --binary-files=without-match --exclude-dir=.git -- 'Sila Research' SRCS SIPS . 2>/dev/null | sort -u || true
+          echo '===== DISCUSSIONS_TO_NON_URL ====='
+          grep -RIn --binary-files=without-match --exclude-dir=.git -E '^discussions-to:[[:space:]]+[^h]' SRCS SIPS 2>/dev/null || true
+          echo '===== MARKDOWN_LINK_TARGET_SILA_RESEARCH ====='
+          grep -RIn --binary-files=without-match --exclude-dir=.git -E '\]\([^)]*Sila Research[^)]*\)' SRCS SIPS . 2>/dev/null | sort -u || true
+          echo '===== SRC_7730_LITERAL_DOUBLE_BRACES ====='
+          grep -nF '{{' SRCS/src-7730.md || true
+          echo '===== END DIAGNOSTIC ====='
