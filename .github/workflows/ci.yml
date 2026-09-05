@@ -49,7 +49,6 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: sila-chain/SIPs
-          ref: 83d5dd3888b9aa3ac3a467419d2f7e6ae47584f0
           path: ''
           fetch-depth: 0
 
@@ -83,6 +82,8 @@ jobs:
           fi
 
           ALL_CHANGED=$(gh pr diff ${{ github.event.number }} --name-only --repo ${{ github.repository }})
+          # Only pure SRC markdown changes are safe for the incremental path.
+          # Asset changes can otherwise leave stale files in `_site/`.
           NON_SRC=$(echo "$ALL_CHANGED" | grep -v -E '^SRCS/src-[0-9]+\.md$' | grep -v '^\s*$' || true)
           if [ -n "$NON_SRC" ]; then
             echo "Non-SRC files changed, will run full check"
@@ -129,10 +130,15 @@ jobs:
           path: |
             _site
             .jekyll-metadata
+          # PR reruns can reuse their own cache via the current PR merge ref.
+          # If that misses, GitHub falls back to caches visible from the base/default branch.
           key: jekyll-${{ runner.os }}-sips-${{ steps.sips.outputs.sha }}
           restore-keys: |
             jekyll-${{ runner.os }}-
 
+      # See .github/workflows/README.md for how incremental builds and caching work.
+      # Always use --incremental: it creates .jekyll-metadata for future runs,
+      # and falls back to a full build when .jekyll-metadata is missing.
       - name: Build Website
         run: |
           bundle exec jekyll doctor
@@ -205,7 +211,6 @@ jobs:
           use-quiet-mode: no
           use-verbose-mode: yes
           check-modified-files-only: yes
-          base-branch: main
 
   codespell:
     name: CodeSpell
