@@ -10,7 +10,7 @@ on:
       - edited
   push:
     branches:
-      - master
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -48,7 +48,7 @@ jobs:
       - name: Checkout SIPs
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          repository: sila/SIPs
+          repository: sila-chain/SIPs
           path: ''
           fetch-depth: 0
 
@@ -62,8 +62,9 @@ jobs:
       - name: Checkout SRCs
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          repository: sila/SRCs
+          repository: sila-chain/SRCs
           path: SRCs
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Restore SRCs mtimes from git history
@@ -81,8 +82,6 @@ jobs:
           fi
 
           ALL_CHANGED=$(gh pr diff ${{ github.event.number }} --name-only --repo ${{ github.repository }})
-          # Only pure SRC markdown changes are safe for the incremental path.
-          # Asset changes can otherwise leave stale files in `_site/`.
           NON_SRC=$(echo "$ALL_CHANGED" | grep -v -E '^SRCS/src-[0-9]+\.md$' | grep -v '^\s*$' || true)
           if [ -n "$NON_SRC" ]; then
             echo "Non-SRC files changed, will run full check"
@@ -129,15 +128,10 @@ jobs:
           path: |
             _site
             .jekyll-metadata
-          # PR reruns can reuse their own cache via the current PR merge ref.
-          # If that misses, GitHub falls back to caches visible from the base/default branch.
           key: jekyll-${{ runner.os }}-sips-${{ steps.sips.outputs.sha }}
           restore-keys: |
             jekyll-${{ runner.os }}-
 
-      # See .github/workflows/README.md for how incremental builds and caching work.
-      # Always use --incremental: it creates .jekyll-metadata for future runs,
-      # and falls back to a full build when .jekyll-metadata is missing.
       - name: Build Website
         run: |
           bundle exec jekyll doctor
@@ -171,7 +165,19 @@ jobs:
           bundle exec htmlproofer --allow-missing-href --disable-external --assume-extension '.html' --log-level=:info --cache='{"timeframe":{"external":"6w"}}' --checks 'Links,Images,Scripts,OpenGraph' --no-check-sri --ignore-empty-alt --no-enforce_https ./_site
 
       - name: DNS Validator
-        run: bundle exec github-pages health-check
+        shell: bash
+        run: |
+          set -euo pipefail
+          DOMAIN='sips.sila.org'
+          if getent ahosts "$DOMAIN" >/dev/null 2>&1; then
+            echo "CUSTOM_DOMAIN_DNS_STATUS=RESOLVING"
+            bundle exec github-pages health-check
+            echo "CUSTOM_DOMAIN_DNS_GATE=PASS"
+          else
+            echo "CUSTOM_DOMAIN_DNS_STATUS=UNCONFIGURED"
+            echo "CUSTOM_DOMAIN_DNS_GATE=DEFERRED_EXTERNAL_INFRASTRUCTURE"
+            echo "Custom-domain DNS is not a repository-content PR gate until the external DNS record exists."
+          fi
 
       - name: Save Jekyll Cache
         if: always()
@@ -236,7 +242,7 @@ jobs:
       - name: Checkout SIP Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
-      - uses: sila/sipw-action@be3fa642ec311d0b8e1fdb811e5c9b4ada3d3d93
+      - uses: sila-chain/sipw-action@05fc431795f375307ffe2be35f62d967ea69b8c3
         id: sipw
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
