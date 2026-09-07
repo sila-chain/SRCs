@@ -74,32 +74,31 @@ jobs:
 
       - name: Get Changed Files
         id: changed
-        continue-on-error: true
+        shell: bash
         run: |
+          set -euo pipefail
           if [ "${{ github.event_name }}" != "pull_request" ]; then
-            echo "mode=full" >> $GITHUB_OUTPUT
+            echo "mode=full" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          ALL_CHANGED=$(gh pr diff ${{ github.event.number }} --name-only --repo ${{ github.repository }})
-          # Only pure SRC markdown changes are safe for the incremental path.
-          # Asset changes can otherwise leave stale files in `_site/`.
-          NON_SRC=$(echo "$ALL_CHANGED" | grep -v -E '^SRCS/src-[0-9]+\.md$' | grep -v '^\s*$' || true)
+          ALL_CHANGED="$(git -C "$GITHUB_WORKSPACE/SRCs" diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}")"
+          CHANGED_COUNT="$(printf '%s\n' "$ALL_CHANGED" | sed '/^$/d' | wc -l | tr -d ' ')"
+          echo "HTML_CHANGED_FILE_COUNT=$CHANGED_COUNT"
+          NON_SRC="$(printf '%s\n' "$ALL_CHANGED" | grep -v -E '^SRCS/src-[0-9]+\.md$' | grep -v '^\s*$' || true)"
           if [ -n "$NON_SRC" ]; then
             echo "Non-SRC files changed, will run full check"
-            echo "mode=full" >> $GITHUB_OUTPUT
+            echo "mode=full" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          CHANGED_NUMS=$(echo "$ALL_CHANGED" | grep -oE 'src-[0-9]+' | sed 's/src-//' | sort -u | tr '\n' ' ')
+          CHANGED_NUMS="$(printf '%s\n' "$ALL_CHANGED" | grep -oE 'src-[0-9]+' | sed 's/src-//' | sort -u | tr '\n' ' ' || true)"
           if [ -z "$CHANGED_NUMS" ]; then
-            echo "mode=full" >> $GITHUB_OUTPUT
+            echo "mode=full" >> "$GITHUB_OUTPUT"
           else
-            echo "mode=incremental" >> $GITHUB_OUTPUT
-            echo "nums=${CHANGED_NUMS}" >> $GITHUB_OUTPUT
+            echo "mode=incremental" >> "$GITHUB_OUTPUT"
+            echo "nums=${CHANGED_NUMS}" >> "$GITHUB_OUTPUT"
             echo "Will check only changed SRCs: ${CHANGED_NUMS}"
           fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Repos
         run: |
@@ -206,6 +205,8 @@ jobs:
     steps:
       - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
+        with:
+          fetch-depth: 0
 
       - name: Link Checker
         uses: gaurav-nelson/github-action-markdown-link-check@d53a906aa6b22b8979d33bc86170567e619495ec
@@ -224,25 +225,40 @@ jobs:
     steps:
       - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
-      - name: Get Changed Files
+      - name: Resolve CodeSpell Scope
         id: changed
-        continue-on-error: true
+        shell: bash
         run: |
-          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          gh pr diff ${{ github.event.number }} --name-only | sed -e 's|$|,|' | xargs -i echo "{}" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          set -euo pipefail
+          BASE='${{ github.event.pull_request.base.sha }}'
+          HEAD='${{ github.event.pull_request.head.sha }}'
+          HEAD_REF='${{ github.event.pull_request.head.ref }}'
+          if [[ "$HEAD_REF" == sila/srcs-latest-pure-* ]]; then
+            echo 'CODESPELL_SCOPE=AUTHORITY_SYNC_POLICY'
+            FILES="$(git diff --name-only "$BASE" "$HEAD" -- .sila .github/workflows config Gemfile _config.yml | sed '/^$/d')"
+          else
+            echo 'CODESPELL_SCOPE=PR_CHANGED_FILES'
+            FILES="$(git diff --name-only "$BASE" "$HEAD" | sed '/^$/d')"
+          fi
+          EXISTING="$(printf '%s\n' "$FILES" | while IFS= read -r p; do [ -f "$p" ] && printf '%s\n' "$p"; done)"
+          COUNT="$(printf '%s\n' "$EXISTING" | sed '/^$/d' | wc -l | tr -d ' ')"
+          PATHS="$(printf '%s\n' "$EXISTING" | sed '/^$/d' | paste -sd, -)"
+          echo "CODESPELL_FILE_COUNT=$COUNT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "paths=$PATHS" >> "$GITHUB_OUTPUT"
 
       - name: Run CodeSpell
         uses: codespell-project/actions-codespell@57beb9f38f49d773d641ac555d1565c3b6a59938
-        if: steps.changed.outcome == 'success'
+        if: steps.changed.outputs.count != '0'
         with:
           check_filenames: true
           ignore_words_file: config/.codespell-whitelist
-          path: ${{ env.CHANGED_FILES }}
-          skip: .git,Gemfile.lock,**/*.png,**/*.gif,**/*.jpg,**/*.svg,.codespell-whitelist,vendor,_site,_config.yml,style.css
+          path: ${{ steps.changed.outputs.paths }}
+          skip: .git,Gemfile.lock,**/*.png,**/*.gif,**/*.jpg,**/*.svg,**/*.pdf,.codespell-whitelist,vendor,_site,_config.yml,style.css
 
   sipw-validator:
     name: SRC Validator
@@ -268,22 +284,15 @@ jobs:
     steps:
       - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
-
-      - name: Get Changed Files
-        id: changed
-        continue-on-error: true
-        run: |
-          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          gh pr diff ${{ github.event.number }} --name-only | grep -E -x '[^/]+\.md|SRCS/src-[0-9]+\.md' >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
 
       - name: Lint
         uses: DavidAnson/markdownlint-cli2-action@f5cf187ef11bd3a68a127321b794aa252ff23019
-        if: steps.changed.outcome == 'success'
         with:
           command: config
           globs: |
             config/.markdownlint.yaml
-            ${{ env.CHANGED_FILES }}
+            *.md
+            SRCS/src-*.md
