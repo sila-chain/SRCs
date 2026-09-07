@@ -1,0 +1,104 @@
+name: SRCs Latest Pure Regeneration Bootstrap
+
+on:
+  push:
+    branches:
+      - sila/srcs-latest-pure-20260907
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout SRCs candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Regenerate from exact latest ERC authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          UPSTREAM_SHA='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
+          GENERATOR_SHA='2a7cc5e3537b5a1d194df4df706594b6b9f0a119'
+          BRANCH='sila/srcs-latest-pure-20260907'
+
+          echo "UPSTREAM_SHA=$UPSTREAM_SHA"
+          echo "GENERATOR_SHA=$GENERATOR_SHA"
+          test "$(git branch --show-current)" = "$BRANCH"
+
+          rm -rf /tmp/srcs-upstream /tmp/srcs-generated /tmp/srcs-policy
+          mkdir -p /tmp/srcs-policy
+
+          cp -a .github /tmp/srcs-policy/.github
+          for p in Gemfile Gemfile.lock _config.yml config; do
+            if [ -e "$p" ]; then
+              cp -a "$p" "/tmp/srcs-policy/$p"
+            fi
+          done
+          test -f SRCS/src-2535.md
+          cp SRCS/src-2535.md /tmp/srcs-policy/src-2535.md
+
+          git clone --quiet https://github.com/ethereum/ERCs.git /tmp/srcs-upstream
+          git -C /tmp/srcs-upstream checkout --quiet --detach "$UPSTREAM_SHA"
+          test "$(git -C /tmp/srcs-upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+          curl -fsSL "https://raw.githubusercontent.com/sila-chain/SIPs/$GENERATOR_SHA/.sila/sips_regenerate_v2.py" -o /tmp/srcs_regenerate.py
+          python3 -m py_compile /tmp/srcs_regenerate.py
+          python3 /tmp/srcs_regenerate.py /tmp/srcs-upstream /tmp/srcs-generated
+
+          rm -rf /tmp/srcs-generated/.github
+          cp -a /tmp/srcs-policy/.github /tmp/srcs-generated/.github
+          for p in Gemfile Gemfile.lock _config.yml config; do
+            if [ -e "/tmp/srcs-policy/$p" ]; then
+              rm -rf "/tmp/srcs-generated/$p"
+              cp -a "/tmp/srcs-policy/$p" "/tmp/srcs-generated/$p"
+            fi
+          done
+
+          # SRC-2535 upstream has not changed since 2023; preserve the verified
+          # Sila-local repair that removes the nonexistent transformed ZIP link.
+          cp /tmp/srcs-policy/src-2535.md /tmp/srcs-generated/SRCS/src-2535.md
+
+          python3 - <<'PY'
+          from pathlib import Path
+          bad = []
+          root = Path('/tmp/srcs-generated')
+          for p in root.rglob('*'):
+              if not p.is_file() or p.is_symlink():
+                  continue
+              try:
+                  text = p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              for token in ('whsila', 'somsiling'):
+                  if token in text:
+                      bad.append(f'{p.relative_to(root)}:{token}')
+          print(f'KNOWN_CORRUPTION_RESIDUAL_COUNT={len(bad)}')
+          if bad:
+              print('\n'.join(bad[:100]))
+              raise SystemExit(1)
+          print('KNOWN_CORRUPTION_GATE=PASS')
+          PY
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a /tmp/srcs-generated/. .
+
+          test -f SRCS/src-7730.md
+          test -f SRCS/src-2535.md
+          test -f .github/workflows/ci.yml
+          git diff --check
+
+          git config user.name 'SILA Network'
+          git config user.email 'sila-chain@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'REGENERATION_DIFF_COUNT=0'
+          else
+            git commit -m 'sync: regenerate SRCs from latest pure Sila authority'
+            git push origin "HEAD:$BRANCH"
+          fi
+
+          echo 'LATEST_REGENERATION_BOOTSTRAP_GATE=PASS'
