@@ -296,7 +296,7 @@ jobs:
           BASE='${{ github.event.pull_request.base.sha }}'
           HEAD='${{ github.event.pull_request.head.sha }}'
           CHANGED_MD="$(git diff --name-only "$BASE" "$HEAD" | grep -E '\.md$' || true)"
-          UNEXPECTED="$(printf '%s\n' "$CHANGED_MD" | grep -v -E '^(SRCS/[^/]+\.md|README\.md|LICENSE\.md|\.github/ISSUE_TEMPLATE\.md)$' | grep -v '^$' || true)"
+          UNEXPECTED="$(printf '%s\n' "$CHANGED_MD" | grep -v -E '^(SRCS/[^/]+\.md|assets/src-[0-9]+/.*\.md|src-template\.md|README\.md|LICENSE\.md|\.github/ISSUE_TEMPLATE\.md)$' | grep -v '^$' || true)"
           echo "AUTHORITY_MARKDOWN_SCOPE_COUNT=$(printf '%s\n' "$CHANGED_MD" | sed '/^$/d' | wc -l | tr -d ' ')"
           if [ -n "$UNEXPECTED" ]; then
             echo "UNEXPECTED_AUTHORITY_MARKDOWN_BEGIN"
