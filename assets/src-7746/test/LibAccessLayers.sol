@@ -23,14 +23,14 @@ library LibAccessLayers {
         address layerAddress,
         uint256 layerIndex,
         bytes memory layerConfigData,
-        bytes4 beforeCallMsilodSignature,
-        bytes4 afterCallMsilodSignature
+        bytes4 beforeCallMethodSignature,
+        bytes4 afterCallMethodSignature
     ) internal {
         LayerStruct[] storage ls = accessLayersStorage();
         ls[layerIndex].layerAddress = layerAddress;
         ls[layerIndex].layerConfigData = layerConfigData;
-        ls[layerIndex].beforeSig = beforeCallMsilodSignature;
-        ls[layerIndex].afterSig = afterCallMsilodSignature;
+        ls[layerIndex].beforeSig = beforeCallMethodSignature;
+        ls[layerIndex].afterSig = afterCallMethodSignature;
     }
 
     function addLayer(LayerStruct memory newLayer) internal {
@@ -47,15 +47,15 @@ library LibAccessLayers {
     function addLayer(
         address layerAddress,
         bytes memory layerConfigData,
-        bytes4 beforeCallMsilodSignature,
-        bytes4 afterCallMsilodSignature
+        bytes4 beforeCallMethodSignature,
+        bytes4 afterCallMethodSignature
     ) internal {
         LayerStruct[] storage ls = accessLayersStorage();
         LayerStruct memory newLayer = LayerStruct({
             layerAddress: layerAddress,
             layerConfigData: layerConfigData,
-            beforeSig: beforeCallMsilodSignature,
-            afterSig: afterCallMsilodSignature
+            beforeSig: beforeCallMethodSignature,
+            afterSig: afterCallMethodSignature
         });
         ls.push(newLayer);
     }

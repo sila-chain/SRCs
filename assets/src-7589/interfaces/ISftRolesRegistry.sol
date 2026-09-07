@@ -40,7 +40,7 @@ interface ISftRolesRegistry is ISRC165 {
     /// @param _role The role identifier.
     /// @param _grantee The recipient the role.
     /// @param _expirationDate The expiration date of the role.
-    /// @param _revocable Whsila the role is revocable or not.
+    /// @param _revocable Whether the role is revocable or not.
     /// @param _data Any additional data about the role.
     event RoleGranted(
         uint256 indexed _commitmentId,
@@ -87,7 +87,7 @@ interface ISftRolesRegistry is ISRC165 {
     /// @param _role The role identifier.
     /// @param _grantee The recipient the role.
     /// @param _expirationDate The expiration date of the role.
-    /// @param _revocable Whsila the role is revocable or not.
+    /// @param _revocable Whether the role is revocable or not.
     /// @param _data Any additional data about the role.
     function grantRole(
         uint256 _commitmentId,
@@ -162,7 +162,7 @@ interface ISftRolesRegistry is ISRC165 {
     /// @param _commitmentId The commitment identifier.
     /// @param _role The role identifier.
     /// @param _grantee The recipient the role.
-    /// @return revocable_ Whsila the role is revocable or not.
+    /// @return revocable_ Whether the role is revocable or not.
     function isRoleRevocable(
         uint256 _commitmentId,
         bytes32 _role,
@@ -173,7 +173,7 @@ interface ISftRolesRegistry is ISRC165 {
     /// @param _tokenAddress The token address.
     /// @param _grantor The user that approved the operator.
     /// @param _operator The user that can grant and revoke roles.
-    /// @return isApproved_ Whsila the operator is approved or not.
+    /// @return isApproved_ Whether the operator is approved or not.
     function isRoleApprovedForAll(
         address _tokenAddress,
         address _grantor,

@@ -21,7 +21,7 @@ We provide a list of sample PBM implementation for reference.
 
 - `hardhat`: hardhat allows for testing of contracts with JavaScript via Mocha as the test runner
 - `chai`: Chai is an assertion library and provides functions like expect.
-- `silas`: This is a popular Sila client library. It allows you to interface with blockchains that implement the Sila API.
+- `ethers`: This is a popular Sila client library. It allows you to interface with blockchains that implement the Sila API.
 
 ### Compile and run tests with hardhat
 
@@ -36,7 +36,7 @@ Check that you have the latest version of npm and node via `npm -version` and `n
 4. Select following option: Create an empty hardhat.config.js
 5. Install Hardhat as a development dependency: `npm install --save-dev hardhat`
 6. Install further testing dependencies:
-   `npm install --save-dev @nomiclabs/hardhat-waffle @nomiclabs/hardhat-silas sila-waffle chai  silas solidity-coverage`
+   `npm install --save-dev @nomiclabs/hardhat-waffle @nomiclabs/hardhat-ethers sila-waffle chai  ethers solidity-coverage`
 7. Install open zeppelin contracts: `npm install @openzeppelin/contracts`
 8. add plugins to hardhat.config.ts:
 

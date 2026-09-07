@@ -48,7 +48,7 @@ const deployContractAndGetAddress = async (
 ) => {
   const hash = await walletClient.deployContract(args);
   return (
-    await publicClient.waitForTransactionRecsipt({
+    await publicClient.waitForTransactionReceipt({
       hash,
     })
   ).contractAddress!;
@@ -91,7 +91,7 @@ describe("DelegatedErc721", () => {
       const tokenUri = 'ipfs://QmYXJ5Y2FzdC5qcGc';
       const nonce = 1n;
 
-      // sipDomain params
+      // eipDomain params
       const chainId = await walletClient.getChainId();
       
       // have creator sign a message permitting a token to be created on the contract
@@ -131,12 +131,12 @@ describe("DelegatedErc721", () => {
         ]
       });
 
-      const recsipt = await publicClient.waitForTransactionRecsipt({
+      const receipt = await publicClient.waitForTransactionReceipt({
         hash: tx
       });
 
       // check that the transaction succeeded
-      expect(recsipt.status).toBe('success');
+      expect(receipt.status).toBe('success');
 
       // 3. Get the CreatorAttribution event from the contract and recover the signer/creator from the emitted signature and params:
 

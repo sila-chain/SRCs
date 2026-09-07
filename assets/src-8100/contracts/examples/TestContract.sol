@@ -14,7 +14,7 @@ IRepresentableStateHashed       // needed for @inheritdoc
  *         for IRepresentableState.sol renderers.
  *
  * Fields are initialized with demo values in the constructor so that an off-chain renderer
- * can immediately exsrcise different type/format combinations without any prior updates.
+ * can immediately exercise different type/format combinations without any prior updates.
  */
 contract TestContract is IXMLRepresentableStateVersionedHashed {
 
@@ -82,7 +82,7 @@ contract TestContract is IXMLRepresentableStateVersionedHashed {
         flagFalse          = false;
 
         // String
-        textPlain          = "Hello, XML & SAVM!";
+        textPlain          = "Hello, XML & SVM!";
 
         // Bytes
         dataBytes          = hex"0102030405DEADBEEF0102030405DEADBEEF0102030405DEADBEEF";
@@ -109,67 +109,67 @@ contract TestContract is IXMLRepresentableStateVersionedHashed {
         // Note: single quotes in XML to allow double quotes in solidity for a single string-block.
         return
                     "<Contract xmlns='urn:example:contract'"
-                    " xmlns:savmstate='urn:savm:state:1.0'"
-                    " savmstate:chain-id=''"
-                    " savmstate:contract-address=''"
-                    " savmstate:block-number=''>"
+                    " xmlns:svmstate='urn:svm:state:1.0'"
+                    " svmstate:chain-id=''"
+                    " svmstate:contract-address=''"
+                    " svmstate:block-number=''>"
 
                     "<TestContract xmlns='urn:example:format-showcase'>"
 
                     // ---- Unsigned Integers ----
-                    "<UintRaw savmstate:call='valueUint()(uint256)' savmstate:format='integer'/>"
-                    "<UintDecimal2 savmstate:call='valueMoney()(uint256)' savmstate:format='decimal' savmstate:scale='2'/>"
-                    "<UintHex savmstate:call='valueHex()(uint256)' savmstate:format='hex'/>"
+                    "<UintRaw svmstate:call='valueUint()(uint256)' svmstate:format='integer'/>"
+                    "<UintDecimal2 svmstate:call='valueMoney()(uint256)' svmstate:format='decimal' svmstate:scale='2'/>"
+                    "<UintHex svmstate:call='valueHex()(uint256)' svmstate:format='hex'/>"
 
                     // Date/Datetime from UNIX timestamps (seconds since epoch)
-                    "<Date savmstate:call='timestampDate()(uint256)' savmstate:format='iso8601-date'/>"
-                    "<DateTime savmstate:call='timestampDateTime()(uint256)' savmstate:format='iso8601-datetime'/>"
+                    "<Date svmstate:call='timestampDate()(uint256)' svmstate:format='iso8601-date'/>"
+                    "<DateTime svmstate:call='timestampDateTime()(uint256)' svmstate:format='iso8601-datetime'/>"
 
                     // ---- Signed Integers ----
-                    "<IntPos savmstate:call='valueIntPos()(int256)' savmstate:format='decimal'/>"
-                    "<IntNeg savmstate:call='valueIntNeg()(int256)' savmstate:format='decimal'/>"
+                    "<IntPos svmstate:call='valueIntPos()(int256)' svmstate:format='decimal'/>"
+                    "<IntNeg svmstate:call='valueIntNeg()(int256)' svmstate:format='decimal'/>"
 
                     // ---- Address ----
-                    "<ExampleAddress savmstate:call='exampleAddress()(address)' savmstate:format='address'/>"
+                    "<ExampleAddress svmstate:call='exampleAddress()(address)' svmstate:format='address'/>"
 
                     // ---- Booleans ----
-                    "<FlagTrue savmstate:call='flagTrue()(bool)' savmstate:format='boolean'/>"
-                    "<FlagFalse savmstate:call='flagFalse()(bool)' savmstate:format='boolean'/>"
+                    "<FlagTrue svmstate:call='flagTrue()(bool)' svmstate:format='boolean'/>"
+                    "<FlagFalse svmstate:call='flagFalse()(bool)' svmstate:format='boolean'/>"
 
                     // ---- String ----
-                    "<TextPlain savmstate:call='textPlain()(string)' savmstate:format='string'/>"
+                    "<TextPlain svmstate:call='textPlain()(string)' svmstate:format='string'/>"
 
                     // ---- Bytes (hex + base64) ----
-                    "<BytesHex savmstate:call='dataBytes()(bytes)' savmstate:format='hex'/>"
-                    "<BytesBase64 savmstate:call='dataBytes()(bytes)' savmstate:format='base64'/>"
+                    "<BytesHex svmstate:call='dataBytes()(bytes)' svmstate:format='hex'/>"
+                    "<BytesBase64 svmstate:call='dataBytes()(bytes)' svmstate:format='base64'/>"
 
                     // ---- Multi-binding: amount as text, currency as attribute ----
                     "<Money"
-                    " savmstate:calls='valueMoney()(uint256);currency()(string)'"
-                    " savmstate:formats='decimal;string'"
-                    " savmstate:scales='2;'"        // 2 decimals for amount, no scaling for currency
-                    " savmstate:targets=';currency'/>"
+                    " svmstate:calls='valueMoney()(uint256);currency()(string)'"
+                    " svmstate:formats='decimal;string'"
+                    " svmstate:scales='2;'"        // 2 decimals for amount, no scaling for currency
+                    " svmstate:targets=';currency'/>"
 
                     // ---- Array binding profile (Mode B): scalar arrays -> repeated rows ----
                     "<ArrayExamples>"
 
                     // int256[] -> repeated <Coupon> with decimal+scale
                     "<Coupons"
-                    " savmstate:call='couponAmounts()(int256[])'"
-                    " savmstate:item-element='Coupon'>"
+                    " svmstate:call='couponAmounts()(int256[])'"
+                    " svmstate:item-element='Coupon'>"
                     "<Coupon"
-                    " savmstate:item-field='0'"
-                    " savmstate:format='decimal'"
-                    " savmstate:scale='2'/>"
+                    " svmstate:item-field='0'"
+                    " svmstate:format='decimal'"
+                    " svmstate:scale='2'/>"
                     "</Coupons>"
 
                     // string[] -> repeated <Label> with plain string
                     "<CouponLabels"
-                    " savmstate:call='couponLabels()(string[])'"
-                    " savmstate:item-element='Label'>"
+                    " svmstate:call='couponLabels()(string[])'"
+                    " svmstate:item-element='Label'>"
                     "<Label"
-                    " savmstate:item-field='0'"
-                    " savmstate:format='string'/>"
+                    " svmstate:item-field='0'"
+                    " svmstate:format='string'/>"
                     "</CouponLabels>"
 
                     "</ArrayExamples>"

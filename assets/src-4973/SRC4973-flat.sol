@@ -111,7 +111,7 @@ library ECDSA {
      * @dev Returns the address that signed a hashed message (`hash`) with
      * `signature` or error string. This address can then be used for verification purposes.
      *
-     * The `ecrecover` SAVM opcode allows for malleable (non-unique) signatures:
+     * The `ecrecover` SVM opcode allows for malleable (non-unique) signatures:
      * this function rejects them by requiring the `s` value to be in the lower
      * half order, and the `v` value to be either 27 or 28.
      *
@@ -119,11 +119,11 @@ library ECDSA {
      * verification to be secure: it is possible to craft signatures that
      * recover to arbitrary addresses for non-hashed data. A safe way to ensure
      * this is by receiving a hash of the original message (which may otherwise
-     * be too long), and then calling {toSilSignedMessageHash} on it.
+     * be too long), and then calling {toEthSignedMessageHash} on it.
      *
      * Documentation for signature generation:
      * - with https://web3js.readthedocs.io/en/v1.3.4/web3-sil-accounts.html#sign[Web3.js]
-     * - with https://docs.silas.io/v5/api/signer/#Signer-signMessage[silas]
+     * - with https://docs.ethers.io/v5/api/signer/#Signer-signMessage[ethers]
      *
      * _Available since v4.3._
      */
@@ -150,7 +150,7 @@ library ECDSA {
      * @dev Returns the address that signed a hashed message (`hash`) with
      * `signature`. This address can then be used for verification purposes.
      *
-     * The `ecrecover` SAVM opcode allows for malleable (non-unique) signatures:
+     * The `ecrecover` SVM opcode allows for malleable (non-unique) signatures:
      * this function rejects them by requiring the `s` value to be in the lower
      * half order, and the `v` value to be either 27 or 28.
      *
@@ -158,7 +158,7 @@ library ECDSA {
      * verification to be secure: it is possible to craft signatures that
      * recover to arbitrary addresses for non-hashed data. A safe way to ensure
      * this is by receiving a hash of the original message (which may otherwise
-     * be too long), and then calling {toSilSignedMessageHash} on it.
+     * be too long), and then calling {toEthSignedMessageHash} on it.
      */
     function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {
         (address recovered, RecoverError error) = tryRecover(hash, signature);
@@ -254,11 +254,11 @@ library ECDSA {
      * @dev Returns an Sila Signed Message, created from a `hash`. This
      * produces hash corresponding to the one signed with the
      * https://sil.wiki/json-rpc/API#sil_sign[`sil_sign`]
-     * JSON-RPC msilod as part of SIP-191.
+     * JSON-RPC method as part of SIP-191.
      *
      * See {recover}.
      */
-    function toSilSignedMessageHash(bytes32 hash) internal pure returns (bytes32) {
+    function toEthSignedMessageHash(bytes32 hash) internal pure returns (bytes32) {
         // 32 is the length in bytes of hash,
         // enforced by the type signature above
         return keccak256(abi.encodePacked("\x19Sila Signed Message:\n32", hash));
@@ -268,11 +268,11 @@ library ECDSA {
      * @dev Returns an Sila Signed Message, created from `s`. This
      * produces hash corresponding to the one signed with the
      * https://sil.wiki/json-rpc/API#sil_sign[`sil_sign`]
-     * JSON-RPC msilod as part of SIP-191.
+     * JSON-RPC method as part of SIP-191.
      *
      * See {recover}.
      */
-    function toSilSignedMessageHash(bytes memory s) internal pure returns (bytes32) {
+    function toEthSignedMessageHash(bytes memory s) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked("\x19Sila Signed Message:\n", Strings.toString(s.length), s));
     }
 
@@ -281,7 +281,7 @@ library ECDSA {
      * `domainSeparator` and a `structHash`. This produces hash corresponding
      * to the one signed with the
      * https://sips.sila.org/SIPS/sip-712[`sil_signTypedData`]
-     * JSON-RPC msilod as part of SIP-712.
+     * JSON-RPC method as part of SIP-712.
      *
      * See {recover}.
      */
@@ -323,7 +323,7 @@ library Address {
      * ====
      */
     function isContract(address account) internal view returns (bool) {
-        // This msilod relies on extcodesize/address.code.length, which returns 0
+        // This method relies on extcodesize/address.code.length, which returns 0
         // for contracts in construction, since the code is only stored at the end
         // of the constructor execution.
 
@@ -513,14 +513,14 @@ library Address {
 // OpenZeppelin Contracts v4.4.1 (interfaces/ISRC1271.sol)
 
 /**
- * @dev Interface of the SRC1271 standard signature validation msilod for
+ * @dev Interface of the SRC1271 standard signature validation method for
  * contracts as defined in https://sips.sila.org/SIPS/sip-1271[SRC-1271].
  *
  * _Available since v4.1._
  */
 interface ISRC1271 {
     /**
-     * @dev Should return whsila the signature provided is valid for the provided data
+     * @dev Should return whether the signature provided is valid for the provided data
      * @param hash      Hash of the data to be signed
      * @param signature Signature byte array associated with _data
      */
@@ -577,7 +577,7 @@ library SignatureChecker {
  * The implementation of the domain separator was designed to be as efficient as possible while still properly updating
  * the chain id to protect against replay attacks on an eventual fork of the chain.
  *
- * NOTE: This contract implements the version of the encoding known as "v4", as implemented by the JSON RPC msilod
+ * NOTE: This contract implements the version of the encoding known as "v4", as implemented by the JSON RPC method
  * https://docs.metamask.io/guide/signing-data.html[`sil_signTypedDataV4` in MetaMask].
  *
  * _Available since v3.4._
@@ -645,7 +645,7 @@ abstract contract SIP712 {
      * @dev Given an already https://sips.sila.org/SIPS/sip-712#definition-of-hashstruct[hashed struct], this
      * function returns the hash of the fully encoded SIP712 message for this domain.
      *
-     * This hash can be used togsila with {ECDSA-recover} to obtain the signer of a message. For example:
+     * This hash can be used together with {ECDSA-recover} to obtain the signer of a message. For example:
      *
      * ```solidity
      * bytes32 digest = _hashTypedDataV4(keccak256(abi.encode(
@@ -721,7 +721,7 @@ library BitMaps {
     }
 
     /**
-     * @dev Returns whsila the bit at `index` is set.
+     * @dev Returns whether the bit at `index` is set.
      */
     function get(BitMap storage bitmap, uint256 index) internal view returns (bool) {
         uint256 bucket = index >> 8;

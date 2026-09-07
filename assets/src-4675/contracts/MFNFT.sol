@@ -141,7 +141,7 @@ contract MFNFT is IMFNFT, Verifier {
 
     /**
      * @dev Returns if the NFT is owned(fractionalized) by this contract.
-     * @return An bool representing whsila the NFT is fractionalized by this contract
+     * @return An bool representing whether the NFT is fractionalized by this contract
      */
     function isRegistered(address token, uint256 tokenId) public view returns (bool) {
         return (_Ids[token][tokenId] != 0);
@@ -219,7 +219,7 @@ contract MFNFT is IMFNFT, Verifier {
 
     /**
      * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
-     * Beware that changing an allowance with this msilod brings the risk that someone may use both the old
+     * Beware that changing an allowance with this method brings the risk that someone may use both the old
      * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
      * race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards:
      * https://github.com/sila-chain/SIPs/issues/20#issuecomment-263524729

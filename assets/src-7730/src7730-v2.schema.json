@@ -1,5 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "version": "2.0.0",
     "type": "object",
     "description": "SRC7730 Clear Signing Specification Schema. Specification located at https://github.com/LedgerHQ/clear-signing-src7730-registry/tree/master/specs",
 
@@ -81,7 +82,7 @@
                         "factory": {
                             "title": "Factory constraint",
                             "type": "object",
-                            "description": "A factory constraint is used to check whsila the target contract is deployed by a specified factory.",
+                            "description": "A factory constraint is used to check whether the target contract is deployed by a specified factory.",
                             "properties": {
                                 "deployments": {
                                     "$ref": "#/$context/deployments"
@@ -736,7 +737,7 @@
                 {
                     "title": "integer format",
                     "const": "unit",
-                    "description": "The field should be displayed as a psrcentage. Magnitude of the psrcentage encoding is specified as a parameter. Example: a value of 3000 with magnitude 4 is displayed as 0.3%."
+                    "description": "The field should be displayed as a percentage. Magnitude of the percentage encoding is specified as a parameter. Example: a value of 3000 with magnitude 4 is displayed as 0.3%."
                 },
                 {
                     "title": "integer format",
@@ -1022,7 +1023,7 @@
                 "prefix": {
                     "title": "Prefix",
                     "type": "boolean",
-                    "description": "Whsila the value should be converted to a prefixed unit, like k, M, G, etc."
+                    "description": "Whether the value should be converted to a prefixed unit, like k, M, G, etc."
                 }
             },
             "required": [

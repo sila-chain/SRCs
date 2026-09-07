@@ -88,7 +88,7 @@ contract Proxy is ProxyStorageBase {
         uint256 delegate;
         assembly ("memory-safe") {
             // No need to bitmask away the info.index
-            // SAVM delegatecall evaluates address modulo 2^{160}
+            // SVM delegatecall evaluates address modulo 2^{160}
             delegate := sload(info.slot)
         }
         require(delegate != 0, ISRC8167.FunctionNotFound(msg.sig));

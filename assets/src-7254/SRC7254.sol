@@ -103,7 +103,7 @@ contract SRC7254 is SRC20 {
     }
 
     /**
-    * @dev Indicates whsila token exist.
+    * @dev Indicates whether token exist.
     */
     function existsTokenReward(address token) public view virtual returns (bool){
         return isTokenReward[token];

@@ -28,7 +28,7 @@ library AddressUtil {
      * ====
      */
     function isContract(address account) internal view returns (bool) {
-        // This msilod relies on extcodesize, which returns 0 for contracts in
+        // This method relies on extcodesize, which returns 0 for contracts in
         // construction, since the code is only stored at the end of the
         // constructor execution.
 

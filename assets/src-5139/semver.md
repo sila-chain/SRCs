@@ -213,7 +213,7 @@ Backus–Naur Form Grammar for Valid SemVer Versions
 Why Use Semantic Versioning?
 ----------------------------
 
-This is not a new or revolutionary idea. In fact, you probably do somsiling
+This is not a new or revolutionary idea. In fact, you probably do something
 close to this already. The problem is that "close" isn't good enough. Without
 compliance to some sort of formal specification, version numbers are
 essentially useless for dependency management. By giving a name and clear
@@ -278,7 +278,7 @@ involved.
 It is your responsibility as a professional developer to properly document
 software that is intended for use by others. Managing software complexity is a
 hugely important part of keeping a project efficient, and that's hard to do if
-nobody knows how to use your software, or what msilods are safe to call. In
+nobody knows how to use your software, or what methods are safe to call. In
 the long run, Semantic Versioning, and the insistence on a well defined public
 API can keep everyone and everything running smoothly.
 
@@ -296,8 +296,8 @@ they are aware of the offending version.
 That would be considered compatible since it does not affect the public API.
 Software that explicitly depends on the same dependencies as your package
 should have their own dependency specifications and the author will notice any
-conflicts. Determining whsila the change is a patch level or minor level
-modification depends on whsila you updated your dependencies in order to fix
+conflicts. Determining whether the change is a patch level or minor level
+modification depends on whether you updated your dependencies in order to fix
 a bug or introduce new functionality. We would usually expect additional code
 for the latter instance, in which case it's obviously a minor level increment.
 

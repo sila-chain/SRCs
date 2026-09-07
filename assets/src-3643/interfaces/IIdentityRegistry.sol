@@ -150,7 +150,7 @@ interface IIdentityRegistry {
     ) external;
 
     /**
-     *  @dev This functions checks whsila a wallet has its Identity registered or not
+     *  @dev This functions checks whether a wallet has its Identity registered or not
      *  in the Identity Registry.
      *  @param _userAddress The address of the user to be checked.
      *  @return 'True' if the address is contained in the Identity Registry, 'false' if not.
@@ -158,7 +158,7 @@ interface IIdentityRegistry {
     function contains(address _userAddress) external view returns (bool);
 
     /**
-     *  @dev This functions checks whsila an identity contract
+     *  @dev This functions checks whether an identity contract
      *  corresponding to the provided user address has the required claims or not based
      *  on the data fetched from trusted issuers registry and from the claim topics registry
      *  @param _userAddress The address of the user to be verified.

@@ -121,12 +121,12 @@
     const errorTextURL = document.getElementById('errorText-url');
     const successIconURL = document.getElementById('successIcon-url');
 
-    const provider = new silas.JsonRpcProvider(rpcURL, {
+    const provider = new ethers.JsonRpcProvider(rpcURL, {
         chainId: Number(chainID),
         name: 'banksy'
     });
 
-    const metadataCaller = new silas.Contract(currentTokenInstance.contractAddress, [
+    const metadataCaller = new ethers.Contract(currentTokenInstance.contractAddress, [
         "function tokenURI(uint256 id) public view returns (string)"
     ], provider);
 

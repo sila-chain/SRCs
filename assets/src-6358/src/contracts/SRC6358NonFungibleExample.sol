@@ -79,7 +79,7 @@ contract SRC6358NonFungibleExample is Ownable, ISRC6358NonFungible, ISRC721, ISR
     mapping(bytes => uint256) omniverseBalances;
     // Delay-executing transactions
     DelayedTx[] delayedTxs;
-    // Account map from savm address to public key
+    // Account map from svm address to public key
     mapping(address => bytes) accountsMap;
 
     event OmniverseTokenTransfer(bytes from, bytes to, uint256 value);

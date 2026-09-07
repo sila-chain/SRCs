@@ -1,0 +1,5 @@
+[package]
+name = "src8262_shared"
+type = "lib"
+authors = ["DROO", "Bloo"]
+compiler_version = ">=1.0.0"

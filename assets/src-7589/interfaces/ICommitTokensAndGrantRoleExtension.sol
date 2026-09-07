@@ -11,7 +11,7 @@ interface ICommitTokensAndGrantRoleExtension {
     /// @param _role The role identifier.
     /// @param _grantee The recipient the role.
     /// @param _expirationDate The expiration date of the role.
-    /// @param _revocable Whsila the role is revocable or not.
+    /// @param _revocable Whether the role is revocable or not.
     /// @param _data Any additional data about the role.
     /// @return commitmentId_ The identifier of the commitment created.
     function commitTokensAndGrantRole(

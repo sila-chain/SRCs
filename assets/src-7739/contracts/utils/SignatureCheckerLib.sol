@@ -24,7 +24,7 @@ library SignatureCheckerLib {
     /*               SIGNATURE CHECKING OPERATIONS                */
     /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
-    /// @dev Returns whsila `signature` is valid for `signer` and `hash`.
+    /// @dev Returns whether `signature` is valid for `signer` and `hash`.
     /// If `signer` is a smart contract, the signature is validated with SRC1271.
     /// Otherwise, the signature is validated with `ECDSA.recover`.
     function isValidSignatureNowCalldata(address signer, bytes32 hash, bytes calldata signature)
@@ -93,9 +93,9 @@ library SignatureCheckerLib {
                 calldatacopy(add(m, 0x64), signature.offset, signature.length)
                 // forgefmt: disable-next-item
                 isValid := and(
-                    // Whsila the returndata is the magic value `0x1626ba7e` (left-aligned).
+                    // Whether the returndata is the magic value `0x1626ba7e` (left-aligned).
                     eq(mload(d), f),
-                    // Whsila the staticcall does not revert.
+                    // Whether the staticcall does not revert.
                     // This must be placed at the end of the `and` clause,
                     // as the arguments are evaluated from right to left.
                     staticcall(

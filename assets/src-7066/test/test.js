@@ -1,12 +1,12 @@
 const { expect } = require('chai');
-const { silas } = require('hardhat');
+const { ethers } = require('hardhat');
 
 describe('NewToken', function () {
 	let LOCK1 = 'lock(uint256)';
 	let LOCK2 = 'lock(uint256,address)';
 	async function deployMyNFTFixture() {
-		const [deployer, acc1, acc2, acc3] = await silas.getSigners();
-		const MyNFT = await silas.getContractFactory('MyNFT');
+		const [deployer, acc1, acc2, acc3] = await ethers.getSigners();
+		const MyNFT = await ethers.getContractFactory('MyNFT');
 		let myNFT = await MyNFT.deploy();
 		await myNFT.deployed();
 		await myNFT.connect(deployer).mint();
@@ -24,7 +24,7 @@ describe('NewToken', function () {
 	describe('lockerOf', () => {
 		it('Should return zero address for an unlocked token', async () => {
 			const { myNFT } = await deployMyNFTFixture();
-			expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+			expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 		});
 
 		it('Should revert as token does not exist', async () => {
@@ -95,8 +95,8 @@ describe('NewToken', function () {
 
 		it('Should allow token owner to lock, locker is zero-address', async () => {
 			const { myNFT, deployer } = await deployMyNFTFixture();
-			await myNFT.connect(deployer)[LOCK2](0, silas.constants.AddressZero);
-			expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+			await myNFT.connect(deployer)[LOCK2](0, ethers.constants.AddressZero);
+			expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 		});
 	});
 
@@ -118,14 +118,14 @@ describe('NewToken', function () {
 			const { myNFT, deployer } = await deployMyNFTFixture();
 			await myNFT.connect(deployer)[LOCK1](0);
 			await myNFT.connect(deployer).unlock(0);
-			expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+			expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 		});
 
 		it('Should allow approver to unlock', async () => {
 			const { myNFT, acc1 } = await approveUser1();
 			await myNFT.connect(acc1)[LOCK1](0);
 			await myNFT.connect(acc1).unlock(0);
-			expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+			expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 		});
 	});
 
@@ -156,7 +156,7 @@ describe('NewToken', function () {
 				.transferAndLock(0, deployer.address, acc1.address, false);
 			expect(await myNFT.ownerOf(0)).to.equal(acc1.address);
 			expect(await myNFT.lockerOf(0)).to.equal(deployer.address);
-			expect(await myNFT.getApproved(0)).to.equal(silas.constants.AddressZero);
+			expect(await myNFT.getApproved(0)).to.equal(ethers.constants.AddressZero);
 		});
 
 		it('Should transfer and lock, msg.sender - approved_user, setApproval - true', async () => {
@@ -176,7 +176,7 @@ describe('NewToken', function () {
 				.transferAndLock(0, deployer.address, acc1.address, false);
 			expect(await myNFT.ownerOf(0)).to.equal(acc1.address);
 			expect(await myNFT.lockerOf(0)).to.equal(acc1.address);
-			expect(await myNFT.getApproved(0)).to.equal(silas.constants.AddressZero);
+			expect(await myNFT.getApproved(0)).to.equal(ethers.constants.AddressZero);
 		});
 	});
 
@@ -227,7 +227,7 @@ describe('NewToken', function () {
 				await myNFT
 					.connect(deployer)
 					.transferFrom(deployer.address, acc1.address, 0);
-				expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+				expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 				expect(await myNFT.ownerOf(0)).to.equal(acc1.address);
 			});
 
@@ -236,7 +236,7 @@ describe('NewToken', function () {
 				await myNFT
 					.connect(acc1)
 					.transferFrom(deployer.address, acc1.address, 0);
-				expect(await myNFT.lockerOf(0)).to.equal(silas.constants.AddressZero);
+				expect(await myNFT.lockerOf(0)).to.equal(ethers.constants.AddressZero);
 				expect(await myNFT.ownerOf(0)).to.equal(acc1.address);
 			});
 		});

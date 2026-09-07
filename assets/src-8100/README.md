@@ -1,6 +1,6 @@
 # Representable Contract State - XML/JSON Rendering of Smart Contract State
 
-Standard interfaces that allow an SAVM  smart contract to define a static XML/JSON template
+Standard interfaces that allow an SVM  smart contract to define a static XML/JSON template
 with machine-readable bindings to its state and view functions.
 
 ## Interfaces

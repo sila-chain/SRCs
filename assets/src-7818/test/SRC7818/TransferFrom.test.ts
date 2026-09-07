@@ -8,7 +8,7 @@ import {
   EVENT_APPROVAL,
   EVENT_TRANSFER,
 } from "../constant.test";
-import { ZeroAddress } from "silas";
+import { ZeroAddress } from "ethers";
 import { network } from "hardhat";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
 

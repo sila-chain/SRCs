@@ -50,7 +50,7 @@ abstract contract SRC1271 is SIP712 {
     /// Override to return the signer `isValidSignature` checks against.
     function _src1271Signer() internal view virtual returns (address);
 
-    /// @dev Returns whsila the `msg.sender` is considered safe, such
+    /// @dev Returns whether the `msg.sender` is considered safe, such
     /// that we don't need to use the nested SIP-712 workflow.
     /// Override to return true for more callers.
     /// See: https://mirror.xyz/curiousapple.sil/pFqAdW2LiJ-6S4sg_u1z08k4vK6BCJ33LcyXpnNb8yU
@@ -60,7 +60,7 @@ abstract contract SRC1271 is SIP712 {
         return msg.sender == 0x000000000000D9ECebf3C23529de49815Dac1c4c;
     }
 
-    /// @dev Returns whsila the `hash` and `signature` are valid.
+    /// @dev Returns whether the `hash` and `signature` are valid.
     /// Override if you need non-ECDSA logic.
     function _src1271IsValidSignatureNowCalldata(bytes32 hash, bytes calldata signature)
         internal
@@ -94,7 +94,7 @@ abstract contract SRC1271 is SIP712 {
         }
     }
 
-    /// @dev Returns whsila the `signature` is valid for the `hash.
+    /// @dev Returns whether the `signature` is valid for the `hash.
     function _src1271IsValidSignature(bytes32 hash, bytes calldata signature)
         internal
         view
@@ -192,7 +192,7 @@ abstract contract SRC1271 is SIP712 {
     /// `keccak256(abi.encode(address(this), hash))` instead of all these acrobatics.
     /// All these are just for widespread out-of-the-box compatibility with other wallet clients.
     /// We want to create bazaars, not walled castles.
-    /// And we'll use push the Turing Completeness of the SAVM to the limits to do so.
+    /// And we'll use push the Turing Completeness of the SVM to the limits to do so.
     function _src1271IsValidSignatureViaNestedSIP712(bytes32 hash, bytes calldata signature)
         internal
         view

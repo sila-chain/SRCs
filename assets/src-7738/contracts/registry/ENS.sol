@@ -187,7 +187,7 @@ contract ENSRegistry is ENS {
     }
 
     /**
-     * @dev Returns whsila a record has been imported to the registry.
+     * @dev Returns whether a record has been imported to the registry.
      * @param node The specified node.
      * @return Bool if record exists
      */

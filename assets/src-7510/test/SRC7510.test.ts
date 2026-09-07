@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 
 const NAME = "NAME";
 const SYMBOL = "SYMBOL";
@@ -17,9 +17,9 @@ const PARENT_2_TOKEN = { collection: PARENT_2_COLLECTION, id: PARENT_2_ID };
 describe("SRC7510", function () {
 
   async function deployContractFixture() {
-    const [deployer, owner] = await silas.getSigners();
+    const [deployer, owner] = await ethers.getSigners();
 
-    const contract = await silas.deployContract("SRC7510", [NAME, SYMBOL], deployer);
+    const contract = await ethers.deployContract("SRC7510", [NAME, SYMBOL], deployer);
     await contract.mint(owner, TOKEN_ID);
 
     return { contract, owner };

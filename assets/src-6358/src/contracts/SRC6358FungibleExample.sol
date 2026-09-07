@@ -67,7 +67,7 @@ contract SRC6358FungibleExample is SRC20, Ownable, ISRC6358Fungible {
     mapping(bytes => uint256) omniverseBalances;
     // Delay-executing transactions
     DelayedTx[] delayedTxs;
-    // Account map from savm address to public key
+    // Account map from svm address to public key
     mapping(address => bytes) accountsMap;
 
     event OmniverseTokenTransfer(bytes from, bytes to, uint256 value);

@@ -36,7 +36,7 @@ library SparseMerkleTree {
      * @param merkleRootId The index of the root node.
      * @param maxDepth The maximum depth of the Merkle tree.
      * @param nodesCount The total number of nodes within the Merkle tree.
-     * @param customHasherSet Indicates whsila custom hash functions have been configured (true) or not (false).
+     * @param customHasherSet Indicates whether custom hash functions have been configured (true) or not (false).
      * @param hash2 A hash function accepting two arguments.
      * @param hash3 A hash function accepting three arguments.
      */
@@ -380,7 +380,7 @@ library SparseMerkleTree {
     }
 
     /**
-     * @dev The check for whsila the current depth exceeds the maximum depth is omitted for two reasons:
+     * @dev The check for whether the current depth exceeds the maximum depth is omitted for two reasons:
      * 1. The current depth may only surpass the maximum depth during the addition of a new leaf.
      * 2. As we navigate through middle nodes, the current depth is assured to remain below the maximum
      *    depth since the traversal must ultimately conclude at a leaf node.

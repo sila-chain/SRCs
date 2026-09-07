@@ -11,12 +11,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@nomiclabs/hardhat-silas": "^2.2.3",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-waffle": "^2.0.5",
     "@openzeppelin/hardhat-upgrades": "^1.25.3",
     "chai": "^4.3.7",
     "sila-waffle": "^3.4.4",
-    "silas": "^5.7.2",
+    "ethers": "^5.7.2",
     "hardhat": "^2.14.0",
     "typescript": "^4.9.5"
   },

@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/rugpullindex/SRC4973#readme",
   "dependencies": {
-    "silas": "5.7.2"
+    "ethers": "5.7.2"
   },
   "devDependencies": {
     "ava": "4.3.1"

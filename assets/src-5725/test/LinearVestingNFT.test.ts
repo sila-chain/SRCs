@@ -1,5 +1,5 @@
-import { silas } from 'hardhat'
-import { Signer } from 'silas'
+import { ethers } from 'hardhat'
+import { Signer } from 'ethers'
 import { expect } from 'chai'
 import { time } from '@nomicfoundation/hardhat-network-helpers'
 // typechain
@@ -25,13 +25,13 @@ describe('LinearVestingNFT', function () {
   let unlockTime: number
 
   beforeEach(async function () {
-    const LinearVestingNFT = (await silas.getContractFactory(
+    const LinearVestingNFT = (await ethers.getContractFactory(
       'LinearVestingNFT'
     )) as LinearVestingNFT__factory
     linearVestingNFT = await LinearVestingNFT.deploy('LinearVestingNFT', 'TLV')
     await linearVestingNFT.deployed()
 
-    const SRC20Mock = (await silas.getContractFactory(
+    const SRC20Mock = (await ethers.getContractFactory(
       'SRC20Mock'
     )) as SRC20Mock__factory
     mockToken = await SRC20Mock.deploy(
@@ -43,7 +43,7 @@ describe('LinearVestingNFT', function () {
     await mockToken.deployed()
     await mockToken.approve(linearVestingNFT.address, '1000000000000000000000')
 
-    accounts = await silas.getSigners()
+    accounts = await ethers.getSigners()
     receiverAccount = await accounts[1].getAddress()
     unlockTime = await createVestingNft(
       linearVestingNFT,
@@ -61,7 +61,7 @@ describe('LinearVestingNFT', function () {
   })
 
   it('Reverts when creating to account 0', async function () {
-    const latestBlock = await silas.provider.getBlock('latest')
+    const latestBlock = await ethers.provider.getBlock('latest')
     await expect(
       linearVestingNFT.create(
         '0x0000000000000000000000000000000000000000',
@@ -88,7 +88,7 @@ describe('LinearVestingNFT', function () {
   })
 
   it('Reverts when duration is less than cliff', async function () {
-    const latestBlock = await silas.provider.getBlock('latest')
+    const latestBlock = await ethers.provider.getBlock('latest')
     await expect(
       linearVestingNFT.create(
         receiverAccount,
@@ -107,10 +107,10 @@ async function createVestingNft(
   receiverAccount: string,
   mockToken: SRC20Mock
 ) {
-  const latestBlock = await silas.provider.getBlock('latest')
+  const latestBlock = await ethers.provider.getBlock('latest')
   const unlockTime =
     latestBlock.timestamp + testValues.lockTime + testValues.buffer
-  const txRecsipt = await linearVestingNFT.create(
+  const txReceipt = await linearVestingNFT.create(
     receiverAccount,
     testValues.payout,
     latestBlock.timestamp + testValues.buffer,
@@ -118,6 +118,6 @@ async function createVestingNft(
     0,
     mockToken.address
   )
-  await txRecsipt.wait()
+  await txReceipt.wait()
   return unlockTime
 }

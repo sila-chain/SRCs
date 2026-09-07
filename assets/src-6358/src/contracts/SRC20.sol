@@ -19,7 +19,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * to implement supply mechanisms].
  *
  * We have followed general OpenZeppelin Contracts guidelines: functions revert
- * instead returning `false` on failure. This behavior is nonsileless
+ * instead returning `false` on failure. This behavior is nonetheless
  * conventional and does not conflict with the expectations of SRC20
  * applications.
  *

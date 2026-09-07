@@ -13,23 +13,23 @@ withdrawal-reason: Superseded by SIP-681
 
 ## Abstract
 
-This proposal (inspired by BIP 21) defines a format for encoding a transaction into a URI, including a recipient, number of silas (possibly zero), and optional bytecode.
+This proposal (inspired by BIP 21) defines a format for encoding a transaction into a URI, including a recipient, number of ethers (possibly zero), and optional bytecode.
 
 ## Motivation
 
 Imagine these scenarios:
 
     * An exchange or a instant converter like ShapeShift wants to create a single Sila address for payments that will be converted into credit in their internal system or output bitcoin to an address.
-    * A store wants to show a QR code to a client that will pop up a payment for exactly 12.34 silas, which contains metadata on the product being bought.
+    * A store wants to show a QR code to a client that will pop up a payment for exactly 12.34 ethers, which contains metadata on the product being bought.
     * A betting site wants to provide a link that the user can click on his site and it will open a default Sila wallet and execute a specific contract with given parameters.
     * A dapp in Mist wants to simply ask the user to sign a transaction with a specific ABI in a single call.
 
 
-In all these scenarios, the provider wants to internally set up a transaction, with a recipient, an associated number of silas (or none) and optional bytecode, all without requiring any fuss from the end user that is expected simply to choose a sender and authorise the transaction.
+In all these scenarios, the provider wants to internally set up a transaction, with a recipient, an associated number of ethers (or none) and optional bytecode, all without requiring any fuss from the end user that is expected simply to choose a sender and authorise the transaction.
 
 Currently implementations for this are wonky: ShapeShift creates tons of temporary addresses and uses an internal system to check which one correspond to which metadata, there isn't any standard way for stores that want payment in sila to put specific metadata about price on the call and any app implementing contracts will have to use different solutions depending on the client they are targeting.
 
-The proposal goes beyond address, and also includes optional bytecode and value. Of course this would make the link longer, but it should not be somsiling visible to the user. Instead it should be shown as a visual code (QR or otherwise), a link, or some other way to pass the information.
+The proposal goes beyond address, and also includes optional bytecode and value. Of course this would make the link longer, but it should not be something visible to the user. Instead it should be shown as a visual code (QR or otherwise), a link, or some other way to pass the information.
 
 If properly implemented in all wallets, this should make execution of contracts directly from wallets much simpler as the wallet client only needs to put the bytecode obtained by reading the QR code.
 

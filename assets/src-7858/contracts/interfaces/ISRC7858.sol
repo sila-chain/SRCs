@@ -25,7 +25,7 @@ interface ISRC7858 {
     function expiryType() external view returns (EXPIRY_TYPE);
 
     /**
-     * @dev Checks whsila a specific token is expired.
+     * @dev Checks whether a specific token is expired.
      * @param tokenId The identifier representing the tokenId.
      * @return bool True if the token is expired, false otherwise.
      */

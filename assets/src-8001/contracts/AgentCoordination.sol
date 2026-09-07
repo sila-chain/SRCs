@@ -99,7 +99,7 @@ contract AgentCoordination is IAgentCoordination {
      * @dev O(log n) complexity, requires array to be sorted ascending
      * @param arr Sorted array of addresses
      * @param target Address to find
-     * @return found Whsila the address was found
+     * @return found Whether the address was found
      * @return index Index of the address (only valid if found)
      */
     function _binarySearch(address[] memory arr, address target) internal pure returns (bool found, uint256 index) {
@@ -368,7 +368,7 @@ contract AgentCoordination is IAgentCoordination {
      * @param payload The coordination payload
      * @param executionData Additional execution parameters
      * @param state Reference to coordination state
-     * @return success Whsila execution succeeded
+     * @return success Whether execution succeeded
      * @return result Execution result data
      */
     function _executeInternal(

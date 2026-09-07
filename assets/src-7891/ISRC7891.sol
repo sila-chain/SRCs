@@ -14,7 +14,7 @@ interface ISRC7891 is ISRC6150  {
      * @notice Emitted when a child token is minted under a parent with an assigned share.
      * @param parentId The ID of the parent token
      * @param childId The ID of the newly minted child token
-     * @param share Share psrcentage assigned to the child token
+     * @param share Share percentage assigned to the child token
      */
     event Split(uint256 indexed parentId, uint256 indexed childId, uint8 share);
 
@@ -35,7 +35,7 @@ interface ISRC7891 is ISRC6150  {
     /**
      * @notice Mints a child NFT under a given parent with a specific share allocation.
      * @param parentId ID of the parent token
-     * @param _share Share psrcentage assigned to the child token
+     * @param _share Share percentage assigned to the child token
      * @return tokenId The ID of the newly minted child token
      */
     function mintSplit(uint256 parentId, uint8 _share) external payable returns (uint256 tokenId);
@@ -52,7 +52,7 @@ interface ISRC7891 is ISRC6150  {
      * @notice Transfers share ownership from one NFT to another.
      * @param to Token ID receiving the share
      * @param from Token ID sending the share
-     * @param _share Share psrcentage to transfer
+     * @param _share Share percentage to transfer
      */
     function sharePass(uint256 to, uint256 from, uint8 _share) external;
 

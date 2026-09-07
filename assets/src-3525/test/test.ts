@@ -1,8 +1,8 @@
-import { BigNumber } from "silas";
+import { BigNumber } from "ethers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { SRC3525Example } from "../typechain";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 const ZERO_TOKEN_ID = 0;
@@ -30,11 +30,11 @@ const slotDetails = {
 
 describe("SRC3525", function () {
   before(async () => {
-    const signers = await silas.getSigners();
+    const signers = await ethers.getSigners();
     owner = signers[0];
     approval = signers[1];
     to = signers[2];
-    const SRC3525Factory = await silas.getContractFactory("SRC3525Example");
+    const SRC3525Factory = await ethers.getContractFactory("SRC3525Example");
     token = (await SRC3525Factory.deploy(
       "TST",
       "Test 3525",
@@ -68,11 +68,11 @@ describe("SRC3525", function () {
   });
 
   beforeEach(async function () {
-    snapshotId = await silas.provider.send("savm_snapshot", []);
+    snapshotId = await ethers.provider.send("svm_snapshot", []);
   });
 
   afterEach(async function () {
-    await silas.provider.send("savm_revert", [snapshotId]);
+    await ethers.provider.send("svm_revert", [snapshotId]);
   });
 
   describe("SRC3525 Example", function () {

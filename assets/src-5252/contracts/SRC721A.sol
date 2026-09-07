@@ -52,7 +52,7 @@ contract SRC721A is Context, SRC165, ISRC721, ISRC721Metadata {
         address addr;
         // Keeps track of the start time of ownership with minimal overhead for tokenomics.
         uint64 startTimestamp;
-        // Whsila the token has been burned.
+        // Whether the token has been burned.
         bool burned;
     }
 
@@ -331,7 +331,7 @@ contract SRC721A is Context, SRC165, ISRC721, ISRC721Metadata {
     }
 
     /**
-     * @dev Returns whsila `tokenId` exists.
+     * @dev Returns whether `tokenId` exists.
      *
      * Tokens can be managed by their owner or approved accounts via {approve} or {setApprovalForAll}.
      *
@@ -548,7 +548,7 @@ contract SRC721A is Context, SRC165, ISRC721, ISRC721Metadata {
      * @param to target address that will receive the tokens
      * @param tokenId uint256 ID of the token to be transferred
      * @param _data bytes optional data to send along with the call
-     * @return bool whsila the call correctly returned the expected magic value
+     * @return bool whether the call correctly returned the expected magic value
      */
     function _checkContractOnSRC721Received(
         address from,

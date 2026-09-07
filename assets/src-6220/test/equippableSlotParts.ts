@@ -1,8 +1,8 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { BigNumber } from "silas";
-import { silas } from "hardhat";
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 import {
   CatalogMock,
   EquippableTokenMock,
@@ -67,7 +67,7 @@ async function setupContextForSlots(
   weaponGem: EquippableTokenMock,
   background: EquippableTokenMock
 ) {
-  [, ...addrs] = await silas.getSigners();
+  [, ...addrs] = await ethers.getSigners();
 
   await setupCatalog();
 
@@ -202,7 +202,7 @@ async function setupContextForSlots(
       await weapon.addEquippableAssetEntry(
         weaponAssetsFull[i],
         0, // Not meant to equip
-        silas.constants.AddressZero, // Not meant to equip
+        ethers.constants.AddressZero, // Not meant to equip
         `ipfs:weapon/full/${weaponAssetsFull[i]}`,
         []
       );
@@ -251,7 +251,7 @@ async function setupContextForSlots(
     await weaponGem.addEquippableAssetEntry(
       weaponGemAssetFull,
       0, // Not meant to equip
-      silas.constants.AddressZero, // Not meant to equip
+      ethers.constants.AddressZero, // Not meant to equip
       "ipfs:weagponGem/full/",
       []
     );
@@ -310,9 +310,9 @@ async function slotsFixture() {
   const catalogSymbol = "SSB";
   const catalogType = "mixed";
 
-  const catalogFactory = await silas.getContractFactory("CatalogMock");
-  const equipFactory = await silas.getContractFactory("EquippableTokenMock");
-  const viewFactory = await silas.getContractFactory("EquipRenderUtils");
+  const catalogFactory = await ethers.getContractFactory("CatalogMock");
+  const equipFactory = await ethers.getContractFactory("EquippableTokenMock");
+  const viewFactory = await ethers.getContractFactory("EquipRenderUtils");
 
   // View
   const view = <EquipRenderUtils>await viewFactory.deploy();
@@ -363,7 +363,7 @@ describe("EquippableTokenMock with Slots", async () => {
   let addrs: SignerWithAddress[];
 
   beforeEach(async function () {
-    [, ...addrs] = await silas.getSigners();
+    [, ...addrs] = await ethers.getSigners();
     ({ catalog, soldier, weapon, weaponGem, background, view } =
       await loadFixture(slotsFixture));
   });
@@ -973,7 +973,7 @@ describe("EquippableTokenMock with Slots", async () => {
           bn(partIdForBackground), // partId
           bn(0), // childAssetId
           0, // z
-          silas.constants.AddressZero, // childAddress
+          ethers.constants.AddressZero, // childAddress
           bn(0), // childTokenId
           "", // childAssetMetadata
           "noBackground.png", // partMetadata
@@ -1046,7 +1046,7 @@ describe("EquippableTokenMock with Slots", async () => {
     // If a slot has nothing equipped, it returns an empty equip:
     const expectedEquips = [
       [bn(soldierResId), bn(weaponResId), bn(weaponsIds[0]), weapon.address],
-      [bn(0), bn(0), bn(0), silas.constants.AddressZero],
+      [bn(0), bn(0), bn(0), ethers.constants.AddressZero],
     ];
     expect(
       await view.getEquipped(soldier.address, snakeSoldiersIds[0], soldierResId)
@@ -1083,8 +1083,8 @@ describe("EquippableTokenMock with Slots", async () => {
     const expectedSlots = [bn(partIdForWeapon), bn(partIdForBackground)];
     // If a slot has nothing equipped, it returns an empty equip:
     const expectedEquips = [
-      [bn(0), bn(0), bn(0), silas.constants.AddressZero],
-      [bn(0), bn(0), bn(0), silas.constants.AddressZero],
+      [bn(0), bn(0), bn(0), ethers.constants.AddressZero],
+      [bn(0), bn(0), bn(0), ethers.constants.AddressZero],
     ];
     expect(
       await view.getEquipped(soldier.address, snakeSoldiersIds[0], soldierResId)

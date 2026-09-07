@@ -8,7 +8,7 @@ describe("SRC721Lockable", function () {
   let owner, holder, holder2;
 
   before(async function () {
-    [owner, holder, holder2] = await silas.getSigners();
+    [owner, holder, holder2] = await ethers.getSigners();
   });
 
   beforeEach(async function () {

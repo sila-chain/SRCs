@@ -1,5 +1,5 @@
-import { silas } from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { ethers } from "hardhat";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { SRC7231Mock } from "../typechain-types";
 
 import { expect } from "chai";
@@ -32,9 +32,9 @@ describe("SRC7231", async () => {
     
   beforeEach(async () => {
 
-    [owner, ...others] = await silas.getSigners();
+    [owner, ...others] = await ethers.getSigners();
 
-    const SRC7231Factory = await silas.getContractFactory("SRC7231Mock");
+    const SRC7231Factory = await ethers.getContractFactory("SRC7231Mock");
     SRC7231Mock = await SRC7231Factory.deploy(name, symbol,);
     await SRC7231Mock.deployed();
 
@@ -85,13 +85,13 @@ describe("SRC7231", async () => {
 
     it("Normal case", async function () {
 
-      const dataHash = silas.utils.keccak256(
-          silas.utils.toUtf8Bytes(JSON.stringify(MultiUserIDs))
+      const dataHash = ethers.utils.keccak256(
+          ethers.utils.toUtf8Bytes(JSON.stringify(MultiUserIDs))
       );
-      const dataHashBin = silas.utils.arrayify(dataHash);
-      const silHash = silas.utils.hashMessage(dataHashBin);
+      const dataHashBin = ethers.utils.arrayify(dataHash);
+      const silHash = ethers.utils.hashMessage(dataHashBin);
 
-      // const wallet = new silas.Wallet(process.env.PK);
+      // const wallet = new ethers.Wallet(process.env.PK);
       const signature = await owner.signMessage(dataHashBin);
 
       await SRC7231Mock.connect(owner).setIdentitiesRoot(

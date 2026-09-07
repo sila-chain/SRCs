@@ -36,7 +36,7 @@ contract CharityToken is SRC20Charity{
     
     //Test support for SRC-Charity
     bytes4 private constant _INTERFACE_ID_SRC_CHARITY = type(ISRC20charity).interfaceId; // 0x557512b6
-    //bytes4 private constant _INTERFACE_ID_SRCcharity =type(ISRC165).interfaceId; // SRC165S
+    //bytes4 private constant _INTERFACE_ID_ERCcharity =type(ISRC165).interfaceId; // SRC165S
     function checkInterface(address testContract) external view returns (bool) {
     (bool success) = ISRC165(testContract).supportsInterface(_INTERFACE_ID_SRC_CHARITY);
     return success;

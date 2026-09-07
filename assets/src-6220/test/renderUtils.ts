@@ -1,8 +1,8 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { BigNumber } from "silas";
-import { silas } from "hardhat";
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 import {
   EquippableTokenMock,
   EquipRenderUtils,
@@ -14,11 +14,11 @@ function bn(x: number): BigNumber {
 }
 
 async function assetsFixture() {
-  const equipFactory = await silas.getContractFactory("EquippableTokenMock");
-  const renderUtilsFactory = await silas.getContractFactory(
+  const equipFactory = await ethers.getContractFactory("EquippableTokenMock");
+  const renderUtilsFactory = await ethers.getContractFactory(
     "MultiAssetRenderUtils"
   );
-  const renderUtilsEquipFactory = await silas.getContractFactory(
+  const renderUtilsEquipFactory = await ethers.getContractFactory(
     "EquipRenderUtils"
   );
 
@@ -54,7 +54,7 @@ describe("Render Utils", async function () {
       assetsFixture
     ));
 
-    const signers = await silas.getSigners();
+    const signers = await ethers.getSigners();
     owner = signers[0];
     someCatalog = signers[1];
     tokenId = 1;
@@ -63,7 +63,7 @@ describe("Render Utils", async function () {
     await equip.addEquippableAssetEntry(
       resId,
       0,
-      silas.constants.AddressZero,
+      ethers.constants.AddressZero,
       "ipfs://res1.jpg",
       []
     );
@@ -77,7 +77,7 @@ describe("Render Utils", async function () {
     await equip.addEquippableAssetEntry(
       resId3,
       0,
-      silas.constants.AddressZero,
+      ethers.constants.AddressZero,
       "ipfs://res3.jpg",
       []
     );
@@ -141,7 +141,7 @@ describe("Render Utils", async function () {
       expect(
         await renderUtilsEquip.getExtendedActiveAssets(equip.address, tokenId)
       ).to.eql([
-        [resId, bn(0), 10, silas.constants.AddressZero, "ipfs://res1.jpg", []],
+        [resId, bn(0), 10, ethers.constants.AddressZero, "ipfs://res1.jpg", []],
         [
           resId2,
           bn(1),
@@ -171,7 +171,7 @@ describe("Render Utils", async function () {
           bn(0),
           bn(1),
           resId,
-          silas.constants.AddressZero,
+          ethers.constants.AddressZero,
           "ipfs://res3.jpg",
           [],
         ],

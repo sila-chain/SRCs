@@ -1,21 +1,21 @@
-// A fully runnalbe version can be found in https://github.com/srcref/srcref-contracts/tree/869843f23dc4da793f0d9d018ed92e3950da8f75
+// A fully runnalbe version can be found in https://github.com/ercref/ercref-contracts/tree/869843f23dc4da793f0d9d018ed92e3950da8f75
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { hexlify } from "silas/lib/utils";
-import { silas } from "hardhat";
+import { hexlify } from "ethers/lib/utils";
+import { ethers } from "hardhat";
 
 describe("ProposalRegistry", function () {
     async function deployFixture() {
         // Contracts are deployed using the first signer/account by default
-        const [owner, otherAccount] = await silas.getSigners();
+        const [owner, otherAccount] = await ethers.getSigners();
 
-        const ProposalRegistry = await silas.getContractFactory("ProposalRegistry");
+        const ProposalRegistry = await ethers.getContractFactory("ProposalRegistry");
         const contract = await ProposalRegistry.deploy();
 
-        const SRC721ForTesting = await silas.getContractFactory("SRC721ForTesting");
+        const SRC721ForTesting = await ethers.getContractFactory("SRC721ForTesting");
         const src721 = await SRC721ForTesting.deploy();
 
-        const SimpleForwarder = await silas.getContractFactory("SimpleForwarder");
+        const SimpleForwarder = await ethers.getContractFactory("SimpleForwarder");
         const forwarder = await SimpleForwarder.deploy();
         return { contract, src721, forwarder, owner, otherAccount };
     }
@@ -101,7 +101,7 @@ describe("ProposalRegistry", function () {
             const addresses = [];
 
             for (let i = 0 ; i < numOfMint; i++) {
-                addresses.push(owner.address);// addresses.push(hexlify(silas.utils.randomBytes(20)));
+                addresses.push(owner.address);// addresses.push(hexlify(ethers.utils.randomBytes(20)));
                 tokenIds.push(i);
             }
             const tx = await src721.connect(owner).batchMint(addresses, tokenIds);
@@ -117,7 +117,7 @@ describe("ProposalRegistry", function () {
             const addresses = [];
 
             for (let i = 0 ; i < numOfMint; i++) {
-                addresses.push(hexlify(silas.utils.randomBytes(20)));
+                addresses.push(hexlify(ethers.utils.randomBytes(20)));
                 tokenIds.push(i);
             }
             const tx = await src721.connect(owner).batchMint(addresses, tokenIds);
@@ -134,7 +134,7 @@ describe("ProposalRegistry", function () {
             const addresses = [];
 
             for (let i = 0 ; i < numOfMint; i++) {
-                addresses.push(owner.address);// addresses.push(hexlify(silas.utils.randomBytes(20)));
+                addresses.push(owner.address);// addresses.push(hexlify(ethers.utils.randomBytes(20)));
                 tokenIds.push(i);
             }
             const tx = await src721.connect(owner).batchSafeMint(addresses, tokenIds);
@@ -150,7 +150,7 @@ describe("ProposalRegistry", function () {
             const addresses = [];
 
             for (let i = 0 ; i < numOfMint; i++) {
-                addresses.push(hexlify(silas.utils.randomBytes(20)));
+                addresses.push(hexlify(ethers.utils.randomBytes(20)));
                 tokenIds.push(i);
             }
             const tx = await src721.connect(owner).batchSafeMint(addresses, tokenIds);

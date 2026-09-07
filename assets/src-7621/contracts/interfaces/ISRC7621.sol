@@ -91,13 +91,13 @@ interface ISRC7621 {
     /// @return weight The target weight in basis points.
     function getWeight(address token) external view returns (uint256 weight);
 
-    /// @notice Returns whsila an address is a current constituent.
+    /// @notice Returns whether an address is a current constituent.
     /// @param token The token address to check.
     /// @return True if `token` is a constituent.
     function isConstituent(address token) external view returns (bool);
 
     /// @notice Returns the total basket value in the implementation's accounting unit.
-    /// @dev The accounting unit and valuation msilod are implementation-defined
+    /// @dev The accounting unit and valuation method are implementation-defined
     ///      but MUST be deterministic and consistent with `previewContribute`.
     ///      The returned value is only meaningful within this implementation's
     ///      accounting model and MUST NOT be assumed comparable across

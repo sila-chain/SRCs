@@ -1,6 +1,6 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { createHash } from 'node:crypto';
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { float } from "hardhat/internal/core/params/argumentTypes";
@@ -18,7 +18,7 @@ describe("SRC6956: Asset-Bound NFT --- Full", function () {
   // Besides owner there's user, minter and burner with appropriate roles.
   async function deployAbNftFixture() {
     // Contracts are deployed using the first signer/account by default
-    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await silas.getSigners();
+    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await ethers.getSigners();
 
     return actuallyDeploy(10, AttestedTransferLimitUpdatePolicy.FLEXIBLE);
   }
@@ -39,9 +39,9 @@ describe("SRC6956: Asset-Bound NFT --- Full", function () {
   }
 
   async function actuallyDeploy(attestationLimitPerAnchor: number, limitUpdatePolicy: AttestedTransferLimitUpdatePolicy) {
-    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await silas.getSigners();
+    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await ethers.getSigners();
 
-    const AbNftContract = await silas.getContractFactory("SRC6956Full");
+    const AbNftContract = await ethers.getContractFactory("SRC6956Full");
 
     const abnftContract = await AbNftContract.connect(owner).deploy("Asset-Bound NFT test", "ABNFT", limitUpdatePolicy);
     await abnftContract.connect(owner).updateMaintainer(maintainer.address, true);

@@ -102,7 +102,7 @@ interface ISRC5727 is ISRC3525, ISRC5192, ISRC5484, ISRC4906 {
      * @dev MUST revert if the `tokenId` does not exist.
      * @param tokenId The token id
      * @param data The additional data used to verify the token
-     * @return A boolean indicating whsila the token is successfully verified
+     * @return A boolean indicating whether the token is successfully verified
      */
     function verify(
         uint256 tokenId,

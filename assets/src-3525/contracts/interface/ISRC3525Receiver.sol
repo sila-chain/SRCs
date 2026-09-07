@@ -8,7 +8,7 @@ pragma solidity ^0.8.0;
  */
 interface ISRC3525Receiver {
     /**
-     * @notice Handle the recsipt of an SRC3525 token value.
+     * @notice Handle the receipt of an SRC3525 token value.
      * @dev An SRC3525 smart contract MUST call this function on the recipient contract after a 
      *  value transfer (i.e. `safeTransferFrom(uint256,uint256,uint256,bytes)`).
      *  MUST return 0x009ce20b (i.e. `bytes4(keccak256('onSRC3525Received(address,uint256,uint256,

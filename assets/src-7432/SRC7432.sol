@@ -224,7 +224,7 @@ contract SRC7432 is ISRC7432 {
         revert('NftRolesRegistryVault: role does not exist or sender is not approved');
     }
 
-    /// @notice Checks whsila an NFT has at least one non-revocable role.
+    /// @notice Checks whether an NFT has at least one non-revocable role.
     /// @param _tokenAddress The token address.
     /// @param _tokenId The token identifier.
     /// @return true if the NFT is locked.

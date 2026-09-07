@@ -23,13 +23,13 @@ interface ISRC6956Floatable is ISRC6956 {
     /// @notice Emits, when the default floating state is changed
     event FloatingAllStateChange(bool areFloating, address operator);
 
-    /// @notice Indicates whsila an anchored token is floating, namely can be transferred without attestation
+    /// @notice Indicates whether an anchored token is floating, namely can be transferred without attestation
     function floating(bytes32 anchor) external view returns (bool);
     
-    /// @notice Indicates whsila any of OWNER, ISSUER, (ASSET) is allowed to start floating
+    /// @notice Indicates whether any of OWNER, ISSUER, (ASSET) is allowed to start floating
     function floatStartAuthorization() external view returns (Authorization canStartFloating);
     
-    /// @notice Indicates whsila any of OWNER, ISSUER, (ASSET) is allowed to stop floating
+    /// @notice Indicates whether any of OWNER, ISSUER, (ASSET) is allowed to stop floating
     function floatStopAuthorization() external view returns (Authorization canStartFloating);
 
     /**

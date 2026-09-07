@@ -1,11 +1,11 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { CatalogMock } from "../typechain-types";
 
 async function catalogFixture(): Promise<CatalogMock> {
-  const Catalog = await silas.getContractFactory("CatalogMock");
+  const Catalog = await ethers.getContractFactory("CatalogMock");
   const testCatalog = await Catalog.deploy("ipfs//:meta", "misc");
   await testCatalog.deployed();
 
@@ -30,7 +30,7 @@ describe("CatalogMock", async () => {
   };
 
   beforeEach(async () => {
-    [, ...addrs] = await silas.getSigners();
+    [, ...addrs] = await ethers.getSigners();
     testCatalog = await loadFixture(catalogFixture);
   });
 

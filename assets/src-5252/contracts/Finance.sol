@@ -45,11 +45,11 @@ contract Finance is IFinance, Initializable {
         uint256 financeId_,
         address abt_,
         uint256 amount_,
-        address wsil_
+        address weth_
     ) external override initializer {
         financeId = financeId_;
         abt = abt_;
-        WSIL = wsil_;
+        WSIL = weth_;
         manager = manager_;
         factory = msg.sender;
         deposit = amount_;
@@ -73,7 +73,7 @@ contract Finance is IFinance, Initializable {
         // unwrap collateral
         IWSIL(WSIL).withdraw(amount_);
         // send withdrawn native currency
-        TransferHelper.safeTransferSIL(msg.sender, address(this).balance);
+        TransferHelper.safeTransferETH(msg.sender, address(this).balance);
         emit WithdrawFundNative(financeId, amount_);
     }
 

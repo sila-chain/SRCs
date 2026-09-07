@@ -1,7 +1,7 @@
-import "@nomiclabs/hardhat-silas";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import "@nomiclabs/hardhat-ethers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { SIP5058Mock } from "typechain-types";
 
 describe("SRC5058 contract", function() {
@@ -10,9 +10,9 @@ describe("SRC5058 contract", function() {
   let SIP5058: SIP5058Mock;
   
   beforeEach(async () => {
-    [owner, alice] = await silas.getSigners();
+    [owner, alice] = await ethers.getSigners();
     
-    const SRC5058Factory = await silas.getContractFactory("SIP5058Mock");
+    const SRC5058Factory = await ethers.getContractFactory("SIP5058Mock");
     
     SIP5058 = await SRC5058Factory.deploy("SRC5058Mock", "SRC5058");
   });
@@ -24,7 +24,7 @@ describe("SRC5058 contract", function() {
   
   it("lockMint works", async function() {
     const NFTId = 0;
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await SIP5058.lockMint(alice.address, NFTId, block + 2);
     
     expect(await SIP5058.lockExpiredTime(NFTId)).eq(block + 2);
@@ -34,7 +34,7 @@ describe("SRC5058 contract", function() {
   
   it("Can not transfer when token is locked", async function() {
     const NFTId = 0;
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await SIP5058.lockMint(owner.address, NFTId, block + 3);
     
     expect(await SIP5058.isLocked(NFTId)).eq(true);
@@ -44,7 +44,7 @@ describe("SRC5058 contract", function() {
     );
     
     // can transfer when token is unlocked
-    await silas.provider.send("savm_mine", []);
+    await ethers.provider.send("svm_mine", []);
     
     expect(await SIP5058.isLocked(NFTId)).eq(false);
     await SIP5058.transferFrom(owner.address, alice.address, NFTId);
@@ -53,18 +53,18 @@ describe("SRC5058 contract", function() {
   
   it("isLocked works", async function() {
     const NFTId = 0;
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await SIP5058.lockMint(owner.address, NFTId, block + 2);
     
     // isLocked works
     expect(await SIP5058.isLocked(NFTId)).eq(true);
-    await silas.provider.send("savm_mine", []);
+    await ethers.provider.send("svm_mine", []);
     expect(await SIP5058.isLocked(NFTId)).eq(false);
   });
   
   it("lock works", async function() {
     const NFTId = 0;
-    let block = await silas.provider.getBlockNumber();
+    let block = await ethers.provider.getBlockNumber();
     await SIP5058.lockMint(owner.address, NFTId, block + 3);
     
     expect(await SIP5058.isLocked(NFTId)).eq(true);
@@ -72,14 +72,14 @@ describe("SRC5058 contract", function() {
       "SRC5058: token is locked",
     );
     
-    await silas.provider.send("savm_mine", []);
+    await ethers.provider.send("svm_mine", []);
     expect(await SIP5058.isLocked(NFTId)).eq(false);
     await SIP5058.lock(NFTId, block + 5);
   });
   
   it("unlock works with lockMint", async function() {
     const NFTId = 0;
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await SIP5058.lockMint(owner.address, NFTId, block + 3);
     
     // unlock works
@@ -96,7 +96,7 @@ describe("SRC5058 contract", function() {
     await expect(SIP5058.unlock(NFTId)).to.be.revertedWith(
       "SRC5058: locker query for non-locked token",
     );
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await SIP5058.lock(NFTId, block + 3);
     expect(await SIP5058.isLocked(NFTId)).eq(true);
     await SIP5058.unlock(NFTId);
@@ -106,7 +106,7 @@ describe("SRC5058 contract", function() {
   it("lockApprove works", async function() {
     const NFTId = 0;
     await SIP5058.mint(alice.address, NFTId);
-    let block = await silas.provider.getBlockNumber();
+    let block = await ethers.provider.getBlockNumber();
     
     await expect(SIP5058.lock(NFTId, block + 4)).to.be.revertedWith(
       "SRC5058: lock caller is not owner nor approved",
@@ -126,7 +126,7 @@ describe("SRC5058 contract", function() {
     const NFTId = 0;
     
     await SIP5058.mint(alice.address, NFTId);
-    const block = await silas.provider.getBlockNumber();
+    const block = await ethers.provider.getBlockNumber();
     await expect(SIP5058.lock(NFTId, block + 2)).to.be.revertedWith(
       "SRC5058: lock caller is not owner nor approved",
     );

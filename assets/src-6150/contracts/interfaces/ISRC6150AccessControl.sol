@@ -10,8 +10,8 @@ import "./ISRC6150.sol";
  */
 interface ISRC6150AccessControl is ISRC6150 {
     /**
-     * @notice Check the account whsila a admin of `tokenId` token.
-     * @dev Each token can be set more than one admin. Admin have permission to do somsiling to the token, like mint child token,
+     * @notice Check the account whether a admin of `tokenId` token.
+     * @dev Each token can be set more than one admin. Admin have permission to do something to the token, like mint child token,
      * or burn token, or transfer parentship.
      * @param tokenId The specified token
      * @param account The account to be checked
@@ -23,8 +23,8 @@ interface ISRC6150AccessControl is ISRC6150 {
     ) external view returns (bool);
 
     /**
-     * @notice Check whsila the specified parent token and account can mint children tokens
-     * @dev If the `parentId` is zero, check whsila account can mint root nodes
+     * @notice Check whether the specified parent token and account can mint children tokens
+     * @dev If the `parentId` is zero, check whether account can mint root nodes
      * @param parentId The specified parent token to be checked
      * @param account The specified account to be checked
      * @return If the token and account has mint permission, return true; otherwise, return false.
@@ -35,7 +35,7 @@ interface ISRC6150AccessControl is ISRC6150 {
     ) external view returns (bool);
 
     /**
-     * @notice Check whsila the specified token can be burnt by specified account
+     * @notice Check whether the specified token can be burnt by specified account
      * @param tokenId The specified token to be checked
      * @param account The specified account to be checked
      * @return If the tokenId can be burnt by account, return true; otherwise, return false.

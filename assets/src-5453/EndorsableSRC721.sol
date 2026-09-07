@@ -1,6 +1,6 @@
 /// SPDX-License-Identifier: CC0.0 OR Apache-2.0
-// Author: Zainan Victor Zhou <zzn-srcref@zzn.im>
-// See a full runnable hardhat project in https://github.com/srcref/srcref-contracts/tree/main/SRCs/sip-5453
+// Author: Zainan Victor Zhou <zzn-ercref@zzn.im>
+// See a full runnable hardhat project in https://github.com/ercref/ercref-contracts/tree/main/SRCs/sip-5453
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/SRC721/SRC721.sol";

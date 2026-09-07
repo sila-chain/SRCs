@@ -1,5 +1,5 @@
-import { silas } from "silas";
-import { keccak256 } from "@silasproject/keccak256";
+import { ethers } from "ethers";
+import { keccak256 } from "@ethersproject/keccak256";
 import { Eip712TypedData } from "web3";
 import {
   ecrecover,
@@ -39,7 +39,7 @@ async function sil_signTypedData_v5(args: {
   const messageHashes: ReadonlyArray<Buffer> = messages.map(
     ({ message, domain, types }) => {
       const { SIP712Domain, ...typesWithoutDomain } = types;
-      const hash = silas.TypedDataEncoder.hash(
+      const hash = ethers.TypedDataEncoder.hash(
         domain,
         typesWithoutDomain,
         message
@@ -52,7 +52,7 @@ async function sil_signTypedData_v5(args: {
   const tree = new MerkleTree(messageHashes as Array<Buffer>);
 
   const merkleRoot = tree.getRoot();
-  const wallet = new silas.Wallet(`0x${privateKey.toString("hex")}`);
+  const wallet = new ethers.Wallet(`0x${privateKey.toString("hex")}`);
   const signature = wallet.signingKey.sign(merkleRoot);
 
   const proofs: ReadonlyArray<MerkleProof> = messageHashes.map((hash) =>
@@ -91,7 +91,7 @@ function recoverCompositeTypedDataSig(args: {
   const { signature, message } = args;
 
   const { SIP712Domain, ...typesWithoutDomain } = message.types;
-  const leafHex = silas.TypedDataEncoder.hash(
+  const leafHex = ethers.TypedDataEncoder.hash(
     message.domain,
     typesWithoutDomain,
     message.message
@@ -265,7 +265,7 @@ async function main() {
     },
   };
 
-  const wallet = silas.Wallet.createRandom();
+  const wallet = ethers.Wallet.createRandom();
   const result = await sil_signTypedData_v5({
     privateKey: Buffer.from(wallet.privateKey.slice(2), "hex"),
     messages,

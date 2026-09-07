@@ -1,12 +1,12 @@
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { expect } from "chai";
-import { BigNumber } from "silas";
+import { BigNumber } from "ethers";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { SRC721TransferableMock } from "../typechain-types";
 
 async function transferableTokenFixture(): Promise<SRC721TransferableMock> {
-  const factory = await silas.getContractFactory("SRC721TransferableMock");
+  const factory = await ethers.getContractFactory("SRC721TransferableMock");
   const token = await factory.deploy("Chunky", "CHNK");
   await token.deployed();
 
@@ -20,7 +20,7 @@ describe("Transferable", async function () {
   const tokenId = 1;
 
   beforeEach(async function () {
-    const signers = await silas.getSigners();
+    const signers = await ethers.getSigners();
     owner = signers[0];
     otherOwner = signers[1];
     nonTransferable = await loadFixture(transferableTokenFixture);
@@ -50,8 +50,8 @@ describe("Transferable", async function () {
   });
 
   it("returns the expected transferability state", async function () {
-    expect(await nonTransferable['isTransferable(uint256,address,address)'](tokenId, silas.constants.AddressZero, silas.constants.AddressZero)).to.equal(false);
-    expect(await nonTransferable['isTransferable(uint256,address,address)'](tokenId, silas.constants.AddressZero, otherOwner.address)).to.equal(true);
+    expect(await nonTransferable['isTransferable(uint256,address,address)'](tokenId, ethers.constants.AddressZero, ethers.constants.AddressZero)).to.equal(false);
+    expect(await nonTransferable['isTransferable(uint256,address,address)'](tokenId, ethers.constants.AddressZero, otherOwner.address)).to.equal(true);
   })
 
   it("reverts if token does not exist", async function () {

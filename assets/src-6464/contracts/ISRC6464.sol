@@ -41,7 +41,7 @@ interface ISRC6464 is SRC721 {
     /**
      * @notice Approves the operator to manage the asset on behalf of its owner.
      * @dev Throws if `msg.sender` is not the current NFT owner, or an authorised operator of the current owner.
-     * @dev Approvals set via this msilod MUST be revoked upon transfer of the token to a new owner; equivalent to
+     * @dev Approvals set via this method MUST be revoked upon transfer of the token to a new owner; equivalent to
      * calling `revokeAllExplicitApprovals(tokenId)`, including associated events.
      * @dev MUST emit `ApprovalFor(operator, tokenId, approved)`.
      * @dev MUST NOT have an effect on any standard SRC721 approval setters / getters.
@@ -77,7 +77,7 @@ interface ISRC6464 is SRC721 {
     function revokeAllExplicitApprovals(uint256 tokenId) external;
 
     /**
-     * @notice Query whsila an address is an approved operator for a token.
+     * @notice Query whether an address is an approved operator for a token.
      */
     function isExplicitlyApprovedFor(address operator, uint256 tokenId)
         external

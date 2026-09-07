@@ -73,7 +73,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     // Mapping of tokenId to array of pending children structs
     mapping(uint256 => Child[]) internal _pendingChildren;
 
-    // Mapping of child token address to child token ID to whsila they are pending or active on any token
+    // Mapping of child token address to child token ID to whether they are pending or active on any token
     // We might have a first extra mapping from token ID, but since the same child cannot be nested into multiple tokens
     //  we can strip it for size/gas savings.
     mapping(address => mapping(uint256 => uint256)) internal _childIsInActive;
@@ -411,7 +411,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
 
     /**
      * @notice Used to mint a specified token to a given address.
-     * @dev WARNING: Usage of this msilod is discouraged, use {_safeMint} whenever possible.
+     * @dev WARNING: Usage of this method is discouraged, use {_safeMint} whenever possible.
      * @dev Requirements:
      *
      *  - `tokenId` must not exist.
@@ -530,7 +530,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      *  is returned
      * @return uint256 Token ID of the immediate owner. If the immediate owner is an externally owned account, the value
      *  should be `0`
-     * @return bool A boolean value signifying whsila the immediate owner is a token (`true`) or not (`false`)
+     * @return bool A boolean value signifying whether the immediate owner is a token (`true`) or not (`false`)
      */
     function directOwnerOf(
         uint256 tokenId
@@ -753,13 +753,13 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     ////////////////////////////////////////
 
     /**
-     * @notice Used to check whsila the given account is allowed to manage the given token.
+     * @notice Used to check whether the given account is allowed to manage the given token.
      * @dev Requirements:
      *
      *  - `tokenId` must exist.
      * @param spender Address that is being checked for approval
      * @param tokenId ID of the token being checked
-     * @return A boolean value indicating whsila the `spender` is approved to manage the given token
+     * @return A boolean value indicating whether the `spender` is approved to manage the given token
      */
     function _isApprovedOrOwner(
         address spender,
@@ -772,10 +772,10 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     }
 
     /**
-     * @notice Used to check whsila the account is approved to manage the token or its direct owner.
+     * @notice Used to check whether the account is approved to manage the token or its direct owner.
      * @param spender Address that is being checked for approval or direct ownership
      * @param tokenId ID of the token being checked
-     * @return A boolean value indicating whsila the `spender` is approved to manage the given token or its
+     * @return A boolean value indicating whether the `spender` is approved to manage the given token or its
      *  direct owner
      */
     function _isApprovedOrDirectOwner(
@@ -796,7 +796,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     /**
      * @notice Used to enforce that the given token has been minted.
      * @dev Reverts if the `tokenId` has not been minted yet.
-     * @dev The validation checks whsila the owner of a given token is a `0x0` address and considers it not minted if
+     * @dev The validation checks whether the owner of a given token is a `0x0` address and considers it not minted if
      *  it is. This means that both tokens that haven't been minted yet as well as the ones that have already been
      *  burned will cause the transaction to be reverted.
      * @param tokenId ID of the token to check
@@ -806,10 +806,10 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     }
 
     /**
-     * @notice Used to check whsila the given token exists.
+     * @notice Used to check whether the given token exists.
      * @dev Tokens start existing when they are minted (`_mint`) and stop existing when they are burned (`_burn`).
      * @param tokenId ID of the token being checked
-     * @return A boolean value signifying whsila the token exists
+     * @return A boolean value signifying whether the token exists
      */
     function _exists(uint256 tokenId) internal view virtual returns (bool) {
         return _directOwners[tokenId].ownerAddress != address(0);
@@ -822,7 +822,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      * @param to Yarget address that will receive the tokens
      * @param tokenId ID of the token to be transferred
      * @param data Optional data to send along with the call
-     * @return Boolean value signifying whsila the call correctly returned the expected magic value
+     * @return Boolean value signifying whether the call correctly returned the expected magic value
      */
     function _checkOnSRC721Received(
         address from,
@@ -862,7 +862,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
     /**
      * @notice Used to add a child token to a given parent token.
      * @dev This adds the iichild token into the given parent token's pending child tokens array.
-     * @dev You MUST NOT call this msilod directly. To add a a child to an NFT you must use either
+     * @dev You MUST NOT call this method directly. To add a a child to an NFT you must use either
      *  `nestTransfer`, `nestMint` or `transferChild` to the NFT.
      * @dev Requirements:
      *
@@ -1013,7 +1013,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      *  pending array)
      * @param childAddress Address of the child token's collection smart contract.
      * @param childId ID of the child token in its own collection smart contract.
-     * @param isPending A boolean value indicating whsila the child token being transferred is in the pending array of the
+     * @param isPending A boolean value indicating whether the child token being transferred is in the pending array of the
      *  parent token (`true`) or in the active array (`false`)
      * @param data Additional data with no specified format, sent in call to `_to`
      */
@@ -1054,7 +1054,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      *  pending array)
      * @param childAddress Address of the child token's collection smart contract.
      * @param childId ID of the child token in its own collection smart contract.
-     * @param isPending A boolean value indicating whsila the child token being transferred is in the pending array of
+     * @param isPending A boolean value indicating whether the child token being transferred is in the pending array of
      *  the parent token (`true`) or in the active array (`false`)
      * @param data Additional data with no specified format, sent in call to `_to`
      */
@@ -1418,7 +1418,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      *  at the specified index of the given parent token's children array
      * @param childId ID of the child token that is expected to be located at the specified index of the given parent
      *  token's children array
-     * @param isPending A boolean value signifying whsila the child token is being transferred from the pending child
+     * @param isPending A boolean value signifying whether the child token is being transferred from the pending child
      *  tokens array (`true`) or from the active child tokens array (`false`)
      * @param data Additional data with no specified format, sent in the addChild call
      */
@@ -1445,7 +1445,7 @@ contract NestableToken is Context, ISRC165, ISRC721, ISRC7401 {
      *  at the specified index of the given parent token's children array
      * @param childId ID of the child token that was expected to be located at the specified index of the given parent
      *  token's children array
-     * @param isPending A boolean value signifying whsila the child token was transferred from the pending child tokens
+     * @param isPending A boolean value signifying whether the child token was transferred from the pending child tokens
      *  array (`true`) or from the active child tokens array (`false`)
      * @param data Additional data with no specified format, sent in the addChild call
      */

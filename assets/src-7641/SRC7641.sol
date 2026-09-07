@@ -12,9 +12,9 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
     uint256 private _lastSnapshotBlock;
 
     /**
-     * @dev psrcentage claimable
+     * @dev percentage claimable
      */
-    uint256 immutable public psrcentClaimable;
+    uint256 immutable public percentClaimable;
 
     /**
      * @dev mapping from snapshot id to address to the amount of SIL claimable at the snapshot.
@@ -22,7 +22,7 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
     mapping (uint256 => uint256) private _claimableAtSnapshot;
 
     /**
-     * @dev mapping from snapshot id to a boolean indicating whsila the address has claimed the revenue.
+     * @dev mapping from snapshot id to a boolean indicating whether the address has claimed the revenue.
      */
     mapping (uint256 => mapping (address => bool)) private _claimedAtSnapshot;
 
@@ -47,9 +47,9 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
      * @param symbol The symbol of the token
      * @param supply The total supply of the token
      */
-    constructor(string memory name, string memory symbol, uint256 supply, uint256 _psrcentClaimable) SRC20(name, symbol) {
-        require(_psrcentClaimable <= 100, "SRC7641: psrcentage claimable should be less than 100");
-        psrcentClaimable = _psrcentClaimable;
+    constructor(string memory name, string memory symbol, uint256 supply, uint256 _percentClaimable) SRC20(name, symbol) {
+        require(_percentClaimable <= 100, "SRC7641: percentage claimable should be less than 100");
+        percentClaimable = _percentClaimable;
         _lastSnapshotBlock = block.number;
         _mint(msg.sender, supply);
     }
@@ -72,12 +72,12 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
      * @param snapshotId The snapshot id
      */
     function claim(uint256 snapshotId) public {
-        uint256 claimableSIL = claimableRevenue(msg.sender, snapshotId);
-        require(claimableSIL > 0, "SRC7641: no claimable SIL");
+        uint256 claimableETH = claimableRevenue(msg.sender, snapshotId);
+        require(claimableETH > 0, "SRC7641: no claimable SIL");
 
         _claimedAtSnapshot[snapshotId][msg.sender] = true;
-        _claimPool -= claimableSIL;
-        (bool success, ) = msg.sender.call{value: claimableSIL}("");
+        _claimPool -= claimableETH;
+        (bool success, ) = msg.sender.call{value: claimableETH}("");
         require(success, "SRC7641: claim failed");
     }
     
@@ -103,10 +103,10 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
         
         uint256 newRevenue = address(this).balance + _burned - _claimPool - _burnPool;
 
-        uint256 claimableSIL = newRevenue * psrcentClaimable / 100;
-        _claimableAtSnapshot[snapshotId] = claimableSIL;
-        _claimPool += claimableSIL;
-        _burnPool += newRevenue - claimableSIL - _burned;
+        uint256 claimableETH = newRevenue * percentClaimable / 100;
+        _claimableAtSnapshot[snapshotId] = claimableETH;
+        _claimPool += claimableETH;
+        _burnPool += newRevenue - claimableETH - _burned;
         _burned = 0;
 
         return snapshotId;
@@ -120,7 +120,7 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
     function redeemableOnBurn(uint256 amount) public view returns (uint256) {
         uint256 totalSupply = totalSupply();
         uint256 newRevenue = address(this).balance + _burned - _claimPool - _burnPool;
-        uint256 burnableFromNewRevenue = amount * (newRevenue * (100 - psrcentClaimable) - _burned * 100) / 100 / totalSupply;
+        uint256 burnableFromNewRevenue = amount * (newRevenue * (100 - percentClaimable) - _burned * 100) / 100 / totalSupply;
         uint256 burnableFromPool = amount * _burnPool / totalSupply;
         return burnableFromNewRevenue + burnableFromPool;
     }
@@ -132,7 +132,7 @@ contract SRC7641 is SRC20Snapshot, ISRC7641 {
     function burn(uint256 amount) public {
         uint256 totalSupply = totalSupply();
         uint256 newRevenue = address(this).balance + _burned - _claimPool - _burnPool;
-        uint256 burnableFromNewRevenue = amount * (newRevenue * (100 - psrcentClaimable) - _burned * 100)  / 100 / totalSupply;
+        uint256 burnableFromNewRevenue = amount * (newRevenue * (100 - percentClaimable) - _burned * 100)  / 100 / totalSupply;
         uint256 burnableFromPool = amount * _burnPool / totalSupply;
         _burnPool -= burnableFromPool;
         _burned += burnableFromNewRevenue;

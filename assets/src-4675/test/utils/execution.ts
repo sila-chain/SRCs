@@ -1,6 +1,6 @@
-import { Contract, Wallet, utils, BigNumber, BigNumberish, Signer, PopulatedTransaction } from "silas"
-import { TypedDataSigner } from "@silasproject/abstract-signer";
-import { AddressZero } from "@silasproject/constants";
+import { Contract, Wallet, utils, BigNumber, BigNumberish, Signer, PopulatedTransaction } from "ethers"
+import { TypedDataSigner } from "@ethersproject/abstract-signer";
+import { AddressZero } from "@ethersproject/constants";
 
 interface transOption {
     from: string;

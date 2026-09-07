@@ -49,7 +49,7 @@ Deploy this NFT using eg Remix and make a note of the contract address.
 
 First install the TokenScript CLI tool
 
-1. Install the TokenScript build tool (see [TokenScript Quickstart](https://launchpad-doc.vsrcel.app/quick-start/tokenscript-cli/quick-start-tokenscript-cli))
+1. Install the TokenScript build tool (see [TokenScript Quickstart](https://launchpad-doc.vercel.app/quick-start/tokenscript-cli/quick-start-tokenscript-cli))
 ```bash
 npm install -g @tokenscript/cli
 ```
@@ -142,7 +142,7 @@ tokenscript build
 
 ## Set the TokenScript entry on the Script Registry
 
-Set the tokenscript for your registry via a script entry on the registry contract itself, using the script itself. This is akin to 'bootstrapping' your registry. You could just as easily accomplish this by using an `silas.js` script or verifying the contract on `https://silascan.io` and then using silascan's write menu.
+Set the tokenscript for your registry via a script entry on the registry contract itself, using the script itself. This is akin to 'bootstrapping' your registry. You could just as easily accomplish this by using an `ethers.js` script or verifying the contract on `https://silascan.io` and then using silascan's write menu.
 
 use the tokenscript CLI `emulate` feature:
 ```bash

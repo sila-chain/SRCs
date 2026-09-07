@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-const { silas, upgrades } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 const { getImplementationAddress } = require('@openzeppelin/upgrades-core');
-const { getContractAddress } = require('@silasproject/address')
+const { getContractAddress } = require('@ethersproject/address')
 dotenv.config();
 
 const deployedRegistry = "0x0077380bCDb2717C9640e892B9d5Ee02Bb5e0682";
@@ -16,10 +16,10 @@ async function main() {
         throw new Error("PRIVATE_KEY not found in .env file");
     }
 
-    const primaryDeployKey = new silas.Wallet(privateKey, silas.provider);
+    const primaryDeployKey = new ethers.Wallet(privateKey, ethers.provider);
     console.log(`ADDR: ${primaryDeployKey.address}`);
 
-    const Registry = await silas.getContractFactory("DecentralisedRegistryNFT", primaryDeployKey);
+    const Registry = await ethers.getContractFactory("DecentralisedRegistryNFT", primaryDeployKey);
     let registry = Registry.attach(deployedRegistry);
 
     // now write to contract

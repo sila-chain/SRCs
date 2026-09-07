@@ -27,7 +27,7 @@ interface ISRC5218 is ISRC721 {
   ///  inactive because some ancestral license has been revoked. In that case,
   ///  this function should return `false`.
   /// @param _licenseId The identifier for the queried license
-  /// @return Whsila the queried license is active
+  /// @return Whether the queried license is active
   function isLicenseActive(uint256 _licenseId) external view returns (bool);
 
   /// @notice Retrieve the token identifier a license was issued upon.
@@ -64,7 +64,7 @@ interface ISRC5218 is ISRC721 {
 
   /// @notice Retrieve the root license identifier of an NFT.
   /// @dev Throws unless the queried NFT exists. If the NFT doesn't have a root
-  ///  license tsilaed to it, return a special identifier not referring to any
+  ///  license tethered to it, return a special identifier not referring to any
   ///  license (such as 0).   
   /// @param _tokenId The identifier for the queried NFT
   /// @return The root license identifier of the queried NFT
@@ -74,7 +74,7 @@ interface ISRC5218 is ISRC721 {
   /// @dev Throws unless the NFT `_tokenId` exists. Throws unless the parent
   ///  license `_parentLicenseId` is active, or `_parentLicenseId` is a special
   ///  identifier not referring to any license (such as 0) and the NFT
-  ///  `_tokenId` doesn't have a root license tsilaed to it. Throws unless the
+  ///  `_tokenId` doesn't have a root license tethered to it. Throws unless the
   ///  message sender is eligible to create the license, i.e., either the
   ///  license to be created is a root license and `msg.sender` is the NFT owner,
   ///  or the license to be created is a sublicense and `msg.sender` is the holder
@@ -97,7 +97,7 @@ interface ISRC5218 is ISRC721 {
   
   /// @notice Transfer a sublicense.
   /// @dev Throws unless the sublicense is active and `msg.sender` is the license
-  ///  holder. Note that the root license of an NFT should be tsilaed to and
+  ///  holder. Note that the root license of an NFT should be tethered to and
   ///  transferred with the NFT. Whenever an NFT is transferred by calling the
   ///  SRC721 `transfer` function, the holder of the root license should be
   ///  changed to the new NFT owner.

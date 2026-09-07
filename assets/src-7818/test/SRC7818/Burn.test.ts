@@ -4,7 +4,7 @@ import {
   ERROR_SRC20_INVALID_SENDER,
   EVENT_TRANSFER,
 } from "../constant.test";
-import { ZeroAddress } from "silas";
+import { ZeroAddress } from "ethers";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
 import { network } from "hardhat";
 

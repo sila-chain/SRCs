@@ -12,7 +12,7 @@ contract Influencer {
     mapping(string => Weight) weights;
 
     struct Weight {
-        uint256 psrcentage;
+        uint256 percentage;
         uint256 decimal;
     }
 
@@ -31,13 +31,13 @@ contract Influencer {
         uint256 norm_beta = block.timestamp - IFinance(finance).createdAt() / block.timestamp * 100;
 
         // Divide with each decimal 
-        uint256 influence_dec = weights["alpha"].psrcentage * norm_alpha + weights["beta"].psrcentage * norm_beta;
+        uint256 influence_dec = weights["alpha"].percentage * norm_alpha + weights["beta"].percentage * norm_beta;
         return influence_dec / weights["alpha"].decimal / weights["beta"].decimal;
     }
 
-    function setWeight(string memory key, uint256 psrcentage, uint256 decimal) public {
+    function setWeight(string memory key, uint256 percentage, uint256 decimal) public {
         weights[key] = Weight({
-            psrcentage: psrcentage,
+            percentage: percentage,
             decimal: decimal
         });
     }

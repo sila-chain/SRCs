@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import hre, { deployments, silas, waffle } from "hardhat";
-import { BigNumber } from "silas";
-import { AddressZero } from "@silasproject/constants";
-import { parseSila } from "@silasproject/units";
+import hre, { deployments, ethers, waffle } from "hardhat";
+import { BigNumber } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
+import { parseEther } from "@ethersproject/units";
 import { setMFNFTwithNFT, deployFTContract, getMFContract, getNFTContract, mintNFT } from "./utils/setup";
 import { transferFrom ,balanceOf, transfer, safeTransferFrom, addToken, approve, increaseAllowance, decreaseAllowance } from "./utils/execution";
 

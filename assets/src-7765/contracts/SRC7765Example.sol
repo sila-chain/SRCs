@@ -18,41 +18,41 @@ contract SRC7765Example is SRC721, ISRC7765, ISRC7765Metadata {
         privilegeIds[2] = true;
     }
 
-    /// @notice This function exsrcised a specific privilege of a token if succeeds.
+    /// @notice This function exercised a specific privilege of a token if succeeds.
     /// @dev Throws if `_privilegeId` is not a valid privilegeId.
     /// @param _to  the address to benefit from the privilege.
     /// @param _tokenId  the NFT tokenID.
     /// @param _privilegeId  the ID of the privileges.
     /// @param _data  extra data passed in for extra message or future extension.
-    function exsrcisePrivilege(address _to, uint256 _tokenId, uint256 _privilegeId, bytes calldata _data) external {
+    function exercisePrivilege(address _to, uint256 _tokenId, uint256 _privilegeId, bytes calldata _data) external {
         if (_to == address(0)) {
             _to = msg.sender;
         }
 
         require(ownerOf(_tokenId) == msg.sender, "Token not exist");
         require(privilegeIds[_privilegeId], "Privilege not exist");
-        require(privilegeStates[_tokenId][_privilegeId] == address(0), "Privilege already exsrcised");
+        require(privilegeStates[_tokenId][_privilegeId] == address(0), "Privilege already exercised");
 
         // Optional to deal with _data
         dealWithData(_data);
 
         privilegeStates[_tokenId][_privilegeId] = _to;
-        emit PrivilegeExsrcised(msg.sender, _to, _tokenId, _privilegeId);
+        emit PrivilegeExercised(msg.sender, _to, _tokenId, _privilegeId);
     }
 
     function dealWithData(bytes calldata _data) internal {
         //
     }
 
-    /// @notice This function is to check whsila a specific privilege of a token can be exsrcised.
+    /// @notice This function is to check whether a specific privilege of a token can be exercised.
     /// @dev Throws if `_privilegeId` is not a valid privilegeId.
     /// @param _to  the address to benefit from the privilege.
     /// @param _tokenId  the NFT tokenID.
     /// @param _privilegeId  the ID of the privileges.
-    function isExsrcisable(address _to, uint256 _tokenId, uint256 _privilegeId)
+    function isExercisable(address _to, uint256 _tokenId, uint256 _privilegeId)
         external
         view
-        returns (bool _exsrcisable)
+        returns (bool _exercisable)
     {
         require(_to != address(0), "Illegal _to address");
         require(ownerOf(_tokenId) != address(0), "Token not exist");
@@ -61,12 +61,12 @@ contract SRC7765Example is SRC721, ISRC7765, ISRC7765Metadata {
         return privilegeStates[_tokenId][_privilegeId] == address(0);
     }
 
-    /// @notice This function is to check whsila a specific privilege of a token has been exsrcised.
+    /// @notice This function is to check whether a specific privilege of a token has been exercised.
     /// @dev Throws if `_privilegeId` is not a valid privilegeId.
     /// @param _to  the address to benefit from the privilege.
     /// @param _tokenId  the NFT tokenID.
     /// @param _privilegeId  the ID of the privileges.
-    function isExsrcised(address _to, uint256 _tokenId, uint256 _privilegeId) external view returns (bool _exsrcised) {
+    function isExercised(address _to, uint256 _tokenId, uint256 _privilegeId) external view returns (bool _exercised) {
         require(_to != address(0), "Illegal _to address");
         require(ownerOf(_tokenId) != address(0), "Token not exist");
         require(privilegeIds[_privilegeId], "Privilege not exist");

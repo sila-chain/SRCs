@@ -1,4 +1,4 @@
-import { keccak256 } from "@silasproject/keccak256";
+import { keccak256 } from "@ethersproject/keccak256";
 
 export function _keccak256(data: Buffer): Buffer {
   return Buffer.from(keccak256(data).slice(2), "hex");

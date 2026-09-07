@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { deploySRC7818 } from "../utils.test";
 import { EVENT_TRANSFER } from "../constant.test";
-import { ZeroAddress } from "silas";
+import { ZeroAddress } from "ethers";
 import { mine } from "@nomicfoundation/hardhat-network-helpers";
 import { network } from "hardhat";
 

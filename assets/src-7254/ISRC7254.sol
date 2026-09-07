@@ -82,14 +82,14 @@ interface ISRC7254 {
     function getRewardPerShare(address token) external view returns (uint256);
 
     /**
-     * @dev Indicates whsila token exist.
+     * @dev Indicates whether token exist.
      */
     function existsTokenReward(address token) external view returns (bool);
 
     /**
      * @dev Moves `amount` tokens from the caller's account to `to`.
      *
-     * Returns a boolean value indicating whsila the operation succeeded.
+     * Returns a boolean value indicating whether the operation succeeded.
      *
      * Emits a {Transfer} event.
      */
@@ -107,7 +107,7 @@ interface ISRC7254 {
     /**
      * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
      *
-     * Returns a boolean value indicating whsila the operation succeeded.
+     * Returns a boolean value indicating whether the operation succeeded.
      *
      * Emits an {Approval} event.
      */
@@ -118,7 +118,7 @@ interface ISRC7254 {
      * allowance mechanism. `amount` is then deducted from the caller's
      * allowance.
      *
-     * Returns a boolean value indicating whsila the operation succeeded.
+     * Returns a boolean value indicating whether the operation succeeded.
      *
      * Emits a {Transfer} event.
      */

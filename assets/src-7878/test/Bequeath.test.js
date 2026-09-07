@@ -7,9 +7,9 @@ const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 // start with a contract that has some tokens minted
 async function deployTokenFixture() {
 
-   const [investor, stranger, executor, inheritor] = await silas.getSigners();
+   const [investor, stranger, executor, inheritor] = await ethers.getSigners();
 
-   const propToken = await silas.deployContract("DeedRegistry");
+   const propToken = await ethers.deployContract("DeedRegistry");
    await propToken.waitForDeployment();
 
    await propToken.safeMint(investor.address,1);

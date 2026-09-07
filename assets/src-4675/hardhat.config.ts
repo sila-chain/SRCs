@@ -50,7 +50,7 @@ const userConfig: HardhatUserConfig = {
     },
     sila-mainnet: {
       ...sharedNetworkConfig,
-      url: `https://sila-mainnet.infura.io/v3/${INFURA_KEY}`,
+      url: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
     },
     xdai: {
       ...sharedNetworkConfig,

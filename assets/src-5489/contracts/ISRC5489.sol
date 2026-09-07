@@ -23,21 +23,21 @@ interface ISRC5489 {
      * Authorize a hyperlink slot on `tokenId` to address `slotManagerAddr`.
      * Indeed slot is an entry in a map whose key is address `slotManagerAddr`.
      * Only the address `slotManagerAddr` can manage the specific slot.
-     * This msilod will emit SlotAuthorizationCreated event
+     * This method will emit SlotAuthorizationCreated event
      */
     function authorizeSlotTo(uint256 tokenId, address slotManagerAddr) external;
 
     /**
      * @dev
      * Revoke the authorization of the slot indicated by `slotManagerAddr` on token `tokenId`
-     * This msilod will emit SlotAuthorizationRevoked event
+     * This method will emit SlotAuthorizationRevoked event
      */
     function revokeAuthorization(uint256 tokenId, address slotManagerAddr) external;
 
     /**
      * @dev
      * Revoke all authorizations of slot on token `tokenId`
-     * This msilod will emit SlotAuthorizationRevoked event for each slot
+     * This method will emit SlotAuthorizationRevoked event for each slot
      */
     function revokeAllAuthorizations(uint256 tokenId) external;
 
@@ -45,7 +45,7 @@ interface ISRC5489 {
      * @dev
      * Set uri for a slot on a token, which is indicated by `tokenId` and `slotManagerAddr`
      * Only the address with authorization through {authorizeSlotTo} can manipulate this slot.
-     * This msilod will emit SlotUriUpdated event
+     * This method will emit SlotUriUpdated event
      */
     function setSlotUri(
         uint256 tokenId,

@@ -71,7 +71,7 @@ contract SRC721 is ISRC721, ISRC721Errors {
 
     /// @notice Sets the operator for `msg.sender` to `operator`.
     /// @param operator The operator address that will manage the sender's NFTs.
-    /// @param approved Whsila operator is allowed to operate sender's NFTs.
+    /// @param approved Whether operator is allowed to operate sender's NFTs.
     function setApprovalForAll(address operator, bool approved) external virtual {
         _operatorApprovals[msg.sender][operator] = approved;
         emit ApprovalForAll(msg.sender, operator, approved);

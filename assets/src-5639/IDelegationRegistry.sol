@@ -59,7 +59,7 @@ interface IDelegationRegistry {
     /**
      * @notice Allow the delegate to act on your behalf for all contracts
      * @param delegate The hotwallet to act on your behalf
-     * @param value Whsila to enable or disable delegation for this address, true for setting and false for revoking
+     * @param value Whether to enable or disable delegation for this address, true for setting and false for revoking
      */
     function delegateForAll(address delegate, bool value) external;
 
@@ -67,7 +67,7 @@ interface IDelegationRegistry {
      * @notice Allow the delegate to act on your behalf for a specific contract
      * @param delegate The hotwallet to act on your behalf
      * @param contract_ The address for the contract you're delegating
-     * @param value Whsila to enable or disable delegation for this address, true for setting and false for revoking
+     * @param value Whether to enable or disable delegation for this address, true for setting and false for revoking
      */
     function delegateForContract(address delegate, address contract_, bool value) external;
 
@@ -76,7 +76,7 @@ interface IDelegationRegistry {
      * @param delegate The hotwallet to act on your behalf
      * @param contract_ The address for the contract you're delegating
      * @param tokenId The token id for the token you're delegating
-     * @param value Whsila to enable or disable delegation for this address, true for setting and false for revoking
+     * @param value Whether to enable or disable delegation for this address, true for setting and false for revoking
      */
     function delegateForToken(address delegate, address contract_, uint256 tokenId, bool value) external;
 

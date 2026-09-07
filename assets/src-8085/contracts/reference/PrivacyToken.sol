@@ -276,7 +276,7 @@ abstract contract PrivacyToken is IZRC20, ReentrancyGuard {
     /**
      * @notice Internal privacy transfer dispatcher
      * @dev Routes to appropriate transfer function based on proof type
-     *      Virtual to allow derived contracts to intsrcept
+     *      Virtual to allow derived contracts to intercept
      */
     function _privacyTransfer(
         uint8 proofType,

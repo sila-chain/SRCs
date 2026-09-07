@@ -1,12 +1,12 @@
 const { expect } = require("chai");
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 
 describe('Compile: Test charity donation configuration ', function() {
     before(async function() {
-        [owner, user, charity1, charity2, charity3, user2]= await silas.getSigners();
+        [owner, user, charity1, charity2, charity3, user2]= await ethers.getSigners();
     });
     it("Deploy contract ", async function() {
-        charityTokenContract = await silas.getContractFactory("CharityToken");
+        charityTokenContract = await ethers.getContractFactory("CharityToken");
         charity = await charityTokenContract.deploy();
         decimals = await charity.decimals();
 
@@ -21,7 +21,7 @@ describe('Compile: Test charity donation configuration ', function() {
 
     it("Owner: Whitelist a charity address ", async function () {
         const amount_send= 10000;
-        const amnt = silas.utils.parseSila(amount_send.toString());
+        const amnt = ethers.utils.parseEther(amount_send.toString());
         await charity.mint(user.address,amnt.toString() );
 
         await charity.addToWhitelist(charity1.address);
@@ -63,7 +63,7 @@ describe('Compile: Test charity donation configuration ', function() {
 
     it("User: transfer an amount to charity when token is transferred", async function () {
         const amount_send= 100;
-        const amnt = silas.utils.parseSila(amount_send.toString());
+        const amnt = ethers.utils.parseEther(amount_send.toString());
         await charity.connect(user).transfer(user2.address,amnt); //default address is charity1 with 2% rate
 
         console.log("user 1 balance: " + (await charity.balanceOf(user.address)/ (10 ** decimals)));
@@ -75,7 +75,7 @@ describe('Compile: Test charity donation configuration ', function() {
 
     it("User: transfer (from) an amount to charity when token is transferred", async function () {
         const amount_send= 100;
-        const amnt = silas.utils.parseSila(amount_send.toString());
+        const amnt = ethers.utils.parseEther(amount_send.toString());
         await charity.connect(user).approve(owner.address,amnt);
         await charity.connect( owner).transferFrom(user.address,user2.address,amnt);
 
@@ -92,7 +92,7 @@ describe('Compile: Test charity donation configuration ', function() {
 
         //try to transfer now
         const amount_send= 100;
-        const amnt = silas.utils.parseSila(amount_send.toString());
+        const amnt = ethers.utils.parseEther(amount_send.toString());
         await charity.connect(user).transfer(user2.address,amnt);
 
         //console.log("user 1 balance: " + (await charity.balanceOf(user.address)/ (10 ** decimals)));
@@ -121,7 +121,7 @@ describe('Compile: Test charity donation configuration ', function() {
 
         //try to transfer now
         const amount_send= 100;
-        const amnt = silas.utils.parseSila(amount_send.toString());
+        const amnt = ethers.utils.parseEther(amount_send.toString());
         await charity.connect(user).transfer(user2.address,amnt);
 
         console.log("user 1 balance: " + (await charity.balanceOf(user.address)/ (10 ** decimals)));

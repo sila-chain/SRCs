@@ -1,6 +1,6 @@
-import {silas} from "hardhat";
+import {ethers} from "hardhat";
 import {expect} from 'chai';
-import {SignerWithAddress} from "@nomiclabs/hardhat-silas/signers";
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
 import {Erc721Consumable} from "../typechain";
 
 describe("SRC721Consumable", async () => {
@@ -11,14 +11,14 @@ describe("SRC721Consumable", async () => {
 	const tokenID = 1; // The first minted NFT
 
 	before(async () => {
-		const signers = await silas.getSigners();
+		const signers = await ethers.getSigners();
 		owner = signers[0];
 		approved = signers[1];
 		operator = signers[2];
 		consumer = signers[3];
 		other = signers[4];
 
-		const ConsumableToken = await silas.getContractFactory("ExampleToken");
+		const ConsumableToken = await ethers.getContractFactory("ExampleToken");
 		const deployedContract = await ConsumableToken.deploy();
 		await deployedContract.deployed();
 		token = deployedContract as Erc721Consumable;
@@ -27,11 +27,11 @@ describe("SRC721Consumable", async () => {
 	})
 
 	beforeEach(async function () {
-		snapshotId = await silas.provider.send('savm_snapshot', []);
+		snapshotId = await ethers.provider.send('svm_snapshot', []);
 	});
 
 	afterEach(async function () {
-		await silas.provider.send('savm_revert', [snapshotId]);
+		await ethers.provider.send('svm_revert', [snapshotId]);
 	});
 
 	it('should implement SRC165', async () => {
@@ -116,13 +116,13 @@ describe("SRC721Consumable", async () => {
 		await token.changeConsumer(consumer.address, tokenID);
 		await expect(token.transferFrom(owner.address, other.address, tokenID))
 			.to.emit(token, 'ConsumerChanged')
-				.withArgs(owner.address, silas.constants.AddressZero, tokenID);
+				.withArgs(owner.address, ethers.constants.AddressZero, tokenID);
 	})
 
 	it('should emit ConsumerChanged on mint', async () => {
 		await expect(token.mint())
 			.to.emit(token, 'ConsumerChanged')
-				.withArgs(silas.constants.AddressZero, silas.constants.AddressZero, tokenID + 1);
+				.withArgs(ethers.constants.AddressZero, ethers.constants.AddressZero, tokenID + 1);
 	})
 
 	it('should not be able to transfer from consumer', async () => {

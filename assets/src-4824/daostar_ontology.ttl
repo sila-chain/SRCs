@@ -24,7 +24,7 @@
 <http:/daostar.org/schemas/calls> rdf:type owl:ObjectProperty ;
                                   rdfs:subPropertyOf owl:topObjectProperty ;
                                   rdfs:domain <http:/daostar.org/schemas/Proposal> ;
-                                  rdfs:range <http:/daostar.org/schemas/CallDataSAVM> ;
+                                  rdfs:range <http:/daostar.org/schemas/CallDataSVM> ;
                                   rdfs:comment "list of calls, which a proposal proposes"^^xsd:string ;
                                   rdfs:label "calls"@en .
 
@@ -32,7 +32,7 @@
 ###  http:/daostar.org/schemas/from
 <http:/daostar.org/schemas/from> rdf:type owl:ObjectProperty ;
                                  rdfs:subPropertyOf owl:topObjectProperty ;
-                                 rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                                 rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                  rdfs:range <http:/daostar.org/schemas/BlockchainAddress> ;
                                  rdfs:label "from"@en .
 
@@ -77,7 +77,7 @@
 ###  http:/daostar.org/schemas/to
 <http:/daostar.org/schemas/to> rdf:type owl:ObjectProperty ;
                                rdfs:subPropertyOf owl:topObjectProperty ;
-                               rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                               rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                rdfs:range <http:/daostar.org/schemas/BlockchainAddress> ;
                                rdfs:label "to"@en .
 
@@ -106,7 +106,7 @@
 ###  http:/daostar.org/schemas/callData
 <http:/daostar.org/schemas/callData> rdf:type owl:DatatypeProperty ;
                                      rdfs:subPropertyOf owl:topDataProperty ;
-                                     rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                                     rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                      rdfs:range xsd:string ;
                                      rdfs:label "callData"@en .
 
@@ -123,7 +123,7 @@
 ###  http:/daostar.org/schemas/data
 <http:/daostar.org/schemas/data> rdf:type owl:DatatypeProperty ;
                                  rdfs:subPropertyOf owl:topDataProperty ;
-                                 rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                                 rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                  rdfs:range xsd:string ;
                                  rdfs:comment "call data"^^xsd:string ;
                                  rdfs:label "data"@en .
@@ -177,7 +177,7 @@
 ###  http:/daostar.org/schemas/operation
 <http:/daostar.org/schemas/operation> rdf:type owl:DatatypeProperty ;
                                       rdfs:subPropertyOf owl:topDataProperty ;
-                                      rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                                      rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                       rdfs:range xsd:string ;
                                       rdfs:label "call or delegate call"^^xsd:string ,
                                                  "operation"@en .
@@ -203,7 +203,7 @@
 ###  http:/daostar.org/schemas/value
 <http:/daostar.org/schemas/value> rdf:type owl:DatatypeProperty ;
                                   rdfs:subPropertyOf owl:topDataProperty ;
-                                  rdfs:domain <http:/daostar.org/schemas/CallDataSAVM> ;
+                                  rdfs:domain <http:/daostar.org/schemas/CallDataSVM> ;
                                   rdfs:range xsd:string ;
                                   rdfs:comment "call value"^^xsd:string ;
                                   rdfs:label "value"^^xsd:string .
@@ -219,10 +219,10 @@
                                               rdfs:label "BlockchainAddress"@en .
 
 
-###  http:/daostar.org/schemas/CallDataSAVM
-<http:/daostar.org/schemas/CallDataSAVM> rdf:type owl:Class ;
-                                        rdfs:comment "information regarding an SAVM call"^^xsd:string ;
-                                        rdfs:label "CallDataSAVM"@en .
+###  http:/daostar.org/schemas/CallDataSVM
+<http:/daostar.org/schemas/CallDataSVM> rdf:type owl:Class ;
+                                        rdfs:comment "information regarding an SVM call"^^xsd:string ;
+                                        rdfs:label "CallDataSVM"@en .
 
 
 ###  http:/daostar.org/schemas/DAO

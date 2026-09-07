@@ -1,5 +1,5 @@
-import { silas } from 'hardhat'
-import { BigNumber, Signer } from 'silas'
+import { ethers } from 'hardhat'
+import { BigNumber, Signer } from 'ethers'
 import { expect } from 'chai'
 import { time } from '@nomicfoundation/hardhat-network-helpers'
 // typechain
@@ -25,11 +25,11 @@ describe('VestingNFT', function () {
   let invalidTokenID = 1337
 
   beforeEach(async function () {
-    const VestingNFT = await silas.getContractFactory('VestingNFT')
+    const VestingNFT = await ethers.getContractFactory('VestingNFT')
     vestingNFT = await VestingNFT.deploy('VestingNFT', 'TLV')
     await vestingNFT.deployed()
 
-    const SRC20Mock = await silas.getContractFactory('SRC20Mock')
+    const SRC20Mock = await ethers.getContractFactory('SRC20Mock')
     mockToken = await SRC20Mock.deploy(
       '1000000000000000000000',
       testValues.payoutDecimals,
@@ -39,7 +39,7 @@ describe('VestingNFT', function () {
     await mockToken.deployed()
     await mockToken.approve(vestingNFT.address, '1000000000000000000000')
 
-    accounts = await silas.getSigners()
+    accounts = await ethers.getSigners()
     receiverAccount = await accounts[1].getAddress()
     operatorAccount = await accounts[2].getAddress()
     transferToAccount = await accounts[3].getAddress()
@@ -124,8 +124,8 @@ describe('VestingNFT', function () {
     const connectedVestingNft = vestingNFT.connect(accounts[1])
     expect(await vestingNFT.claimedPayout(0)).to.equal(0)
     await time.increase(testValues.lockTime)
-    const txRecsipt = await connectedVestingNft.claim(0)
-    await txRecsipt.wait()
+    const txReceipt = await connectedVestingNft.claim(0)
+    await txReceipt.wait()
     expect(await mockToken.balanceOf(receiverAccount)).to.equal(
       testValues.payout
     )
@@ -324,17 +324,17 @@ async function createVestingNft(
   mockToken: SRC20Mock,
   batchMintAmount: number = 1
 ) {
-  const latestBlock = await silas.provider.getBlock('latest')
+  const latestBlock = await ethers.provider.getBlock('latest')
   const unlockTime = latestBlock.timestamp + testValues.lockTime
 
   for (let i = 0; i <= batchMintAmount; i++) {
-    const txRecsipt = await vestingNFT.create(
+    const txReceipt = await vestingNFT.create(
       receiverAccount,
       testValues.payout,
       unlockTime,
       mockToken.address
     )
-    await txRecsipt.wait()
+    await txReceipt.wait()
   }
 
   return unlockTime

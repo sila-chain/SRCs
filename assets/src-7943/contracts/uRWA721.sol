@@ -29,7 +29,7 @@ contract uRWA721 is Context, SRC721, AccessControlEnumerable, ISRC7943NonFungibl
     mapping(address account => bool allowed) internal _receiveWhitelist;
 
     /// @notice Mapping storing the freezing status of assets for each account address.
-    /// @dev It gives true or false on whsila the `tokenId` is frozen for `account`.
+    /// @dev It gives true or false on whether the `tokenId` is frozen for `account`.
     mapping(address account => mapping(uint256 tokenId => bool frozen)) internal _frozenTokens;
 
     /// @notice Emitted when an account's send whitelist status is changed.

@@ -196,7 +196,7 @@ interface ISRC3643 is ISRC20 {
 
     /**
      *  @dev mint tokens on a wallet
-     *  Improved version of default mint msilod. Tokens can be minted
+     *  Improved version of default mint method. Tokens can be minted
      *  to an address if only it is a verified address as per the security token.
      *  @param _to Address to mint the tokens to.
      *  @param _amount Amount of tokens to mint.

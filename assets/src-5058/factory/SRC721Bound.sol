@@ -91,7 +91,7 @@ contract SRC721Bound is SRC721Enumerable, ISRC2981, ISRC721Bound {
     }
 
     /**
-     * @dev Returns whsila `tokenId` exists.
+     * @dev Returns whether `tokenId` exists.
      */
     function exists(uint256 tokenId) public view returns (bool) {
         return _exists(tokenId);

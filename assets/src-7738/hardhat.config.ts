@@ -12,7 +12,7 @@ const config: HardhatUserConfig = {
   solidity: { compilers: [{ version: "0.8.24" }, { version: "0.8.24" }], settings: { optimizer: { enabled: true, runs: 400} }},
   networks: {
     sila-mainnet: {
-      url: `https://sila-mainnet.infura.io/v3/${INFURA_KEY}`,
+      url: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
       accounts: [`${PRIVATE_KEY}`]
     },
     sepolia: {
@@ -40,11 +40,11 @@ const config: HardhatUserConfig = {
       accounts: [`${PRIVATE_KEY}`]
     },
     base: {
-      url: `https://base-sila-mainnet.infura.io/v3/${INFURA_KEY}`,
+      url: `https://base-mainnet.infura.io/v3/${INFURA_KEY}`,
       accounts: [`${PRIVATE_KEY}`]
     }, 
     polygon: {
-      url: `https://polygon-sila-mainnet.infura.io/v3/${INFURA_KEY}`,
+      url: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
       accounts: [`${PRIVATE_KEY}`]
     },
     mantlesepolia: {
@@ -76,7 +76,7 @@ const config: HardhatUserConfig = {
       accounts: [`${PRIVATE_KEY}`]
     },
     optimism: {
-      url: `https://sila-mainnet.optimism.io`,
+      url: `https://mainnet.optimism.io`,
       accounts: [`${PRIVATE_KEY}`]
     }
   },

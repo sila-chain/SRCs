@@ -1,6 +1,6 @@
 {
   "title": "Package Manifest",
-  "description": "SilPM Manifest Specification",
+  "description": "EthPM Manifest Specification",
   "type": "object",
   "required": [
     "manifest"
@@ -13,9 +13,9 @@
     "manifest": {
       "type": "string",
       "title": "Manifest",
-      "description": "SilPM Manifest Version",
-      "default": "silpm/3",
-      "enum": ["silpm/3"]
+      "description": "EthPM Manifest Version",
+      "default": "ethpm/3",
+      "enum": ["ethpm/3"]
     },
     "name": {
       "$ref": "#/definitions/PackageName"

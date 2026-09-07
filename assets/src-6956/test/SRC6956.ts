@@ -1,6 +1,6 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { createHash } from 'node:crypto';
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { SRC6956Authorization, SRC6956Role, merkleTestAnchors, NULLADDR, createAttestation} from "./commons";
@@ -21,7 +21,7 @@ export async function minimalAttestationExample() {
 
   // #################################### ACCOUNTS
   // Alice shall get the NFT, oracle signs the attestation off-chain 
-  const [alice, oracle] = await silas.getSigners();
+  const [alice, oracle] = await ethers.getSigners();
 
   // #################################### CREATE AN ATTESTATION
   const to = alice.address;
@@ -33,10 +33,10 @@ export async function minimalAttestationExample() {
   const validEndTime = attestationTime + 15 * 60; // 15 minutes valid from attestation
 
   // Hash and sign. In practice, oracle shall only sign when Proof-of-Control is established!
-  const messageHash = silas.utils.solidityKeccak256(["address", "bytes32", "uint256", 'uint256', "uint256", "bytes32[]"], [to, anchor, attestationTime, validStartTime, validEndTime, proof]);
-  const sig = await oracle.signMessage(silas.utils.arrayify(messageHash));
+  const messageHash = ethers.utils.solidityKeccak256(["address", "bytes32", "uint256", 'uint256', "uint256", "bytes32[]"], [to, anchor, attestationTime, validStartTime, validEndTime, proof]);
+  const sig = await oracle.signMessage(ethers.utils.arrayify(messageHash));
   // Encode
-  return silas.utils.defaultAbiCoder.encode(['address', 'bytes32', 'uint256', 'uint256', 'uint256', 'bytes32[]', 'bytes'], [to, anchor, attestationTime,  validStartTime, validStartTime, proof, sig]);
+  return ethers.utils.defaultAbiCoder.encode(['address', 'bytes32', 'uint256', 'uint256', 'uint256', 'bytes32[]', 'bytes'], [to, anchor, attestationTime,  validStartTime, validStartTime, proof, sig]);
 }
 
 describe("SRC6956: Asset-Bound NFT --- Basics", function () {
@@ -44,9 +44,9 @@ describe("SRC6956: Asset-Bound NFT --- Basics", function () {
   // Besides owner there's user, minter and burner with appropriate roles.
   async function deployAbNftFixture() {
     // Contracts are deployed using the first signer/account by default
-    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await silas.getSigners();
+    const [owner, maintainer, oracle, alice, bob, mallory, hacker, carl, gasProvider ] = await ethers.getSigners();
 
-    const AbNftContract = await silas.getContractFactory("SRC6956");
+    const AbNftContract = await ethers.getContractFactory("SRC6956");
     //const burnAuthorization = SRC6956Authorization.ALL;
     //const approveAuthorization = SRC6956Authorization.ALL;
 

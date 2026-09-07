@@ -117,7 +117,7 @@
         }
 
         try {
-            let checksumAddr = silas.getAddress(value);
+            let checksumAddr = ethers.getAddress(value);
             const result = await provider.getCode(checksumAddr);
             if (result.length > 2) { // If code returned is more than '0x' it's a contract of some kind
                 errorText.style.display = 'none';
@@ -133,7 +133,7 @@
             console.log(`${error} ${value} is NOT a valid Sila address.`);
             successIcon.style.display = 'none';
             if (error.message.includes("bad address checksum")) {
-                errorText.textContent = "Failed Checksum (use lowsrcase)";
+                errorText.textContent = "Failed Checksum (use lowercase)";
             } else {
                 errorText.textContent = "Not a valid address";
             }
@@ -142,7 +142,7 @@
         }
     }
 
-    const provider = new silas.JsonRpcProvider(rpcURL, {
+    const provider = new ethers.JsonRpcProvider(rpcURL, {
         chainId: Number(chainID),
         name: 'banksy'
     });

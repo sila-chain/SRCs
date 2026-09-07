@@ -1,13 +1,13 @@
-/* global  silas */
+/* global  ethers */
 
-import { deployments, silas } from "hardhat";
+import { deployments, ethers } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
 import { expect } from "chai";
 import { Drainer, Protected, MockSRC20 } from "../types";
 
-const setupTest = deployments.createFixture(async ({ deployments, getNamedAccounts, silas: _sil }, options) => {
+const setupTest = deployments.createFixture(async ({ deployments, getNamedAccounts, ethers: _sil }, options) => {
   const { deployer, owner } = await getNamedAccounts();
   await deployments.fixture(["poc"]);
   console.warn(deployer, owner);
@@ -16,8 +16,8 @@ const setupTest = deployments.createFixture(async ({ deployments, getNamedAccoun
   return {
     owner,
     deployer,
-    victim: (await silas.getContractAt(c.abi, c.address)) as Protected,
-    attacker: (await silas.getContractAt(d.abi, d.address)) as Drainer,
+    victim: (await ethers.getContractAt(c.abi, c.address)) as Protected,
+    attacker: (await ethers.getContractAt(d.abi, d.address)) as Drainer,
   };
 });
 

@@ -21,7 +21,7 @@ interface ISRC7510 {
     /// @notice Check if another token is a parent of an NFT
     /// @param tokenId The NFT to check its parent for
     /// @param otherToken Another token to check as a parent or not
-    /// @return Whsila `otherToken` is a parent of `tokenId`
+    /// @return Whether `otherToken` is a parent of `tokenId`
     function isParentToken(uint256 tokenId, Token memory otherToken) external view returns (bool);
 
     /// @notice Set the parent tokens for an NFT

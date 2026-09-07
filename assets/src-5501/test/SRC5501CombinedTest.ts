@@ -1,7 +1,7 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
-import { BigNumber } from "silas";
+import { ethers } from "hardhat";
+import { BigNumber } from "ethers";
 
 describe("SRC5501CombinedTest", function () {
   async function initialize() {
@@ -11,9 +11,9 @@ describe("SRC5501CombinedTest", function () {
     const uint64MaxValue = BigNumber.from("18446744073709551615");
 
     const [owner, delegatee, borrower, rentalContractMock] =
-      await silas.getSigners();
+      await ethers.getSigners();
 
-    const contractFactory = await silas.getContractFactory(
+    const contractFactory = await ethers.getContractFactory(
       "SRC5501CombinedTestCollection"
     );
     const contract = await contractFactory.deploy("Test Collection", "TEST");

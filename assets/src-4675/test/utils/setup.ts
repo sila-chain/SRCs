@@ -1,7 +1,7 @@
 import hre, { deployments } from "hardhat"
-import { Contract, Wallet, utils, BigNumber, BigNumberish, Signer, PopulatedTransaction } from "silas"
-import { AddressZero } from "@silasproject/constants";
-import { formatFixed, parseFixed } from "@silasproject/bignumber";
+import { Contract, Wallet, utils, BigNumber, BigNumberish, Signer, PopulatedTransaction } from "ethers"
+import { AddressZero } from "@ethersproject/constants";
+import { formatFixed, parseFixed } from "@ethersproject/bignumber";
 import { addToken } from "./execution";
 import { Address } from "cluster";
 
@@ -11,21 +11,21 @@ const MFContract = () => {
 
 export const getMFContract = async () => {
     // const MFDeployment = await deployments.get(MFContract());
-    const MF = await hre.silas.getContractFactory(MFContract());
+    const MF = await hre.ethers.getContractFactory(MFContract());
     // return MF.attach(MFDeployment.address);
     return MF.deploy();
 }
 
 export const getNFTContract = async () => {
     // const NFTDeployment = await deployments.get("NFT");
-    const NFT = await hre.silas.getContractFactory("NFT");
+    const NFT = await hre.ethers.getContractFactory("NFT");
     // return NFT.attach(NFTDeployment.address);
     return NFT.deploy();
 }
 
 export const deployFTContract = async (totalSupply: BigNumberish) => {
     const tSupply = totalSupply || 1000;
-    const FT = await hre.silas.getContractFactory("FT");
+    const FT = await hre.ethers.getContractFactory("FT");
     return FT.deploy(tSupply);
 }
 

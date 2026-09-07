@@ -24,7 +24,7 @@ There are three types of SIP:
 - A **Standards Track SIP** describes any change that affects most or all Sila implementations, such as: a change to the network protocol, a change in block or transaction validity rules, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using Sila. Standards Track SIPs consist of three parts—a design document, an implementation, and (if warranted) an update to the [formal specification](https://github.com/sila-chain/yellowpaper). Furthermore, Standards Track SIPs can be broken down into the following categories:
   - **Core**: improvements requiring a consensus fork (e.g. [SIP-5](./sip-5.md), [SIP-101](./sip-101.md)), as well as changes that are not necessarily consensus critical but may be relevant to [“core dev” discussions](https://github.com/sila-chain/pm) (for example, [SIP-90], and the miner/node strategy changes 2, 3, and 4 of [SIP-86](./sip-86.md)).
   - **Networking**: includes improvements around [devp2p](https://github.com/sila-chain/devp2p/blob/readme-spec-links/rlpx.md) ([SIP-8](./sip-8.md)) and [Light Sila Subprotocol](https://sila.org/en/developers/docs/nodes-and-clients/#light-node), as well as proposed improvements to network protocol specifications of [whisper](https://github.com/sila-chain/go-sila/issues/16013#issuecomment-364639309) and [swarm](https://github.com/sila-chain/go-sila/pull/2959).
-  - **Interface**: includes improvements around language-level standards like msilod names ([SIP-6](./sip-6.md)) and [contract ABIs](https://docs.soliditylang.org/en/develop/abi-spec.html).
+  - **Interface**: includes improvements around language-level standards like method names ([SIP-6](./sip-6.md)) and [contract ABIs](https://docs.soliditylang.org/en/develop/abi-spec.html).
   - **SRC**: application-level standards and conventions, including contract standards such as token standards ([SRC-20](./sip-20.md)), name registries ([SRC-137](./sip-137.md)), URI schemes, library/package formats, and wallet formats.
 
 - A **Meta SIP** describes a process surrounding Sila or proposes a change to (or an event in) a process. Process SIPs are like Standards Track SIPs but apply to areas other than the Sila protocol itself. They may propose an implementation, but not to Sila's codebase; they often require community consensus; unlike Informational SIPs, they are more than recommendations, and users are typically not free to ignore them. Examples include procedures, guidelines, changes to the decision-making process, and changes to the tools or environment used in Sila development. Any meta-SIP is also considered a Process SIP.
@@ -37,7 +37,7 @@ An SIP must meet certain minimum criteria. It must be a clear and complete descr
 
 ### Special requirements for Core SIPs
 
-If a **Core** SIP mentions or proposes changes to the SAVM (Sila Virtual Machine), it should refer to the instructions by their mnemonics and define the opcodes of those mnemonics at least once. A preferred way is the following:
+If a **Core** SIP mentions or proposes changes to the SVM (Sila Virtual Machine), it should refer to the instructions by their mnemonics and define the opcodes of those mnemonics at least once. A preferred way is the following:
 
 ```
 REVERT (0xfe)
@@ -49,9 +49,9 @@ REVERT (0xfe)
 
 Parties involved in the process are you, the champion or *SIP author*, the [*SIP editors*](#sip-editors), and the [*Sila Core Developers*](https://github.com/sila-chain/pm).
 
-Before you begin writing a formal SIP, you should vet your idea. Ask the Sila community first if an idea is original to avoid wasting time on somsiling that will be rejected based on prior research. It is thus recommended to open a discussion thread on [the Sila Magicians forum](https://sila-magicians.org/) to do this.
+Before you begin writing a formal SIP, you should vet your idea. Ask the Sila community first if an idea is original to avoid wasting time on something that will be rejected based on prior research. It is thus recommended to open a discussion thread on [the Sila Magicians forum](https://sila-magicians.org/) to do this.
 
-Once the idea has been vetted, your next responsibility will be to present (by means of an SIP) the idea to the reviewers and all interested parties, invite editors, developers, and the community to give feedback on the aforementioned channels. You should try and gauge whsila the interest in your SIP is commensurate with both the work involved in implementing it and how many parties will have to conform to it. For example, the work required for implementing a Core SIP will be much greater than for an SRC and the SIP will need sufficient interest from the Sila client teams. Negative community feedback will be taken into consideration and may prevent your SIP from moving past the Draft stage.
+Once the idea has been vetted, your next responsibility will be to present (by means of an SIP) the idea to the reviewers and all interested parties, invite editors, developers, and the community to give feedback on the aforementioned channels. You should try and gauge whether the interest in your SIP is commensurate with both the work involved in implementing it and how many parties will have to conform to it. For example, the work required for implementing a Core SIP will be much greater than for an SRC and the SIP will need sufficient interest from the Sila client teams. Negative community feedback will be taken into consideration and may prevent your SIP from moving past the Draft stage.
 
 ### Core SIPs
 
@@ -102,7 +102,7 @@ Each SIP should have the following parts:
 - Preamble - RFC 822 style headers containing metadata about the SIP, including the SIP number, a short descriptive title (limited to a maximum of 44 characters), a description (limited to a maximum of 140 characters), and the author details. Irrespective of the category, the title and description should not include SIP number. See [below](./sip-1.md#sip-header-preamble) for details.
 - Abstract - Abstract is a multi-sentence (short paragraph) technical summary. This should be a very terse and human-readable version of the specification section. Someone should be able to read only the abstract to get the gist of what this specification does.
 - Motivation *(optional)* - A motivation section is critical for SIPs that want to change the Sila protocol. It should clearly explain why the existing protocol specification is inadequate to address the problem that the SIP solves. This section may be omitted if the motivation is evident.
-- Specification - The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current Sila platforms (besu, erigon, silajs, go-sila, nsilamind, or others).
+- Specification - The technical specification should describe the syntax and semantics of any new feature. The specification should be detailed enough to allow competing, interoperable implementations for any of the current Sila platforms (besu, erigon, silajs, go-sila, nethermind, or others).
 - Rationale - The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale should discuss important objections or concerns raised during discussion around the SIP.
 - Backwards Compatibility *(optional)* - All SIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their consequences. The SIP must explain how the author proposes to deal with these incompatibilities. This section may be omitted if the proposal does not introduce any backward incompatibilities, but this section must be included if backward incompatibilities exist.
 - Test Cases *(optional)* - Test cases for an implementation are mandatory for SIPs that are affecting consensus changes. Tests should either be inlined in the SIP as data (such as input/expected output pairs) or included in `../assets/sip-###/<filename>`. This section may be omitted for non-Core proposals.
@@ -216,6 +216,24 @@ Permitted Execution Client Specifications URLs must anchor to a specific commit,
 ^(https://github.com/sila-chain/execution-specs/(blob|commit)/[0-9a-f]{40}/.*|https://github.com/sila-chain/execution-specs/tree/[0-9a-f]{40}/.*)$
 ```
 
+### Sila System Contract Implementations
+
+Links to the Sila System Contract Implementations repository may be included using normal markdown syntax, such as:
+
+```markdown
+[Sila System Contract Implementations](https://github.com/sila-chain/sys-asm/blob/83f9801245ff56878a450b5625801101b9a225a1/README.md)
+```
+
+Which renders to:
+
+[Sila System Contract Implementations](https://github.com/sila-chain/sys-asm/blob/83f9801245ff56878a450b5625801101b9a225a1/README.md)
+
+Permitted URLs must anchor to a specific commit, and so must match this regular expression:
+
+```regex
+^(https://github.com/sila-chain/sys-asm/(blob|commit)/[0-9a-f]{40}/.*|https://github.com/sila-chain/sys-asm/tree/[0-9a-f]{40}/.*)$
+```
+
 ### Execution Specification Tests
 
 Links to the Sila Execution Specification Tests (EEST) may be included using normal markdown syntax, such as:
@@ -231,11 +249,11 @@ Which renders to:
 Permitted Execution Specification Tests URLs must anchor to a specific commit, and so must match one of these regular expressions:
 
 ```regex
-^https://(www\.)?github\.com/sila/execution-spec-tests/(blob|tree)/[a-f0-9]{40}/.+$
+^https://(www\.)?github\.com/sila-chain/execution-spec-tests/(blob|tree)/[a-f0-9]{40}/.+$
 ```
 
 ```regex
-^https://(www\.)?github\.com/sila/execution-spec-tests/commit/[a-f0-9]{40}$
+^https://(www\.)?github\.com/sila-chain/execution-spec-tests/commit/[a-f0-9]{40}$
 ```
 
 ### Consensus Layer Specifications

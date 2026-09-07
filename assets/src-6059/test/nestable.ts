@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { silas } from 'hardhat';
-import { BigNumber, constants } from 'silas';
+import { ethers } from 'hardhat';
+import { BigNumber, constants } from 'ethers';
 import { NestableTokenMock } from '../typechain-types';
-import { SignerWithAddress } from '@nomiclabs/hardhat-silas/signers';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 
 function bn(x: number): BigNumber {
@@ -15,7 +15,7 @@ async function parentChildFixture(): Promise<{
   parent: NestableTokenMock;
   child: NestableTokenMock;
 }> {
-  const factory = await silas.getContractFactory('NestableTokenMock');
+  const factory = await ethers.getContractFactory('NestableTokenMock');
 
   const parent = await factory.deploy();
   await parent.deployed();
@@ -32,7 +32,7 @@ describe('NestableToken', function () {
   let addrs: SignerWithAddress[];
 
   beforeEach(async function () {
-    [owner, tokenOwner, ...addrs] = await silas.getSigners();
+    [owner, tokenOwner, ...addrs] = await ethers.getSigners();
     ({ parent, child } = await loadFixture(parentChildFixture));
   });
 
@@ -129,7 +129,7 @@ describe('NestableToken', function () {
     });
 
     it('cannot nest mint to non nestable receiver', async function () {
-      const SRC721 = await silas.getContractFactory('SRC721Mock');
+      const SRC721 = await ethers.getContractFactory('SRC721Mock');
       const nonReceiver = await SRC721.deploy('Non receiver', 'NR');
       await nonReceiver.deployed();
 
@@ -1116,7 +1116,7 @@ describe('NestableToken', function () {
     });
 
     it('cannot nest tranfer to contract if it does implement ISRC6059', async function () {
-      const SRC721 = await silas.getContractFactory('SRC721Mock');
+      const SRC721 = await ethers.getContractFactory('SRC721Mock');
       const nonNestable = await SRC721.deploy('Non receiver', 'NR');
       await nonNestable.deployed();
       await expect(

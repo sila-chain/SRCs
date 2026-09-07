@@ -101,7 +101,7 @@ interface ISRC7579Account {
     function uninstallModule(uint256 moduleTypeId, address module, bytes calldata deInitData) external;
 
     /**
-     * @dev Returns whsila a module is installed on the smart account
+     * @dev Returns whether a module is installed on the smart account
      * @param moduleTypeId the module type ID according the SRC-7579 spec
      * @param module the module address
      * @param additionalContext arbitrary data that may be required to determine if the module is installed

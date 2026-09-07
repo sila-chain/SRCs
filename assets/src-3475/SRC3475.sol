@@ -318,7 +318,7 @@ contract SRC3475 is ISRC3475 {
         uint256 issuanceDate = _classes[classId].nonces[nonceId]._values[0].uintValue;
         uint256 maturityDate = issuanceDate + _classes[classId].nonces[nonceId]._values[5].uintValue;
         
-        // check whsila the bond is being already initialized: 
+        // check whether the bond is being already initialized: 
         progressAchieved = block.timestamp - issuanceDate;
         progressRemaining = block.timestamp < maturityDate
         ? maturityDate - block.timestamp
@@ -399,7 +399,7 @@ contract SRC3475 is ISRC3475 {
         ISRC3475.Transaction calldata _transaction
     ) private {
         Nonce storage nonce = _classes[_transaction.classId].nonces[_transaction.nonceId];
-        // verify whsila _amount of bonds to be redeemed are sufficient available for the given nonce of the bonds
+        // verify whether _amount of bonds to be redeemed are sufficient available for the given nonce of the bonds
 
         require(
             nonce._balances[_from] >= _transaction._amount,
@@ -418,7 +418,7 @@ contract SRC3475 is ISRC3475 {
         ISRC3475.Transaction calldata _transaction
     ) private {
         Nonce storage nonce = _classes[_transaction.classId].nonces[_transaction.nonceId];
-        // verify whsila _amount of bonds to be burned are sufficient available for the given nonce of the bonds
+        // verify whether _amount of bonds to be burned are sufficient available for the given nonce of the bonds
         require(
             nonce._balances[_from] >= _transaction._amount,
             "SRC3475: not enough bond to transfer"

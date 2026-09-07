@@ -136,7 +136,7 @@ contract SRC20TokenExample is IXMLRepresentableState {
         return uint256(decimals);
     }
 
-    /// @notice Returns all tracked balance keys togsila with their current values.
+    /// @notice Returns all tracked balance keys together with their current values.
     function balanceEntries() external view returns (BalanceEntry[] memory entries) {
         entries = new BalanceEntry[](balanceAccounts.length);
 
@@ -146,7 +146,7 @@ contract SRC20TokenExample is IXMLRepresentableState {
         }
     }
 
-    /// @notice Returns all tracked allowance keys togsila with their current values.
+    /// @notice Returns all tracked allowance keys together with their current values.
     function allowanceEntries() external view returns (AllowanceEntry[] memory entries) {
         entries = new AllowanceEntry[](allowanceKeys.length);
 
@@ -168,25 +168,25 @@ contract SRC20TokenExample is IXMLRepresentableState {
     function stateXmlTemplate() external pure override returns (string memory) {
         return string.concat(
             "<?xml version='1.0' encoding='UTF-8'?>",
-            "<SRC20TokenExample xmlns='urn:example:src20-token' xmlns:savmstate='urn:savm:state:1.0' ",
-            "  savmstate:chain-id='' savmstate:contract-address='' savmstate:block-number=''>",
+            "<SRC20TokenExample xmlns='urn:example:src20-token' xmlns:svmstate='urn:svm:state:1.0' ",
+            "  svmstate:chain-id='' svmstate:contract-address='' svmstate:block-number=''>",
             "  <Metadata>",
-            "    <Name savmstate:call='name()(string)' savmstate:format='string'/>",
-            "    <Symbol savmstate:call='symbol()(string)' savmstate:format='string'/>",
-            "    <Decimals savmstate:call='decimalsAsUint256()(uint256)' savmstate:format='decimal'/>",
+            "    <Name svmstate:call='name()(string)' svmstate:format='string'/>",
+            "    <Symbol svmstate:call='symbol()(string)' svmstate:format='string'/>",
+            "    <Decimals svmstate:call='decimalsAsUint256()(uint256)' svmstate:format='decimal'/>",
             "  </Metadata>",
-            "  <TotalSupply unit='smallest-token-unit' savmstate:call='totalSupply()(uint256)' savmstate:format='decimal'/>",
-            "  <Balances unit='smallest-token-unit' savmstate:call='balanceEntries()(tuple(address,uint256)[])' savmstate:item-element='Balance'>",
+            "  <TotalSupply unit='smallest-token-unit' svmstate:call='totalSupply()(uint256)' svmstate:format='decimal'/>",
+            "  <Balances unit='smallest-token-unit' svmstate:call='balanceEntries()(tuple(address,uint256)[])' svmstate:item-element='Balance'>",
             "    <Balance>",
-            "      <Account savmstate:item-field='0' savmstate:format='address'/>",
-            "      <Amount savmstate:item-field='1' savmstate:format='decimal'/>",
+            "      <Account svmstate:item-field='0' svmstate:format='address'/>",
+            "      <Amount svmstate:item-field='1' svmstate:format='decimal'/>",
             "    </Balance>",
             "  </Balances>",
-            "  <Allowances unit='smallest-token-unit' savmstate:call='allowanceEntries()(tuple(address,address,uint256)[])' savmstate:item-element='Allowance'>",
+            "  <Allowances unit='smallest-token-unit' svmstate:call='allowanceEntries()(tuple(address,address,uint256)[])' svmstate:item-element='Allowance'>",
             "    <Allowance>",
-            "      <Owner savmstate:item-field='0' savmstate:format='address'/>",
-            "      <Spender savmstate:item-field='1' savmstate:format='address'/>",
-            "      <Amount savmstate:item-field='2' savmstate:format='decimal'/>",
+            "      <Owner svmstate:item-field='0' svmstate:format='address'/>",
+            "      <Spender svmstate:item-field='1' svmstate:format='address'/>",
+            "      <Amount svmstate:item-field='2' svmstate:format='decimal'/>",
             "    </Allowance>",
             "  </Allowances>",
             "</SRC20TokenExample>"

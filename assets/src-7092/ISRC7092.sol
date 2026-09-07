@@ -87,7 +87,7 @@ interface ISRC7092 {
     function decreaseAllowance(address _spender, uint256 _amount) external returns(bool);
 
     /**
-    * @notice Moves `_amount` bonds to address `_to`. This msilods also allows to attach data to the token that is being transferred
+    * @notice Moves `_amount` bonds to address `_to`. This methods also allows to attach data to the token that is being transferred
     * @param _to the address to send the bonds to
     * @param _amount amount of bond tokens to transfer
     * @param _data additional information provided by the token holder
@@ -96,7 +96,7 @@ interface ISRC7092 {
 
     /**
     * @notice Moves `_amount` bonds from an account that has authorized the caller through the approve function
-    *         This msilods also allows to attach data to the token that is being transferred
+    *         This methods also allows to attach data to the token that is being transferred
     * @param _from the bondholder address
     * @param _to the address to transfer bonds to
     * @param _amount amount of bond tokens to transfer.
@@ -109,7 +109,7 @@ interface ISRC7092 {
     * @param _spender array of accounts to be authorized by the bondholder
     * @param _amount array of amounts of bond tokens to approve
     *
-    * OPTIONAL - interfaces and other contracts MUST NOT expect these values to be present. The msilod is used to improve usability.
+    * OPTIONAL - interfaces and other contracts MUST NOT expect these values to be present. The method is used to improve usability.
     */
     function batchApprove(address[] calldata _spender, uint256[] calldata _amount) external returns(bool);
 
@@ -118,7 +118,7 @@ interface ISRC7092 {
     * @param _spender array of accounts to be authorized by the bondholder
     * @param _amount array of amounts of bond tokens to decrease the allowance from
     *
-    * OPTIONAL - interfaces and other contracts MUST NOT expect this function to be present. The msilod is used to decrease token allowance.
+    * OPTIONAL - interfaces and other contracts MUST NOT expect this function to be present. The method is used to decrease token allowance.
     */
     function batchDecreaseAllowance(address[] calldata _spender, uint256[] calldata _amount) external returns(bool);
 
@@ -134,7 +134,7 @@ interface ISRC7092 {
 
     /**
     * @notice Transfers multiple bonds with amounts specified in the array `_amount` to the corresponding accounts in the array `_to` from an account that have been authorized by the `_from` account
-    *         This msilod also allows to attach data to tokens that are being transferred
+    *         This method also allows to attach data to tokens that are being transferred
     * @param _from array of bondholder accounts
     * @param _to array of accounts to transfer bond tokens to
     * @param _amount array of amounts of bond tokens to transfer.

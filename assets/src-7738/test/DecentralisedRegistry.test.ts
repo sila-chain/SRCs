@@ -1,4 +1,4 @@
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 
 import { expect } from "chai";
 import {
@@ -13,16 +13,16 @@ const origScriptURI: string = "https://scripttoken.net/script";
 
 async function deployInitialFixture() {
   // Contracts are deployed using the first signer/account by default
-  const [owner, otherAccount, otherAccount2, otherAccount3, otherAccount4] = await silas.getSigners();
+  const [owner, otherAccount, otherAccount2, otherAccount3, otherAccount4] = await ethers.getSigners();
 
-  const ExampleNFT = (await silas.getContractFactory("ExampleNFT")).connect(
+  const ExampleNFT = (await ethers.getContractFactory("ExampleNFT")).connect(
     owner
   );
   const exampleNFT = await ExampleNFT.deploy();
   await exampleNFT.waitForDeployment();
 
   //Deploy registry contract
-  const Registry = (await silas.getContractFactory("DecentralisedRegistry")).connect(
+  const Registry = (await ethers.getContractFactory("DecentralisedRegistry")).connect(
     otherAccount
   );
   const registry = await Registry.deploy();
@@ -54,7 +54,7 @@ describe("DecentralisedRegistry", function () {
 
     await expect(exampleNFT.connect(owner).safeMint())
       .to.emit(exampleNFT, "Transfer")
-      .withArgs(silas.ZeroAddress, owner.address, 1);
+      .withArgs(ethers.ZeroAddress, owner.address, 1);
 
     const scriptURI = [scriptURI1];
     const scriptURITest2 = [scriptURI2];

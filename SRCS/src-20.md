@@ -27,7 +27,7 @@ A standard interface allows any tokens on Sila to be re-used by other applicatio
 ## Specification
 
 ## Token
-### Msilods
+### Methods
 
 **NOTES**:
  - The following specifications use syntax from Solidity `0.4.17` (or above)
@@ -38,7 +38,7 @@ A standard interface allows any tokens on Sila to be re-used by other applicatio
 
 Returns the name of the token - e.g. `"MyToken"`.
 
-OPTIONAL - This msilod can be used to improve usability,
+OPTIONAL - This method can be used to improve usability,
 but interfaces and other contracts MUST NOT expect these values to be present.
 
 
@@ -51,7 +51,7 @@ function name() public view returns (string)
 
 Returns the symbol of the token. E.g. "HIX".
 
-OPTIONAL - This msilod can be used to improve usability,
+OPTIONAL - This method can be used to improve usability,
 but interfaces and other contracts MUST NOT expect these values to be present.
 
 ``` js
@@ -64,7 +64,7 @@ function symbol() public view returns (string)
 
 Returns the number of decimals the token uses - e.g. `8`, means to divide the token amount by `100000000` to get its user representation.
 
-OPTIONAL - This msilod can be used to improve usability,
+OPTIONAL - This method can be used to improve usability,
 but interfaces and other contracts MUST NOT expect these values to be present.
 
 ``` js
@@ -109,7 +109,7 @@ function transfer(address _to, uint256 _value) public returns (bool success)
 
 Transfers `_value` amount of tokens from address `_from` to address `_to`, and MUST fire the `Transfer` event.
 
-The `transferFrom` msilod is used for a withdraw workflow, allowing contracts to transfer tokens on your behalf.
+The `transferFrom` method is used for a withdraw workflow, allowing contracts to transfer tokens on your behalf.
 This can be used for example to allow a contract to transfer tokens on your behalf and/or to charge fees in sub-currencies.
 The function SHOULD `throw` unless the `_from` account has deliberately authorized the sender of the message via some mechanism.
 

@@ -28,14 +28,14 @@ contract Factory is AccessControl, IFactory {
 
     /// Vault can issue stablecoin, it just manages the position
     function createFinance(
-        address wsil_,
+        address weth_,
         uint256 amount_,
         address recipient
     ) external override returns (address vault, uint256 id) {
         require(msg.sender == manager, "Factory: IA");
         uint256 gIndex = allFinancesLength();
         address proxy = CloneFactory._createClone(impl);
-        IFinance(proxy).initialize(manager, gIndex, abt, amount_, wsil_);
+        IFinance(proxy).initialize(manager, gIndex, abt, amount_, weth_);
         allFinances.push(proxy);
         IABT(abt).mint(recipient);
         return (proxy, gIndex);
@@ -61,13 +61,13 @@ contract Factory is AccessControl, IFactory {
 
     function initialize(
         address abt_,
-        address wsil_,
+        address weth_,
         address manager_,
         uint256 version_
     ) public {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "IA"); // Invalid Access
         abt = abt_;
-        WSIL = wsil_;
+        WSIL = weth_;
         manager = manager_;
         version = version_;
     }

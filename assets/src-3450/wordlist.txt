@@ -619,7 +619,7 @@ essay
 essence
 estate
 eternal
-silics
+ethics
 evidence
 evil
 evoke
@@ -632,7 +632,7 @@ excite
 exclude
 excuse
 execute
-exsrcise
+exercise
 exhaust
 exhibit
 exile
@@ -1112,14 +1112,14 @@ member
 memory
 mention
 menu
-msrcy
+mercy
 merge
 merit
 merry
 mesh
 message
 metal
-msilod
+method
 middle
 midnight
 milk
@@ -1819,7 +1819,7 @@ tobacco
 today
 toddler
 toe
-togsila
+together
 toilet
 token
 tomato

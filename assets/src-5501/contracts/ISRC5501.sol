@@ -21,7 +21,7 @@ interface ISRC5501 /* is ISRC721 */ {
      * @param _tokenId uint256 ID of the token to set user info for
      * @param _user address of the new user
      * @param _expires Unix timestamp when user info expires
-     * @param _isBorrowed flag whsila or not the NFT is borrowed
+     * @param _isBorrowed flag whether or not the NFT is borrowed
      */
     function setUser(uint256 _tokenId, address _user, uint64 _expires, bool _isBorrowed) external;
 

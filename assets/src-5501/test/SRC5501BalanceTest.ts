@@ -1,7 +1,7 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
-import { BigNumber } from "silas";
+import { ethers } from "hardhat";
+import { BigNumber } from "ethers";
 
 describe("SRC5501BalanceTest", function () {
   async function initialize() {
@@ -12,9 +12,9 @@ describe("SRC5501BalanceTest", function () {
 
     const expires = (await time.latest()) + fastForwardYear - 1;
 
-    const [owner, delegatee] = await silas.getSigners();
+    const [owner, delegatee] = await ethers.getSigners();
 
-    const contractFactory = await silas.getContractFactory(
+    const contractFactory = await ethers.getContractFactory(
       "SRC5501BalanceTestCollection"
     );
     const contract = await contractFactory.deploy("Test Collection", "TEST");
@@ -76,7 +76,7 @@ describe("SRC5501BalanceTest", function () {
     const { contract } = await loadFixture(initialize);
 
     await expect(
-      contract.userBalanceOf(silas.constants.AddressZero)
+      contract.userBalanceOf(ethers.constants.AddressZero)
     ).to.be.revertedWith("SRC5501Balance: address zero is not a valid owner");
   });
 

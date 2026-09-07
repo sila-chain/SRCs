@@ -114,53 +114,53 @@ contract BondDataTaxonomyDemo is IXMLRepresentableStateVersionedHashed {
         // BDT-inspired XML structure.
         return
                     "<Contract xmlns='urn:example:contract'"
-                    " xmlns:savmstate='urn:savm:state:1.0'"
-                    " savmstate:chain-id=''"
-                    " savmstate:contract-address=''"
-                    " savmstate:block-number=''>"
+                    " xmlns:svmstate='urn:svm:state:1.0'"
+                    " svmstate:chain-id=''"
+                    " svmstate:contract-address=''"
+                    " svmstate:block-number=''>"
                     "<BondData xmlns='urn:icma:bdt:1.0'>"
 
                     "<Security>"
                     "<Identifier>"
-                    "<ISIN savmstate:call='isin()(string)'/>"
+                    "<ISIN svmstate:call='isin()(string)'/>"
                     "</Identifier>"
-                    "<Name savmstate:call='instrumentName()(string)'/>"
-                    "<Status savmstate:call='status()(string)'/>"
+                    "<Name svmstate:call='instrumentName()(string)'/>"
+                    "<Status svmstate:call='status()(string)'/>"
                     "</Security>"
 
                     "<Issuer>"
-                    "<Name savmstate:call='issuerName()(string)'/>"
-                    "<LEI savmstate:call='issuerLei()(string)'/>"
+                    "<Name svmstate:call='issuerName()(string)'/>"
+                    "<LEI svmstate:call='issuerLei()(string)'/>"
                     "</Issuer>"
 
                     "<EconomicTerms>"
 
                     "<Notional>"
-                    "<Amount savmstate:call='notionalAmount()(uint256)' savmstate:format='decimal' savmstate:scale='2'/>"
-                    "<Currency savmstate:call='currency()(string)'/>"
+                    "<Amount svmstate:call='notionalAmount()(uint256)' svmstate:format='decimal' svmstate:scale='2'/>"
+                    "<Currency svmstate:call='currency()(string)'/>"
                     "</Notional>"
 
                     "<IssueDate>"
-                    "<UnadjustedDate savmstate:call='issueDate()(uint256)' savmstate:format='iso8601-date'/>"
+                    "<UnadjustedDate svmstate:call='issueDate()(uint256)' svmstate:format='iso8601-date'/>"
                     "</IssueDate>"
 
                     "<MaturityDate>"
-                    "<UnadjustedDate savmstate:call='maturityDate()(uint256)' savmstate:format='iso8601-date'/>"
+                    "<UnadjustedDate svmstate:call='maturityDate()(uint256)' svmstate:format='iso8601-date'/>"
                     "</MaturityDate>"
 
                     "<Coupon>"
                     "<Type>Fixed</Type>"
-                    "<Rate savmstate:call='couponRateBP()(int256)' savmstate:format='decimal' savmstate:scale='4'/>"
-                    "<DayCountFraction savmstate:call='dayCountFraction()(string)'/>"
+                    "<Rate svmstate:call='couponRateBP()(int256)' svmstate:format='decimal' svmstate:scale='4'/>"
+                    "<DayCountFraction svmstate:call='dayCountFraction()(string)'/>"
                     "<Frequency>"
-                    "<PeriodMultiplier savmstate:call='couponFrequencyMonths()(uint256)' savmstate:format='integer'/>"
+                    "<PeriodMultiplier svmstate:call='couponFrequencyMonths()(uint256)' svmstate:format='integer'/>"
                     "<Period>M</Period>"
                     "</Frequency>"
                     "</Coupon>"
 
                     "</EconomicTerms>"
 
-                    "<GoverningLaw savmstate:call='governingLaw()(string)'/>"
+                    "<GoverningLaw svmstate:call='governingLaw()(string)'/>"
 
                     "</BondData>"
                     "</Contract>";

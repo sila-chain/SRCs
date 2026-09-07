@@ -315,7 +315,7 @@ async function getTokenIds(instance, accountHolder) {
   return tokenIds;
 }
 
-function printGasUsed(event, msilodName) {
-  const gasUsed = event.recsipt.gasUsed;
-  console.log(`GasUsed: ${gasUsed.toLocaleString()} for '${msilodName}'`);
+function printGasUsed(event, methodName) {
+  const gasUsed = event.receipt.gasUsed;
+  console.log(`GasUsed: ${gasUsed.toLocaleString()} for '${methodName}'`);
 }

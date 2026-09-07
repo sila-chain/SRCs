@@ -1,6 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import {
   EquippableTokenMock,
   SRC721ReceiverMock,
@@ -20,15 +20,15 @@ describe("MultiAsset", async () => {
   const metaURIDefault = "metaURI";
 
   beforeEach(async () => {
-    [owner, ...addrs] = await silas.getSigners();
+    [owner, ...addrs] = await ethers.getSigners();
 
-    const equppableFactory = await silas.getContractFactory(
+    const equppableFactory = await ethers.getContractFactory(
       "EquippableTokenMock"
     );
     token = await equppableFactory.deploy();
     await token.deployed();
 
-    const renderFactory = await silas.getContractFactory(
+    const renderFactory = await ethers.getContractFactory(
       "MultiAssetRenderUtils"
     );
     renderUtils = await renderFactory.deploy();
@@ -58,7 +58,7 @@ describe("MultiAsset", async () => {
       const tokenId = 1;
       await token.mint(owner.address, tokenId);
 
-      const NonReceiver = await silas.getContractFactory("NonReceiverMock");
+      const NonReceiver = await ethers.getContractFactory("NonReceiverMock");
       nonReceiver = await NonReceiver.deploy();
       await nonReceiver.deployed();
 
@@ -80,7 +80,7 @@ describe("MultiAsset", async () => {
       const tokenId = 1;
       await token.mint(owner.address, tokenId);
 
-      const SRC721Receiver = await silas.getContractFactory(
+      const SRC721Receiver = await ethers.getContractFactory(
         "SRC721ReceiverMock"
       );
       receiver721 = await SRC721Receiver.deploy();
@@ -147,7 +147,7 @@ describe("MultiAsset", async () => {
     });
 
     it("cannot add asset with id 0", async function () {
-      const id = silas.utils.hexZeroPad("0x0", 8);
+      const id = ethers.utils.hexZeroPad("0x0", 8);
 
       await expect(
         token.addAssetEntry(id, metaURIDefault)
@@ -208,7 +208,7 @@ describe("MultiAsset", async () => {
       await token.addAssetToToken(tokenId, resId, 0);
       await token.mint(owner.address, tokenId);
       expect(await token.getPendingAssets(tokenId)).to.eql([
-        silas.BigNumber.from(resId),
+        ethers.BigNumber.from(resId),
       ]);
     });
 
@@ -220,7 +220,7 @@ describe("MultiAsset", async () => {
       await addAssets([resId]);
       await token.addAssetToToken(tokenId, resId, 0);
       await expect(
-        token.addAssetToToken(tokenId, silas.BigNumber.from(resId), 0)
+        token.addAssetToToken(tokenId, ethers.BigNumber.from(resId), 0)
       ).to.be.revertedWithCustomError(token, "AssetAlreadyExists");
     });
 
@@ -366,7 +366,7 @@ describe("MultiAsset", async () => {
       // Overwrite should be gone
       expect(
         await token.getAssetReplacements(tokenId, pendingAssets[0])
-      ).to.eql(silas.BigNumber.from(0));
+      ).to.eql(ethers.BigNumber.from(0));
     });
 
     it("can overwrite non existing asset to token, it could have been deleted", async function () {
@@ -378,7 +378,7 @@ describe("MultiAsset", async () => {
       await token.addAssetToToken(
         tokenId,
         resId,
-        silas.utils.hexZeroPad("0x1", 8)
+        ethers.utils.hexZeroPad("0x1", 8)
       );
       await token.acceptAsset(tokenId, 0, resId);
 
@@ -451,7 +451,7 @@ describe("MultiAsset", async () => {
       await token.rejectAsset(tokenId, 0, resId2);
 
       expect(await token.getAssetReplacements(tokenId, resId2)).to.eql(
-        silas.BigNumber.from(0)
+        ethers.BigNumber.from(0)
       );
     });
 
@@ -470,7 +470,7 @@ describe("MultiAsset", async () => {
       await token.rejectAllAssets(tokenId, 1);
 
       expect(await token.getAssetReplacements(tokenId, resId2)).to.eql(
-        silas.BigNumber.from(0)
+        ethers.BigNumber.from(0)
       );
     });
 
@@ -491,7 +491,7 @@ describe("MultiAsset", async () => {
       await token.rejectAllAssets(tokenId, 128);
 
       expect(await token.getAssetReplacements(1, 2)).to.eql(
-        silas.BigNumber.from(0)
+        ethers.BigNumber.from(0)
       );
     });
 
@@ -590,10 +590,10 @@ describe("MultiAsset", async () => {
       await token.connect(tokenOwner).transfer(newOwner.address, tokenId);
 
       expect(await token.getApproved(tokenId)).to.eql(
-        silas.constants.AddressZero
+        ethers.constants.AddressZero
       );
       expect(await token.getApprovedForAssets(tokenId)).to.eql(
-        silas.constants.AddressZero
+        ethers.constants.AddressZero
       );
     });
 

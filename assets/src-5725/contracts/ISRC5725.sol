@@ -23,7 +23,7 @@ interface ISRC5725 is ISRC721 {
      *  This event is emitted when an `owner` sets an address to manage token claims for all tokens.
      *  @param owner The address setting a manager to manage all tokens.
      *  @param spender The address being permitted to manage all tokens.
-     *  @param approved A boolean indicating whsila the spender is approved to claim for all tokens.
+     *  @param approved A boolean indicating whether the spender is approved to claim for all tokens.
      */
     event ClaimApprovalForAll(address indexed owner, address indexed spender, bool approved);
 
@@ -32,7 +32,7 @@ interface ISRC5725 is ISRC721 {
      *  @param owner The `owner` of `tokenId`.
      *  @param spender The address being permitted to manage a tokenId.
      *  @param tokenId The unique identifier of the token being managed.
-     *  @param approved A boolean indicating whsila the spender is approved to claim for `tokenId`.
+     *  @param approved A boolean indicating whether the spender is approved to claim for `tokenId`.
      */
     event ClaimApproval(address indexed owner, address indexed spender, uint256 indexed tokenId, bool approved);
 
@@ -109,7 +109,7 @@ interface ISRC5725 is ISRC721 {
     /**
      * @notice Sets a global `operator` with permission to manage all tokens owned by the current `msg.sender`.
      * @param operator The address to let manage all tokens.
-     * @param approved A boolean indicating whsila the spender is approved to claim for all tokens.
+     * @param approved A boolean indicating whether the spender is approved to claim for all tokens.
      */
     function setClaimApprovalForAll(address operator, bool approved) external;
 
@@ -117,7 +117,7 @@ interface ISRC5725 is ISRC721 {
      * @notice Sets a tokenId `operator` with permission to manage a single `tokenId` owned by the `msg.sender`.
      * @param operator The address to let manage a single `tokenId`.
      * @param tokenId the `tokenId` to be managed.
-     * @param approved A boolean indicating whsila the spender is approved to claim for all tokens.
+     * @param approved A boolean indicating whether the spender is approved to claim for all tokens.
      */
     function setClaimApproval(address operator, bool approved, uint256 tokenId) external;
 

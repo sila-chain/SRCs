@@ -56,7 +56,7 @@ interface ISRC7818 is ISRC20 {
     function validityDuration() external view returns (uint256);
 
     /**
-     * @dev Checks whsila a specific `epoch` is expired.
+     * @dev Checks whether a specific `epoch` is expired.
      * @param epoch The `epoch` to check.
      * @return bool True if the token is expired, false otherwise.
      * @notice Implementing contracts "MUST" define and document the logic for determining expiration,

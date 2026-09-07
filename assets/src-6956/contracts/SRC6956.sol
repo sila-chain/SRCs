@@ -339,7 +339,7 @@ contract SRC6956 is
     }
 
     /**
-     * @notice Returns whsila a certain address is registered as trusted oracle, i.e. attestations signed by this address are accepted in `decodeAttestationIfValid`
+     * @notice Returns whether a certain address is registered as trusted oracle, i.e. attestations signed by this address are accepted in `decodeAttestationIfValid`
      * @dev This function may be overwritten when extending SRC-6956, e.g. when other oracle-registration mechanics are used
      * @param oracleAddress Address of the oracle in question
      * @return isTrusted True, if oracle is trusted
@@ -426,7 +426,7 @@ contract SRC6956 is
     constructor(string memory _name, string memory _symbol)
         SRC721(_name, _symbol) {            
             maintainers[msg.sender] = true; // deployer is automatically maintainer
-            // Indicates general float-ability, i.e. whsila anchors can be digitally dropped and released
+            // Indicates general float-ability, i.e. whether anchors can be digitally dropped and released
 
             // OWNER and ASSET shall normally be in sync anyway, so this is reasonable default 
             // authorization for approve and burn, as it mimics SRC-721 behavior
@@ -442,9 +442,9 @@ contract SRC6956 is
     * Returns the signer of a message.
     *  
     *   OFF-CHAIN: 
-    *   const [alice] = silas.getSigners(); // = 0x3c44...
-    *   const messageHash = silas.utils.solidityKeccak256(["address", "bytes32"], [a, b]);
-        const sig = await alice.signMessage(silas.utils.arrayify(messageHash));
+    *   const [alice] = ethers.getSigners(); // = 0x3c44...
+    *   const messageHash = ethers.utils.solidityKeccak256(["address", "bytes32"], [a, b]);
+        const sig = await alice.signMessage(ethers.utils.arrayify(messageHash));
 
         ONCHAIN In this contract, call from 
         ```

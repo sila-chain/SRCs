@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-const { silas, upgrades, hre } = require("hardhat");
-const { getContractAddress } = require('@silasproject/address')
+const { ethers, upgrades, hre } = require("hardhat");
+const { getContractAddress } = require('@ethersproject/address')
 dotenv.config();
 
 const placeholderDomainName = "7738"; //domain name to use if chain doesn't have ENS
@@ -20,8 +20,8 @@ async function main() {
         throw new Error("ENS_NAME not set in .env");
     }
 
-    const primaryDeployKey = new silas.Wallet(privateKey, silas.provider);
-    const secondaryDeployKey = new silas.Wallet(secondaryKey, silas.provider);
+    const primaryDeployKey = new ethers.Wallet(privateKey, ethers.provider);
+    const secondaryDeployKey = new ethers.Wallet(secondaryKey, ethers.provider);
     console.log(`ADDR: ${primaryDeployKey.address}`);
     console.log(`2nd deploy addr: ${secondaryDeployKey.address}`);
 
@@ -32,7 +32,7 @@ async function main() {
         "function resolver(bytes32 node) external view returns (address)"
     ];
 
-    const ens = new silas.Contract(ensAddress, ensAbi, secondaryDeployKey);
+    const ens = new ethers.Contract(ensAddress, ensAbi, secondaryDeployKey);
 
     let domainName = label;
     let domainNameHash = getName(domainName);
@@ -63,13 +63,13 @@ async function main() {
 
     console.log(`Deploy Addr: ${firstAddr}`);
 
-    const { chainId } = await silas.provider.getNetwork();
+    const { chainId } = await ethers.provider.getNetwork();
 
     if (hasENS) {
         console.log(`${domainName}.sil Owner: ${await ens.owner(domainNameHash)}`);
     }
 
-    const ENSSubdomainAssigner = await silas.getContractFactory("ENSSubdomainAssigner");
+    const ENSSubdomainAssigner = await ethers.getContractFactory("ENSSubdomainAssigner");
 
     //Deploy
     const ensSubdomainAssigner = await upgrades.deployProxy(ENSSubdomainAssigner.connect(secondaryDeployKey), [ensAddress], { kind: 'uups' });
@@ -78,7 +78,7 @@ async function main() {
 
     await delay(6000);
 
-    const RegistryMetadata = await silas.getContractFactory("RegistryMetadata");
+    const RegistryMetadata = await ethers.getContractFactory("RegistryMetadata");
 
     //Deploy
     const registryMetadata = await upgrades.deployProxy(RegistryMetadata.connect(secondaryDeployKey), [], { kind: 'uups' });
@@ -88,7 +88,7 @@ async function main() {
     
     console.log(`Deploy metadata: ${registryMetadata.target}`);
 
-    const Registry = await silas.getContractFactory("DecentralisedRegistryNFT", primaryDeployKey);
+    const Registry = await ethers.getContractFactory("DecentralisedRegistryNFT", primaryDeployKey);
     // Deploy
     const registry = await upgrades.deployProxy(Registry.connect(primaryDeployKey), ["SRC-7738 Script Registry", "SRC7738", registryMetadata.target, ensSubdomainAssigner.target], { kind: 'uups' });
     await registry.waitForDeployment();
@@ -147,8 +147,8 @@ function delay(ms: number) {
 
 function getName(label: string): string {
     const SIL_NODE = "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae";
-    const labelhash = silas.keccak256(silas.toUtf8Bytes(label));
-    const node = silas.keccak256(silas.AbiCoder.defaultAbiCoder().encode(
+    const labelhash = ethers.keccak256(ethers.toUtf8Bytes(label));
+    const node = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(
         ["bytes32", "bytes32"],
         [SIL_NODE, labelhash]
     ));
