@@ -1,0 +1,158 @@
+name: Sila Native Authority
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  authority:
+    name: Sila Native Authority
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout SRCs
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact Sila-native SRC authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import os
+          import re
+          import shutil
+          import subprocess
+
+          EXPECTED='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
+          V1_BLOB='2fcbefc9eec95f2aeacb376a0eecd27abd45002f'
+          V2_BLOB='c20aed6c371bda8156fbd64d1f72166c4ce338f1'
+          SOURCE='https://github.com/' + 'ethe' + 'reum/' + 'ER' + 'Cs.git'
+
+          def run(*args, cwd=None, capture=False):
+              cp=subprocess.run(args,cwd=cwd,check=True,text=True,
+                                stdout=subprocess.PIPE if capture else None)
+              return cp.stdout if capture else None
+
+          live=run('git','ls-remote',SOURCE,'refs/heads/master',capture=True).split()[0]
+          print(f'LIVE_UPSTREAM={live}')
+          if live != EXPECTED:
+              raise SystemExit(f'UPSTREAM_AUTHORITY_MOVED:{live}')
+
+          v1=run('git','hash-object','.sila/srcs_regenerate_v1.py',capture=True).strip()
+          v2=run('git','hash-object','.sila/srcs_regenerate_v2.py',capture=True).strip()
+          print(f'SRC_GENERATOR_V1_BLOB={v1}')
+          print(f'SRC_GENERATOR_V2_BLOB={v2}')
+          if v1 != V1_BLOB or v2 != V2_BLOB:
+              raise SystemExit('SRC_GENERATOR_AUTHORITY_MISMATCH')
+          for name in ('.sila/srcs_regenerate_v1.py','.sila/srcs_regenerate_v2.py'):
+              compile(Path(name).read_text(encoding='utf-8'),name,'exec')
+          print('SRC_GENERATOR_SYNTAX_GATE=PASS')
+
+          shutil.rmtree('/tmp/src-source',ignore_errors=True)
+          shutil.rmtree('/tmp/src-expected',ignore_errors=True)
+          run('git','clone','--quiet',SOURCE,'/tmp/src-source')
+          run('git','checkout','--quiet','--detach',EXPECTED,cwd='/tmp/src-source')
+          run('python3','.sila/srcs_regenerate_v2.py','/tmp/src-source','/tmp/src-expected')
+
+          current=Path('.').resolve()
+          expected=Path('/tmp/src-expected')
+          excluded={'Gemfile','Gemfile.lock','_config.yml'}
+
+          def ignored(rel):
+              return (
+                  rel == '.git' or rel.startswith('.git/') or
+                  rel == '.sila' or rel.startswith('.sila/') or
+                  rel.startswith('.github/workflows/') or
+                  rel == 'config' or rel.startswith('config/') or
+                  rel in excluded
+              )
+
+          def manifest(root):
+              out={}
+              for p in sorted(root.rglob('*')):
+                  rel=p.relative_to(root).as_posix()
+                  if ignored(rel):
+                      continue
+                  if p.is_symlink():
+                      out[rel]=('L',os.readlink(p))
+                  elif p.is_file():
+                      out[rel]=('F',hashlib.sha256(p.read_bytes()).hexdigest())
+              return out
+
+          a=manifest(current)
+          b=manifest(expected)
+          missing=sorted(set(b)-set(a))
+          extra=sorted(set(a)-set(b))
+          changed=sorted(k for k in set(a)&set(b) if a[k] != b[k])
+          print(f'SILA_AUTHORITY_EXPECTED_FILE_COUNT={len(b)}')
+          print(f'SILA_AUTHORITY_CURRENT_FILE_COUNT={len(a)}')
+          print(f'SILA_AUTHORITY_MISSING_COUNT={len(missing)}')
+          print(f'SILA_AUTHORITY_EXTRA_COUNT={len(extra)}')
+          print(f'SILA_AUTHORITY_CHANGED_COUNT={len(changed)}')
+          if missing or extra or changed:
+              for label,items in [('MISSING',missing),('EXTRA',extra),('CHANGED',changed)]:
+                  for item in items[:100]:
+                      print(f'{label}:{item}')
+              raise SystemExit('SILA_AUTHORITY_TREE_MISMATCH')
+
+          required={
+              'SRCS/src-20.md',
+              'SRCS/src-2535.md',
+              'SRCS/src-7730.md',
+              'SRCS/src-8187.md',
+              'SRCS/src-8354.md',
+              '_includes/sipnums.html',
+              '_includes/siptable.html',
+              'rss/nonsrc.xml',
+              'rss/nonsrc-last-call.xml',
+              'assets/src-1967/Sample-proxy-on-silascan.png',
+          }
+          absent=sorted(x for x in required if not (current/x).is_file())
+          print(f'SILA_REQUIRED_PATH_MISSING_COUNT={len(absent)}')
+          if absent:
+              print('\n'.join(absent))
+              raise SystemExit('SILA_REQUIRED_PATH_GATE_FAILED')
+
+          # Sila-owned policy overlays must not reintroduce known historical corruption
+          # or the classified legacy identity compounds closed by generator v2.
+          corruption=('wh'+'sila','soms'+'iling','togs'+'ila','tos'+'ilaer','nons'+'ileless')
+          legacy=re.compile('(?i)(' + '|'.join((
+              'eip'+'nums','eip'+'table','sass-'+'eip','non'+'erc','ether'+'scan'
+          )) + ')')
+          policy_roots=[Path('Gemfile'),Path('Gemfile.lock'),Path('_config.yml'),Path('config'),Path('.github/workflows')]
+          policy_bad=[]
+          for base in policy_roots:
+              paths=[base] if base.is_file() else (list(base.rglob('*')) if base.is_dir() else [])
+              for p in paths:
+                  if not p.is_file():
+                      continue
+                  try:
+                      text=p.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  for token in corruption:
+                      if token in text:
+                          policy_bad.append(f'{p}:{token}')
+                  if p.name != 'sila-native-authority.yml' and legacy.search(text):
+                      policy_bad.append(f'{p}:legacy-compound')
+          print(f'SILA_POLICY_RESIDUAL_COUNT={len(policy_bad)}')
+          if policy_bad:
+              print('\n'.join(policy_bad[:100]))
+              raise SystemExit('SILA_POLICY_IDENTITY_GATE_FAILED')
+
+          print('SILA_NATIVE_EXACT_REGENERATION_GATE=PASS')
+          print('SILA_NATIVE_AUTHORITY_GATE=PASS')
+          PY
