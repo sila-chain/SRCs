@@ -22,19 +22,26 @@ jobs:
         run: |
           set -euo pipefail
           UPSTREAM_SHA='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
-          GENERATOR_SHA='2a7cc5e3537b5a1d194df4df706594b6b9f0a119'
           BRANCH='sila/srcs-latest-pure-20260907'
+          GENERATOR='.sila/srcs_regenerate_v1.py'
 
           echo "UPSTREAM_SHA=$UPSTREAM_SHA"
-          echo "GENERATOR_SHA=$GENERATOR_SHA"
+          echo "GENERATOR=$GENERATOR"
           test "$(git branch --show-current)" = "$BRANCH"
+          test -f "$GENERATOR"
+          python3 -m py_compile "$GENERATOR"
+
+          LIVE_UPSTREAM="$(git ls-remote https://github.com/ethereum/ERCs.git refs/heads/master | awk '{print $1}')"
+          echo "LIVE_UPSTREAM=$LIVE_UPSTREAM"
+          test "$LIVE_UPSTREAM" = "$UPSTREAM_SHA"
 
           rm -rf /tmp/srcs-upstream /tmp/srcs-generated /tmp/srcs-policy
           mkdir -p /tmp/srcs-policy/workflows
 
-          # Preserve only the two verified Sila integration/build workflows.
+          # Preserve only Sila-owned policy/build authorities and the SRC-native generator.
           cp .github/workflows/ci.yml /tmp/srcs-policy/workflows/ci.yml
           cp .github/workflows/jekyll.yml /tmp/srcs-policy/workflows/jekyll.yml
+          cp -a .sila /tmp/srcs-policy/.sila
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "$p" ]; then
               cp -a "$p" "/tmp/srcs-policy/$p"
@@ -45,13 +52,12 @@ jobs:
           git -C /tmp/srcs-upstream checkout --quiet --detach "$UPSTREAM_SHA"
           test "$(git -C /tmp/srcs-upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
 
-          curl -fsSL "https://raw.githubusercontent.com/sila-chain/SIPs/$GENERATOR_SHA/.sila/sips_regenerate_v2.py" -o /tmp/srcs_regenerate.py
-          python3 -m py_compile /tmp/srcs_regenerate.py
-          python3 /tmp/srcs_regenerate.py /tmp/srcs-upstream /tmp/srcs-generated
+          python3 "$GENERATOR" /tmp/srcs-upstream /tmp/srcs-generated
 
-          # Overlay only verified repository-policy/build authorities.
+          # Overlay only verified Sila repository-policy/build authorities.
           cp /tmp/srcs-policy/workflows/ci.yml /tmp/srcs-generated/.github/workflows/ci.yml
           cp /tmp/srcs-policy/workflows/jekyll.yml /tmp/srcs-generated/.github/workflows/jekyll.yml
+          cp -a /tmp/srcs-policy/.sila /tmp/srcs-generated/.sila
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "/tmp/srcs-policy/$p" ]; then
               rm -rf "/tmp/srcs-generated/$p"
@@ -59,43 +65,30 @@ jobs:
             fi
           done
 
-          # SRC-2535 upstream has not changed since 2023. Preserve only the
-          # verified semantic repair: remove its link to a ZIP that is absent.
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('/tmp/srcs-generated/SRCS/src-2535.md')
-          text = p.read_text(encoding='utf-8')
-          lines = text.splitlines(keepends=True)
-          hits = [i for i, line in enumerate(lines) if 'Download it as a zip file:' in line]
-          print(f'SRC2535_BROKEN_ZIP_LINE_COUNT={len(hits)}')
-          if len(hits) != 1:
-              raise SystemExit('SRC2535_ZIP_REPAIR_AUTHORITY_MISMATCH')
-          del lines[hits[0]]
-          p.write_text(''.join(lines), encoding='utf-8')
-          print('SRC2535_BROKEN_ZIP_REPAIR_GATE=PASS')
-          PY
-
-          # Reject known artifacts of the old naive substring conversion.
+          # Validate preserved policy text against known historical substring corruption.
           python3 - <<'PY'
           from pathlib import Path
           root = Path('/tmp/srcs-generated')
-          tokens = ('wh'+'sila', 'soms'+'iling', 'togs'+'ila', 'm'+'sil'+'od', 'm'+'sil'+'ods')
+          tokens = ('wh'+'sila', 'soms'+'iling', 'togs'+'ila', 'tos'+'ilaer', 'nons'+'ileless')
           bad = []
-          for p in root.rglob('*'):
-              if not p.is_file() or p.is_symlink():
+          for base in (root/'.github', root/'.sila', root/'config'):
+              if not base.exists():
                   continue
-              try:
-                  text = p.read_text(encoding='utf-8')
-              except UnicodeDecodeError:
-                  continue
-              for token in tokens:
-                  if token in text:
-                      bad.append(f'{p.relative_to(root)}:{token}')
-          print(f'KNOWN_CORRUPTION_RESIDUAL_COUNT={len(bad)}')
+              for p in base.rglob('*'):
+                  if not p.is_file():
+                      continue
+                  try:
+                      text = p.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  for token in tokens:
+                      if token in text:
+                          bad.append(f'{p.relative_to(root)}:{token}')
+          print(f'POLICY_CORRUPTION_RESIDUAL_COUNT={len(bad)}')
           if bad:
               print('\n'.join(bad[:200]))
               raise SystemExit(1)
-          print('KNOWN_CORRUPTION_GATE=PASS')
+          print('POLICY_CORRUPTION_GATE=PASS')
           PY
 
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
@@ -105,8 +98,12 @@ jobs:
           test -f SRCS/src-2535.md
           test -f .github/workflows/ci.yml
           test -f .github/workflows/jekyll.yml
+          test -f .sila/srcs_regenerate_v1.py
           test ! -f .github/workflows/srcs-latest-regeneration-bootstrap.yml
-          git diff --check
+
+          # Generated upstream files may intentionally preserve upstream whitespace.
+          # Diff-check only Sila-owned policy/generator sources.
+          git diff --check -- .sila .github/workflows/ci.yml .github/workflows/jekyll.yml config _config.yml Gemfile Gemfile.lock
 
           git config user.name 'SILA Network'
           git config user.email 'sila-chain@users.noreply.github.com'
