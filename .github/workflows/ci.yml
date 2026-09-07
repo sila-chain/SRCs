@@ -204,7 +204,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout SIP Repository
+      - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
       - name: Link Checker
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout SIP Repository
+      - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
       - name: Get Changed Files
@@ -245,12 +245,12 @@ jobs:
           skip: .git,Gemfile.lock,**/*.png,**/*.gif,**/*.jpg,**/*.svg,.codespell-whitelist,vendor,_site,_config.yml,style.css
 
   sipw-validator:
-    name: SIP Walidator
+    name: SRC Validator
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout SIP Repository
+      - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
       - uses: sila-chain/sipw-action@05fc431795f375307ffe2be35f62d967ea69b8c3
@@ -266,7 +266,7 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout SIP Repository
+      - name: Checkout SRC Repository
         uses: actions/checkout@47fbe2df0ad0e27efb67a70beac3555f192b062f
 
       - name: Get Changed Files
@@ -274,7 +274,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          gh pr diff ${{ github.event.number }} --name-only | grep -E -x '[^/]+\.md|SIPS/sip-[0-9]+\.md' >> $GITHUB_ENV
+          gh pr diff ${{ github.event.number }} --name-only | grep -E -x '[^/]+\.md|SRCS/src-[0-9]+\.md' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
