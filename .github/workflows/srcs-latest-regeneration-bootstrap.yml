@@ -30,16 +30,16 @@ jobs:
           test "$(git branch --show-current)" = "$BRANCH"
 
           rm -rf /tmp/srcs-upstream /tmp/srcs-generated /tmp/srcs-policy
-          mkdir -p /tmp/srcs-policy
+          mkdir -p /tmp/srcs-policy/workflows
 
-          cp -a .github /tmp/srcs-policy/.github
+          # Preserve only the two verified Sila integration/build workflows.
+          cp .github/workflows/ci.yml /tmp/srcs-policy/workflows/ci.yml
+          cp .github/workflows/jekyll.yml /tmp/srcs-policy/workflows/jekyll.yml
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "$p" ]; then
               cp -a "$p" "/tmp/srcs-policy/$p"
             fi
           done
-          test -f SRCS/src-2535.md
-          cp SRCS/src-2535.md /tmp/srcs-policy/src-2535.md
 
           git clone --quiet https://github.com/ethereum/ERCs.git /tmp/srcs-upstream
           git -C /tmp/srcs-upstream checkout --quiet --detach "$UPSTREAM_SHA"
@@ -49,8 +49,9 @@ jobs:
           python3 -m py_compile /tmp/srcs_regenerate.py
           python3 /tmp/srcs_regenerate.py /tmp/srcs-upstream /tmp/srcs-generated
 
-          rm -rf /tmp/srcs-generated/.github
-          cp -a /tmp/srcs-policy/.github /tmp/srcs-generated/.github
+          # Overlay only verified repository-policy/build authorities.
+          cp /tmp/srcs-policy/workflows/ci.yml /tmp/srcs-generated/.github/workflows/ci.yml
+          cp /tmp/srcs-policy/workflows/jekyll.yml /tmp/srcs-generated/.github/workflows/jekyll.yml
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "/tmp/srcs-policy/$p" ]; then
               rm -rf "/tmp/srcs-generated/$p"
@@ -58,14 +59,28 @@ jobs:
             fi
           done
 
-          # SRC-2535 upstream has not changed since 2023; preserve the verified
-          # Sila-local repair that removes the nonexistent transformed ZIP link.
-          cp /tmp/srcs-policy/src-2535.md /tmp/srcs-generated/SRCS/src-2535.md
-
+          # SRC-2535 upstream has not changed since 2023. Preserve only the
+          # verified semantic repair: remove its link to a ZIP that is absent.
           python3 - <<'PY'
           from pathlib import Path
-          bad = []
+          p = Path('/tmp/srcs-generated/SRCS/src-2535.md')
+          text = p.read_text(encoding='utf-8')
+          lines = text.splitlines(keepends=True)
+          hits = [i for i, line in enumerate(lines) if 'Download it as a zip file:' in line]
+          print(f'SRC2535_BROKEN_ZIP_LINE_COUNT={len(hits)}')
+          if len(hits) != 1:
+              raise SystemExit('SRC2535_ZIP_REPAIR_AUTHORITY_MISMATCH')
+          del lines[hits[0]]
+          p.write_text(''.join(lines), encoding='utf-8')
+          print('SRC2535_BROKEN_ZIP_REPAIR_GATE=PASS')
+          PY
+
+          # Reject known artifacts of the old naive substring conversion.
+          python3 - <<'PY'
+          from pathlib import Path
           root = Path('/tmp/srcs-generated')
+          tokens = ('wh'+'sila', 'soms'+'iling', 'togs'+'ila', 'm'+'sil'+'od', 'm'+'sil'+'ods')
+          bad = []
           for p in root.rglob('*'):
               if not p.is_file() or p.is_symlink():
                   continue
@@ -73,12 +88,12 @@ jobs:
                   text = p.read_text(encoding='utf-8')
               except UnicodeDecodeError:
                   continue
-              for token in ('whsila', 'somsiling'):
+              for token in tokens:
                   if token in text:
                       bad.append(f'{p.relative_to(root)}:{token}')
           print(f'KNOWN_CORRUPTION_RESIDUAL_COUNT={len(bad)}')
           if bad:
-              print('\n'.join(bad[:100]))
+              print('\n'.join(bad[:200]))
               raise SystemExit(1)
           print('KNOWN_CORRUPTION_GATE=PASS')
           PY
@@ -89,6 +104,8 @@ jobs:
           test -f SRCS/src-7730.md
           test -f SRCS/src-2535.md
           test -f .github/workflows/ci.yml
+          test -f .github/workflows/jekyll.yml
+          test ! -f .github/workflows/srcs-latest-regeneration-bootstrap.yml
           git diff --check
 
           git config user.name 'SILA Network'
