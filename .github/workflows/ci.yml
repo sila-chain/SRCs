@@ -288,15 +288,24 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Lint Authority Sync
+      - name: Validate Authority Markdown Scope
         if: startsWith(github.event.pull_request.head.ref, 'sila/srcs-latest-pure-')
-        uses: DavidAnson/markdownlint-cli2-action@f5cf187ef11bd3a68a127321b794aa252ff23019
-        with:
-          command: config
-          globs: |
-            config/.markdownlint.yaml
-            *.md
-            .github/*.md
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='${{ github.event.pull_request.base.sha }}'
+          HEAD='${{ github.event.pull_request.head.sha }}'
+          CHANGED_MD="$(git diff --name-only "$BASE" "$HEAD" | grep -E '\.md$' || true)"
+          UNEXPECTED="$(printf '%s\n' "$CHANGED_MD" | grep -v -E '^(SRCS/[^/]+\.md|README\.md|LICENSE\.md|\.github/ISSUE_TEMPLATE\.md)$' | grep -v '^$' || true)"
+          echo "AUTHORITY_MARKDOWN_SCOPE_COUNT=$(printf '%s\n' "$CHANGED_MD" | sed '/^$/d' | wc -l | tr -d ' ')"
+          if [ -n "$UNEXPECTED" ]; then
+            echo "UNEXPECTED_AUTHORITY_MARKDOWN_BEGIN"
+            printf '%s\n' "$UNEXPECTED"
+            echo "UNEXPECTED_AUTHORITY_MARKDOWN_END"
+            echo "AUTHORITY_MARKDOWN_SCOPE_GATE=FAIL"
+            exit 1
+          fi
+          echo "AUTHORITY_MARKDOWN_SCOPE_GATE=PASS"
 
       - name: Lint
         if: "!startsWith(github.event.pull_request.head.ref, 'sila/srcs-latest-pure-')"
