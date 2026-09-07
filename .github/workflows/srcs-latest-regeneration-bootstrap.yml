@@ -23,24 +23,33 @@ jobs:
           set -euo pipefail
           UPSTREAM_SHA='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
           BRANCH='sila/srcs-latest-pure-20260907'
-          GENERATOR='.sila/srcs_regenerate_v1.py'
+          GENERATOR='.sila/srcs_regenerate_v2.py'
 
           echo "UPSTREAM_SHA=$UPSTREAM_SHA"
           echo "GENERATOR=$GENERATOR"
           test "$(git branch --show-current)" = "$BRANCH"
           test -f "$GENERATOR"
-          python3 -m py_compile "$GENERATOR"
+          test -f .sila/srcs_regenerate_v1.py
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ('.sila/srcs_regenerate_v1.py', '.sila/srcs_regenerate_v2.py'):
+              source = Path(name).read_text(encoding='utf-8')
+              compile(source, name, 'exec')
+              print(f'SYNTAX_GATE=PASS:{name}')
+          PY
+          test ! -d .sila/__pycache__
 
           LIVE_UPSTREAM="$(git ls-remote https://github.com/ethereum/ERCs.git refs/heads/master | awk '{print $1}')"
           echo "LIVE_UPSTREAM=$LIVE_UPSTREAM"
           test "$LIVE_UPSTREAM" = "$UPSTREAM_SHA"
 
           rm -rf /tmp/srcs-upstream /tmp/srcs-generated /tmp/srcs-policy
-          mkdir -p /tmp/srcs-policy/workflows
+          mkdir -p /tmp/srcs-policy
 
-          # Preserve only Sila-owned policy/build authorities and the SRC-native generator.
-          cp .github/workflows/ci.yml /tmp/srcs-policy/workflows/ci.yml
-          cp .github/workflows/jekyll.yml /tmp/srcs-policy/workflows/jekyll.yml
+          # Preserve all current workflow files byte-identically. The Actions token is not
+          # allowed to create/update workflow files; workflow policy is mutated only through
+          # the GitHub authority connector after regeneration succeeds.
+          cp -a .github/workflows /tmp/srcs-policy/workflows
           cp -a .sila /tmp/srcs-policy/.sila
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "$p" ]; then
@@ -54,9 +63,12 @@ jobs:
 
           python3 "$GENERATOR" /tmp/srcs-upstream /tmp/srcs-generated
 
-          # Overlay only verified Sila repository-policy/build authorities.
-          cp /tmp/srcs-policy/workflows/ci.yml /tmp/srcs-generated/.github/workflows/ci.yml
-          cp /tmp/srcs-policy/workflows/jekyll.yml /tmp/srcs-generated/.github/workflows/jekyll.yml
+          # Overlay verified Sila repository-policy/build authorities. Workflows remain
+          # exactly equal to the branch input so the generated commit cannot mutate them.
+          rm -rf /tmp/srcs-generated/.github/workflows
+          mkdir -p /tmp/srcs-generated/.github
+          cp -a /tmp/srcs-policy/workflows /tmp/srcs-generated/.github/workflows
+          rm -rf /tmp/srcs-generated/.sila
           cp -a /tmp/srcs-policy/.sila /tmp/srcs-generated/.sila
           for p in Gemfile Gemfile.lock _config.yml config; do
             if [ -e "/tmp/srcs-policy/$p" ]; then
@@ -64,6 +76,9 @@ jobs:
               cp -a "/tmp/srcs-policy/$p" "/tmp/srcs-generated/$p"
             fi
           done
+
+          find /tmp/srcs-generated/.sila -type d -name __pycache__ -prune -exec rm -rf {} +
+          test ! -d /tmp/srcs-generated/.sila/__pycache__
 
           # Validate preserved policy text against known historical substring corruption.
           python3 - <<'PY'
@@ -96,14 +111,24 @@ jobs:
 
           test -f SRCS/src-7730.md
           test -f SRCS/src-2535.md
+          test -f _includes/sipnums.html
+          test -f _includes/siptable.html
+          test -f rss/nonsrc.xml
+          test -f rss/nonsrc-last-call.xml
+          test -f assets/src-1967/Sample-proxy-on-silascan.png
           test -f .github/workflows/ci.yml
           test -f .github/workflows/jekyll.yml
+          test -f .github/workflows/srcs-latest-regeneration-bootstrap.yml
           test -f .sila/srcs_regenerate_v1.py
-          test ! -f .github/workflows/srcs-latest-regeneration-bootstrap.yml
+          test -f .sila/srcs_regenerate_v2.py
+          test ! -d .sila/__pycache__
 
-          # Generated upstream files may intentionally preserve upstream whitespace.
-          # Diff-check only Sila-owned policy/generator sources.
-          git diff --check -- .sila .github/workflows/ci.yml .github/workflows/jekyll.yml config _config.yml Gemfile Gemfile.lock
+          # Workflow tree must be byte-identical to the branch input.
+          diff -qr /tmp/srcs-policy/workflows .github/workflows
+          echo 'WORKFLOW_BYTE_IDENTITY_GATE=PASS'
+
+          # Generated upstream may preserve upstream whitespace; check Sila-owned authorities.
+          git diff --check -- .sila config _config.yml Gemfile Gemfile.lock
 
           git config user.name 'SILA Network'
           git config user.email 'sila-chain@users.noreply.github.com'
@@ -111,6 +136,12 @@ jobs:
           if git diff --cached --quiet; then
             echo 'REGENERATION_DIFF_COUNT=0'
           else
+            if ! git diff --cached --quiet -- .github/workflows; then
+              echo 'WORKFLOW_MUTATION_GATE=FAIL'
+              git diff --cached --name-status -- .github/workflows
+              false
+            fi
+            echo 'WORKFLOW_MUTATION_GATE=PASS'
             git commit -m 'sync: regenerate SRCs from latest pure Sila authority'
             git push origin "HEAD:$BRANCH"
           fi
