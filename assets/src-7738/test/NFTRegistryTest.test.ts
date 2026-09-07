@@ -1,7 +1,7 @@
-const { silas, upgrades } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
 import { HardhatUserConfig } from "hardhat/config";
 const { getImplementationAddress } = require('@openzeppelin/upgrades-core');
-const { getContractAddress } = require('@silasproject/address')
+const { getContractAddress } = require('@ethersproject/address')
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -26,7 +26,7 @@ const domainName = "src7738";
 
 async function deployInitialFixture() {
   // Contracts are deployed using the first signer/account by default
-  const [owner, nftOwner, otherAccount2, otherAccount3, otherAccount4, regOwner] = await silas.getSigners();
+  const [owner, nftOwner, otherAccount2, otherAccount3, otherAccount4, regOwner] = await ethers.getSigners();
 
   let primaryDeploy;
   let secondaryDeploy;
@@ -36,17 +36,17 @@ async function deployInitialFixture() {
   if (!privateKey) {
     primaryDeploy = regOwner;
   } else {
-    primaryDeploy = new silas.Wallet(privateKey, silas.provider);
+    primaryDeploy = new ethers.Wallet(privateKey, ethers.provider);
   }
 
   if (!secondaryKey) {
     secondaryDeploy = owner;
   } else {
-    secondaryDeploy = new silas.Wallet(secondaryKey, silas.provider);
+    secondaryDeploy = new ethers.Wallet(secondaryKey, ethers.provider);
   }
 
   // Define amounts to send (for example: 1 sila)
-  const amountToSend = silas.parseSila("1.0");
+  const amountToSend = ethers.parseEther("1.0");
 
   // Send transaction to primary deploy key
   const tx1 = await owner.sendTransaction({
@@ -62,20 +62,20 @@ async function deployInitialFixture() {
   });
   await tx2.wait(); // Wait for the transaction to be mined
 
-  const ExampleNFT = (await silas.getContractFactory("ExampleNFT")).connect(
+  const ExampleNFT = (await ethers.getContractFactory("ExampleNFT")).connect(
     nftOwner
   );
   const stakingToken = await ExampleNFT.deploy();
   await stakingToken.waitForDeployment();
 
   //deploy Fake ENS & resolver for testing
-  const ENS = (await silas.getContractFactory("ENSRegistry")).connect(
+  const ENS = (await ethers.getContractFactory("ENSRegistry")).connect(
     nftOwner
   );
   const ens = await ENS.deploy();
   await ens.waitForDeployment();
 
-  const Resolver = (await silas.getContractFactory("PublicResolver")).connect(
+  const Resolver = (await ethers.getContractFactory("PublicResolver")).connect(
     nftOwner
   );
   const resolver = await Resolver.deploy(ens.target);
@@ -89,11 +89,11 @@ async function deployInitialFixture() {
     nonce: 1
   })
 
-  const ENSSubdomainAssigner = await silas.getContractFactory("ENSSubdomainAssigner");
+  const ENSSubdomainAssigner = await ethers.getContractFactory("ENSSubdomainAssigner");
   const ensSubdomainAssigner = await upgrades.deployProxy(ENSSubdomainAssigner.connect(secondaryDeploy), [ens.target], { kind: 'uups' });
   await ensSubdomainAssigner.waitForDeployment();
 
-  const RegistryMetadata = await silas.getContractFactory("RegistryMetadata");
+  const RegistryMetadata = await ethers.getContractFactory("RegistryMetadata");
   const registryMetadata = await upgrades.deployProxy(RegistryMetadata.connect(secondaryDeploy), [], { kind: 'uups' });
   await registryMetadata.waitForDeployment();
 
@@ -102,7 +102,7 @@ async function deployInitialFixture() {
   await ens.connect(nftOwner).setRecord(domainNameHash, nftOwner.address, resolver.target, 0);
 
   //Deploy registry contract
-  const Registry = await silas.getContractFactory("DecentralisedRegistryNFT");
+  const Registry = await ethers.getContractFactory("DecentralisedRegistryNFT");
   const registry = await upgrades.deployProxy(Registry.connect(primaryDeploy), ["SRC-7738 Script Registry", "SRC7738", registryMetadata.target, ensSubdomainAssigner.target], { kind: 'uups' });
   await registry.waitForDeployment();
 
@@ -166,7 +166,7 @@ describe("DecentralisedRegistryNFT", function () {
 
     await expect(stakingToken.connect(nftOwner).safeMint())
       .to.emit(stakingToken, "Transfer")
-      .withArgs(silas.ZeroAddress, nftOwner.address, 1);
+      .withArgs(ethers.ZeroAddress, nftOwner.address, 1);
 
     const scriptURI = [scriptURI1];
     const scriptURITest2 = [scriptURI2];
@@ -299,7 +299,7 @@ describe("DecentralisedRegistryNFT", function () {
     let thisNameENS = getAttributeValue(metaDataJSON.attributes, 'ENS');
     console.log(`${thisNameENS}`);
 
-    let nameHash = silas.namehash(thisNameENS);
+    let nameHash = ethers.namehash(thisNameENS);
     console.log(`Resolve addr/owner: ${await resolver.addr(nameHash)} ${await ens.owner(nameHash)}`);
 
     //check domain ownerships
@@ -352,17 +352,17 @@ describe("DecentralisedRegistryNFT", function () {
 
   async function calculateContractAddress(walletAddress: string, nonce: number) {
     // Convert the deployer's address to a bytes format
-    //const deployerAddressBytes = silas.getAddress(deployerAddress);
+    //const deployerAddressBytes = ethers.getAddress(deployerAddress);
   
     // RLP encode the deployer's address and the nonce (1 for the second contract)
     // nonce
-    const rlpEncoded = silas.RLP.encode([walletAddress, "0x01"]);
+    const rlpEncoded = ethers.RLP.encode([walletAddress, "0x01"]);
   
     // Hash the RLP encoded value using keccak256
-    const contractAddressHash = silas.keccak256(rlpEncoded);
+    const contractAddressHash = ethers.keccak256(rlpEncoded);
   
     // Get the last 20 bytes of the hash to obtain the contract address
-    const contractAddress = silas.getAddress("0x" + contractAddressHash.slice(-40));
+    const contractAddress = ethers.getAddress("0x" + contractAddressHash.slice(-40));
   
     console.log(`The second contract address will be: ${contractAddress}`);
   }

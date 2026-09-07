@@ -169,7 +169,7 @@ contract RegistryMetadata is
                                 Strings.toString(id)
                             )
                         ),
-                    '","description":"A recsipt of ownership for script entry #',
+                    '","description":"A receipt of ownership for script entry #',
                     Strings.toString(getOrder(id)),
                     " for the Token Contract: ",
                     Strings.toHexString(uint160(contractAddress), 20),

@@ -223,19 +223,19 @@ error SRC725X_MsgValueDisallowedInDelegateCall();
 
 /**
  * @dev reverts when passing a `to` address while deploying a contract va `SRC725X.execute(...)`
- * whsila using operation type 1 (CREATE) or 2 (CREATE2).
+ * whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error SRC725X_CreateOperationsRequireEmptyRecipientAddress();
 
 /**
  * @dev reverts when contract deployment via `SRC725X.execute(...)` failed.
- * whsila using operation type 1 (CREATE) or 2 (CREATE2).
+ * whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error SRC725X_ContractDeploymentFailed();
 
 /**
  * @dev reverts when no contract bytecode was provided as parameter when trying to deploy a contract
- * via `SRC725X.execute(...)`, whsila using operation type 1 (CREATE) or 2 (CREATE2).
+ * via `SRC725X.execute(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2).
  */
 error SRC725X_NoContractBytecodeProvided();
 

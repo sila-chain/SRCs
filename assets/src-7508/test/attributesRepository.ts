@@ -1,7 +1,7 @@
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { expect } from "chai";
 import { loadFixture, mine } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   OwnableMintableSRC721Mock,
   AttributesRepository,
@@ -21,16 +21,16 @@ enum AccessType {
 }
 
 async function fixture() {
-  const tokenAttributesFactory = await silas.getContractFactory(
+  const tokenAttributesFactory = await ethers.getContractFactory(
     "AttributesRepository"
   );
   const tokenAttributes = await tokenAttributesFactory.deploy();
   await tokenAttributes.waitForDeployment();
 
-  const collectionFactory = await silas.getContractFactory(
+  const collectionFactory = await ethers.getContractFactory(
     "OwnableMintableSRC721Mock"
   );
-  const [owner, ownerOf] = await silas.getSigners();
+  const [owner, ownerOf] = await ethers.getSigners();
   const ownedCollection1 = await collectionFactory.deploy(owner, ownerOf);
   await ownedCollection1.waitForDeployment();
   const ownedCollection2 = await collectionFactory.deploy(owner, ownerOf);
@@ -62,7 +62,7 @@ describe("AttributesRepository", async function () {
       await loadFixture(fixture));
     collectionAddress = await ownedCollection1.getAddress();
     collectionAddress2 = await ownedCollection2.getAddress();
-    [collectionOwner, tokenOwner, collaborator] = await silas.getSigners();
+    [collectionOwner, tokenOwner, collaborator] = await ethers.getSigners();
   });
 
   it("can support ISRC165", async function () {
@@ -1541,7 +1541,7 @@ describe("AttributesRepository", async function () {
     });
 
     it("should not allow to register a collection without Ownable implemented", async function () {
-      const src20Factory = await silas.getContractFactory("SRC20Mock");
+      const src20Factory = await ethers.getContractFactory("SRC20Mock");
       const src20 = await src20Factory.deploy();
       await expect(
         tokenAttributes.registerAccessControl(
@@ -1763,7 +1763,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.Owner,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await expect(
@@ -1804,7 +1804,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.Collaborator,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await tokenAttributes
@@ -1850,7 +1850,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.OwnerOrCollaborator,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await tokenAttributes
@@ -1905,7 +1905,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.OwnerOrCollaborator,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await tokenAttributes
@@ -1964,7 +1964,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.TokenOwner,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await expect(
@@ -2014,7 +2014,7 @@ describe("AttributesRepository", async function () {
           collectionAddress,
           "X",
           AccessType.SpecificAddress,
-          silas.ZeroAddress
+          ethers.ZeroAddress
         );
 
       await expect(
@@ -2106,22 +2106,22 @@ describe("AttributesRepository", async function () {
         );
 
       const uintSignature = await collectionOwner.signMessage(
-        silas.getBytes(uintMessage)
+        ethers.getBytes(uintMessage)
       );
       const intSignature = await collectionOwner.signMessage(
-        silas.getBytes(intMessage)
+        ethers.getBytes(intMessage)
       );
       const stringSignature = await collectionOwner.signMessage(
-        silas.getBytes(stringMessage)
+        ethers.getBytes(stringMessage)
       );
       const boolSignature = await collectionOwner.signMessage(
-        silas.getBytes(boolMessage)
+        ethers.getBytes(boolMessage)
       );
       const bytesSignature = await collectionOwner.signMessage(
-        silas.getBytes(bytesMessage)
+        ethers.getBytes(bytesMessage)
       );
       const addressSignature = await collectionOwner.signMessage(
-        silas.getBytes(addressMessage)
+        ethers.getBytes(addressMessage)
       );
 
       const uintR: string = uintSignature.substring(0, 66);
@@ -2324,19 +2324,19 @@ describe("AttributesRepository", async function () {
         );
 
       const uintSignature = await collectionOwner.signMessage(
-        silas.getBytes(uintMessage)
+        ethers.getBytes(uintMessage)
       );
       const stringSignature = await collectionOwner.signMessage(
-        silas.getBytes(stringMessage)
+        ethers.getBytes(stringMessage)
       );
       const boolSignature = await collectionOwner.signMessage(
-        silas.getBytes(boolMessage)
+        ethers.getBytes(boolMessage)
       );
       const bytesSignature = await collectionOwner.signMessage(
-        silas.getBytes(bytesMessage)
+        ethers.getBytes(bytesMessage)
       );
       const addressSignature = await collectionOwner.signMessage(
-        silas.getBytes(addressMessage)
+        ethers.getBytes(addressMessage)
       );
 
       const uintR: string = uintSignature.substring(0, 66);
@@ -2502,19 +2502,19 @@ describe("AttributesRepository", async function () {
         );
 
       const uintSignature = await tokenOwner.signMessage(
-        silas.getBytes(uintMessage)
+        ethers.getBytes(uintMessage)
       );
       const stringSignature = await tokenOwner.signMessage(
-        silas.getBytes(stringMessage)
+        ethers.getBytes(stringMessage)
       );
       const boolSignature = await tokenOwner.signMessage(
-        silas.getBytes(boolMessage)
+        ethers.getBytes(boolMessage)
       );
       const bytesSignature = await tokenOwner.signMessage(
-        silas.getBytes(bytesMessage)
+        ethers.getBytes(bytesMessage)
       );
       const addressSignature = await tokenOwner.signMessage(
-        silas.getBytes(addressMessage)
+        ethers.getBytes(addressMessage)
       );
 
       const uintR: string = uintSignature.substring(0, 66);
@@ -2672,19 +2672,19 @@ describe("AttributesRepository", async function () {
         );
 
       const uintSignature = await collectionOwner.signMessage(
-        silas.getBytes(uintMessage)
+        ethers.getBytes(uintMessage)
       );
       const stringSignature = await collectionOwner.signMessage(
-        silas.getBytes(stringMessage)
+        ethers.getBytes(stringMessage)
       );
       const boolSignature = await collectionOwner.signMessage(
-        silas.getBytes(boolMessage)
+        ethers.getBytes(boolMessage)
       );
       const bytesSignature = await collectionOwner.signMessage(
-        silas.getBytes(bytesMessage)
+        ethers.getBytes(bytesMessage)
       );
       const addressSignature = await collectionOwner.signMessage(
-        silas.getBytes(addressMessage)
+        ethers.getBytes(addressMessage)
       );
 
       const uintR: string = uintSignature.substring(0, 66);

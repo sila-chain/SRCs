@@ -66,7 +66,7 @@ abstract contract SDCSingleTrade is ISDCTrade {
     }
 
     /*
-    * Modifiers serve as guards whsila at a specific process state a specific function can be called
+    * Modifiers serve as guards whether at a specific process state a specific function can be called
     */
 
     modifier onlyWhenTradeInactive() {
@@ -148,7 +148,7 @@ abstract contract SDCSingleTrade is ISDCTrade {
     }
 
     /*
-     * generates a hash from tradeData and checks whsila an open request can be found by the opposite party
+     * generates a hash from tradeData and checks whether an open request can be found by the opposite party
      * if so, data are stored and open request is deleted
      * emits a TradeConfirmed
      * can be called only when TradeState = Incepted
@@ -166,7 +166,7 @@ abstract contract SDCSingleTrade is ISDCTrade {
     }
 
     /*
-      * generates a hash from tradeData and checks whsila an open request can be found by the opposite party
+      * generates a hash from tradeData and checks whether an open request can be found by the opposite party
       * if so, the open request is deleted, can only be called by incepting party.
       * emits a TradeConfirmed
       * can be called only when TradeState = Incepted

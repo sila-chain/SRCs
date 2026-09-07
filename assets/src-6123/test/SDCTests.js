@@ -1,7 +1,7 @@
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 const { expect } = require("chai");
-const AbiCoder = silas.utils.AbiCoder;
-const Keccak256 = silas.utils.keccak256;
+const AbiCoder = ethers.utils.AbiCoder;
+const Keccak256 = ethers.utils.keccak256;
 
 describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
 
@@ -36,12 +36,12 @@ describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
   let SRC20Factory;
 
   before(async () => {
-    const [_tokenManager, _counterparty1, _counterparty2] = await silas.getSigners();
+    const [_tokenManager, _counterparty1, _counterparty2] = await ethers.getSigners();
     tokenManager = _tokenManager;
     counterparty1 = _counterparty1;
     counterparty2 = _counterparty2;
-    SRC20Factory = await silas.getContractFactory("SRC20Settlement");
-    SDCFactory = await silas.getContractFactory("SDCSingleTradePledgedBalance");
+    SRC20Factory = await ethers.getContractFactory("SRC20Settlement");
+    SDCFactory = await ethers.getContractFactory("SDCSingleTradePledgedBalance");
     //oken = await SRC20Factory.deploy();
    // await token.deployed();
   });
@@ -185,8 +185,8 @@ describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
      await token.connect(counterparty2).mint(counterparty2.address,initialLiquidityBalance);
      let sdc = await SDCFactory.deploy(counterparty1.address, counterparty2.address,token.address,marginBufferAmount,terminationFee);
      const incept_call = await sdc.connect(counterparty1).inceptTrade(counterparty2.address, trade_data, 1, upfront, "initialMarketData");
-     const recsipt = await incept_call.wait();
-     const event = recsipt.events.find(event => event.event === 'TradeIncepted');
+     const receipt = await incept_call.wait();
+     const event = receipt.events.find(event => event.event === 'TradeIncepted');
      const trade_id = event.args[2];
      const confirm_call = await sdc.connect(counterparty2).confirmTrade(counterparty1.address, trade_data, -1, -upfront, "initialMarketData");
      await expect(confirm_call).to.emit(sdc, "TradeConfirmed");
@@ -211,8 +211,8 @@ describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
         let sdc = await SDCFactory.deploy(counterparty1.address, counterparty2.address,token.address,marginBufferAmount,terminationFee);
         // Note: position = 1 => counterparty1 is the receivingParty
         const incept_call = await sdc.connect(counterparty1).inceptTrade(counterparty2.address, trade_data, 1, 0, "initialMarketData");
-        const recsipt = await incept_call.wait();
-        const event = recsipt.events.find(event => event.event === 'TradeIncepted');
+        const receipt = await incept_call.wait();
+        const event = receipt.events.find(event => event.event === 'TradeIncepted');
         const trade_id = event.args[2];
         const confirm_call = await sdc.connect(counterparty2).confirmTrade(counterparty1.address, trade_data, -1, 0, "initialMarketData");
 
@@ -234,8 +234,8 @@ describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
         let sdc = await SDCFactory.deploy(counterparty1.address, counterparty2.address,token.address,marginBufferAmount,terminationFee);
         // Note: position = 1 => counterparty1 is the receivingParty
         const incept_call = await sdc.connect(counterparty1).inceptTrade(counterparty2.address, trade_data, 1, 0, "initialMarketData");
-        const recsipt = await incept_call.wait();
-        const event = recsipt.events.find(event => event.event === 'TradeIncepted');
+        const receipt = await incept_call.wait();
+        const event = receipt.events.find(event => event.event === 'TradeIncepted');
         const trade_id = event.args[2];
         const confirm_call = await sdc.connect(counterparty2).confirmTrade(counterparty1.address, trade_data, -1, 0, "initialMarketData");
         // Note: terminationPayment is considered to be viewed from the requester here.
@@ -313,8 +313,8 @@ describe("Livecycle Unit-Tests for SDC Plege Balance", () => {
         await token.connect(counterparty2).mint(counterparty2.address,initialLiquidityBalance);
         let sdc = await SDCFactory.deploy(counterparty1.address, counterparty2.address,token.address,marginBufferAmount,terminationFee);
         const incept_call = await sdc.connect(counterparty1).inceptTrade(counterparty2.address, trade_data, 1, 0, "initialMarketData");
-        const recsipt = await incept_call.wait();
-        const event = recsipt.events.find(event => event.event === 'TradeIncepted');
+        const receipt = await incept_call.wait();
+        const event = receipt.events.find(event => event.event === 'TradeIncepted');
         const trade_id = event.args[2];
         const confirm_call = await sdc.connect(counterparty2).confirmTrade(counterparty1.address, trade_data, -1, 0, "initialMarketData");
         await expect(confirm_call).to.emit(sdc, "TradeConfirmed");

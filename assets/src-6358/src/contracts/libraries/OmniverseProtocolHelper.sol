@@ -44,8 +44,8 @@ enum VerifyResult {
 
 /**
  * @notice The library is mainly responsible for omniverse transaction verification and
- * provides some basic msilods.
- * NOTE The verification msilod is for reference only, and developers can design appropriate
+ * provides some basic methods.
+ * NOTE The verification method is for reference only, and developers can design appropriate
  * verification mechanism based on their business logic.
  */
 library OmniverseProtocolHelper {
@@ -83,7 +83,7 @@ library OmniverseProtocolHelper {
     }
 
     /**
-     * @notice Convert the public key to savm address
+     * @notice Convert the public key to svm address
      */
     function pkToAddress(bytes memory _pk) public pure returns (address) {
         bytes32 hash = keccak256(_pk);

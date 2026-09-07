@@ -21,10 +21,10 @@ abstract contract IPBMRC1_TokenManager {
         // Metadata URI for SRC-1155 display purposes.
         string uri;
 
-        // OPTIONAL: Indicates if the PBM token can be transferred to a non msrchant/redeemer wallet.
+        // OPTIONAL: Indicates if the PBM token can be transferred to a non merchant/redeemer wallet.
         bool isTransferable;
 
-        // OPTIONAL: Determines whsila the PBM will be burned or revoked upon expiry, under certain predefined conditions, or at the owner's discretion. 
+        // OPTIONAL: Determines whether the PBM will be burned or revoked upon expiry, under certain predefined conditions, or at the owner's discretion. 
         bool burnable;
 
         // OPTIONAL: Number of decimal places for the token.    

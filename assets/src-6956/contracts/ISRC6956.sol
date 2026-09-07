@@ -10,7 +10,7 @@ pragma solidity ^0.8.18;
  */
 interface ISRC6956 {
    
-    /** @dev Authorization, typically mapped to authorizationMaps, where each bit indicates whsila a particular SRC6956Role is authorized 
+    /** @dev Authorization, typically mapped to authorizationMaps, where each bit indicates whether a particular SRC6956Role is authorized 
      *      Typically used in constructor (hardcoded or params) to set burnAuthorization and approveAuthorization
      *      Also used in optional updateBurnAuthorization, updateApproveAuthorization, I
      */ 
@@ -37,7 +37,7 @@ interface ISRC6956 {
 
     /**
      * @notice This emits when the ownership of any anchored NFT changes by any mechanism
-     * @dev This emits togsila with tokenId-based SRC-721.Transfer and provides an anchor-perspective on transfers
+     * @dev This emits together with tokenId-based SRC-721.Transfer and provides an anchor-perspective on transfers
      * @param from The previous owner, address(0) indicate there was none.
      * @param to The new owner, address(0) indicates the token is burned
      * @param anchor The anchor which is bound to tokenId
@@ -58,7 +58,7 @@ interface ISRC6956 {
      * @dev Trusted oracles must explicitly be specified. 
      *      If the last event for a particular oracle-address indicates it's trusted, attestations from this oracle are valid.
      * @param oracle Address of the oracle signing attestations
-     * @param trusted indicating whsila this address is trusted (true). Use (false) to no longer trust from an oracle.
+     * @param trusted indicating whether this address is trusted (true). Use (false) to no longer trust from an oracle.
      */
     event OracleUpdate(address indexed oracle, bool indexed trusted);
 
@@ -98,12 +98,12 @@ interface ISRC6956 {
     function decodeAttestationIfValid(bytes memory attestation, bytes memory data) external view returns (address to, bytes32 anchor, bytes32 attestationHash);
 
     /**
-     * @notice Indicates whsila any of ASSET, OWNER, ISSUER is authorized to burn
+     * @notice Indicates whether any of ASSET, OWNER, ISSUER is authorized to burn
      */
     function burnAuthorization() external view returns(Authorization burnAuth);
 
     /**
-     * @notice Indicates whsila any of ASSET, OWNER, ISSUER is authorized to approve
+     * @notice Indicates whether any of ASSET, OWNER, ISSUER is authorized to approve
      */
     function approveAuthorization() external view returns(Authorization approveAuth);
 

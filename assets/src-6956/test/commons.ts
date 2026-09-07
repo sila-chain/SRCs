@@ -1,4 +1,4 @@
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { createHash } from 'node:crypto';
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { float } from "hardhat/internal/core/params/argumentTypes";
@@ -29,7 +29,7 @@ export enum AttestedTransferLimitUpdatePolicy {
     }
     
 export const invalidAnchor = '0x' + createHash('sha256').update('TestAnchor1239').digest('hex');
-export const NULLADDR = silas.utils.getAddress('0x0000000000000000000000000000000000000000');
+export const NULLADDR = ethers.utils.getAddress('0x0000000000000000000000000000000000000000');
     
     // Needs to be an odd number of anchors to test the edge case of the merkle-
     // tree: Nodes with only one leaf.
@@ -53,10 +53,10 @@ export async function createAttestation(to, anchor, signer, validStartTime= 0) {
     const attestationTime = Math.floor(Date.now() / 1000.0); // Now in seconds
     const expiryTime = attestationTime + 5 * 60; // 5min valid
 
-    const messageHash = silas.utils.solidityKeccak256(["address", "bytes32", "uint256", 'uint256', "uint256"], [to, anchor, attestationTime, validStartTime, expiryTime]);
-    const sig = await signer.signMessage(silas.utils.arrayify(messageHash));
+    const messageHash = ethers.utils.solidityKeccak256(["address", "bytes32", "uint256", 'uint256', "uint256"], [to, anchor, attestationTime, validStartTime, expiryTime]);
+    const sig = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
-    return silas.utils.defaultAbiCoder.encode(['address', 'bytes32', 'uint256', 'uint256', 'uint256', 'bytes'], [to, anchor, attestationTime,  validStartTime, expiryTime, sig]);
+    return ethers.utils.defaultAbiCoder.encode(['address', 'bytes32', 'uint256', 'uint256', 'uint256', 'bytes'], [to, anchor, attestationTime,  validStartTime, expiryTime, sig]);
 }
 
 
@@ -65,7 +65,7 @@ export async function createAttestationWithData(to, anchor, signer, merkleTree, 
         const attestation = await createAttestation(to, anchor, signer, validStartTime); // Now in seconds
         
         const proof = merkleTree.getProof([anchor]);
-        const data = silas.utils.defaultAbiCoder.encode(['bytes32[]'], [proof])
+        const data = ethers.utils.defaultAbiCoder.encode(['bytes32[]'], [proof])
               
         return  [attestation, data];
 }

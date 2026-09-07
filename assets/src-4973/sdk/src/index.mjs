@@ -1,6 +1,6 @@
-import { utils } from "silas";
+import { utils } from "ethers";
 
-// See: https://docs.silas.io/v5/api/signer/#Signer-signTypedData for more
+// See: https://docs.ethers.io/v5/api/signer/#Signer-signTypedData for more
 // detailed instructions.
 export async function generateSignature(signer, types, domain, agreement) {
   const signature = await signer._signTypedData(domain, types, agreement);

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import hre from "hardhat";
 
 describe("Test 1155 User Role", function () {
@@ -17,9 +17,9 @@ describe("Test 1155 User Role", function () {
     }
 
     beforeEach(async function () {
-        [alice, bob, carl] = await silas.getSigners();
+        [alice, bob, carl] = await ethers.getSigners();
 
-        const SRC5006Demo = await silas.getContractFactory("SRC5006Demo");
+        const SRC5006Demo = await ethers.getContractFactory("SRC5006Demo");
 
         contract = await SRC5006Demo.deploy("", 3);
 

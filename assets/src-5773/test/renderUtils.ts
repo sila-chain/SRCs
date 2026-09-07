@@ -1,19 +1,19 @@
-import { BigNumber } from "silas";
-import { silas } from "hardhat";
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { MultiAssetTokenMock, MultiAssetRenderUtils } from "../typechain-types";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 function bn(x: number): BigNumber {
   return BigNumber.from(x);
 }
 
 async function assetsFixture() {
-  const multiassetFactory = await silas.getContractFactory(
+  const multiassetFactory = await ethers.getContractFactory(
     "MultiAssetTokenMock"
   );
-  const renderUtilsFactory = await silas.getContractFactory(
+  const renderUtilsFactory = await ethers.getContractFactory(
     "MultiAssetRenderUtils"
   );
 
@@ -40,7 +40,7 @@ describe("Render Utils", async function () {
   before(async function () {
     ({ multiasset, renderUtils } = await loadFixture(assetsFixture));
 
-    const signers = await silas.getSigners();
+    const signers = await ethers.getSigners();
     owner = signers[0];
 
     tokenId = 1;

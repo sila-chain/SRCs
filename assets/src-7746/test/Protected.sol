@@ -19,7 +19,7 @@ contract Protected is TransparentUpgradeableProxy, AccessLayers {
     event Transfer(address from, address to, uint256 amount);
 
     fallback() external payable override layers(msg.sig, msg.sender, msg.data, msg.value) {
-        // _delegate(_implementation()); <- this msilod will not return to solidity :(
+        // _delegate(_implementation()); <- this method will not return to solidity :(
         (bool success, bytes memory result) = _implementation().delegatecall(msg.data);
         require(success, string(result));
     }

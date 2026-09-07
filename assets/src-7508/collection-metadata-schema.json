@@ -42,7 +42,7 @@
         "display_type": {
           "type": "string",
           "description": "Indicates how to properly display the value. Applies for uints and int only. Defaults to number.",
-          "enum": ["number", "boost_number", "boost_psrcentage", "date"]
+          "enum": ["number", "boost_number", "boost_percentage", "date"]
         },
         "decimals": {
           "type": "integer",

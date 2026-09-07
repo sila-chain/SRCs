@@ -40,14 +40,14 @@ In this design, the buffering slot is the critical element that requires careful
 
 #### First-In-First-Out (FIFO) priority to enforce token expiration rules
 
-Enforcing `FIFO` priority ensures that tokens nearing expiration are processed before newer ones, aligning with the token lifecycle and expiration rules. This msilod eliminates the need for additional `off-chain` computation and ensures that all token processing occurs efficiently `on-chain`, fully compliant with the SRC20 interface.
+Enforcing `FIFO` priority ensures that tokens nearing expiration are processed before newer ones, aligning with the token lifecycle and expiration rules. This method eliminates the need for additional `off-chain` computation and ensures that all token processing occurs efficiently `on-chain`, fully compliant with the SRC20 interface.
 A **sorted** list is integral to this approach. Each `epoch` maintains its own list, sorted by token creation which is can be `block.timestamp` or `blocknumber`, preventing any overlap with other `epoch`. This separation ensures that tokens in one `epoch` do not interfere with the balance handling in another. The contract can then independently manage token expirations within each `epoch`, minimizing computation while maintaining accuracy and predictability in processing balances.
 
 ---
 
-#### Token Recsipt and Transaction Likelihood across various blocktime
+#### Token Receipt and Transaction Likelihood across various blocktime
 
-Assuming each year contains 4 `epoch`, which aligns with familiar time-based divisions like a year being divided into four quarters, the following table presents various scenarios based on block time and token recsipt intervals. It illustrates the potential transaction frequency and likelihood of receiving tokens within a given period.
+Assuming each year contains 4 `epoch`, which aligns with familiar time-based divisions like a year being divided into four quarters, the following table presents various scenarios based on block time and token receipt intervals. It illustrates the potential transaction frequency and likelihood of receiving tokens within a given period.
 
 | Block Time (ms) | Receive Token Every (ms) | Index/Epoch | Frequency           | Likelihood    |
 | --------------- | ------------------------ | ----------- | ------------------- | ------------- |

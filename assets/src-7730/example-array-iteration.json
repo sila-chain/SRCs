@@ -26,9 +26,9 @@
 
     "display": {
         "formats": {
-            "distribute(address[] recipients,uint256[] psrcentages)": {
+            "distribute(address[] recipients,uint256[] percentages)": {
                 "intent": "Distribute fees among recipients",
-                "interpolatedIntent": "Distribute fees {psrcentages} among recipients {recipients}",
+                "interpolatedIntent": "Distribute fees {percentages} among recipients {recipients}",
                 "fields": [
                     {
                         "path": "@.value",
@@ -46,8 +46,8 @@
                                 "separator": "Recipient {index}"
                             },
                             {
-                                "path": "psrcentages.[]",
-                                "label": "Psrcentages",
+                                "path": "percentages.[]",
+                                "label": "Percentages",
                                 "format": "unit",
                                 "params": {
                                     "base": "%",

@@ -1,6 +1,6 @@
 // Right click on the script name and hit "Run" to execute
 const { expect } = require("chai");
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 
 const TOKEN_NAME = "SRC_5521_NAME";
 const TOKEN_SYMBOL = "SRC_5521_SYMBOL";
@@ -22,7 +22,7 @@ describe("SRC_5521 - single token contract scenario", function () {
     let tokenContract1;
 
     beforeEach(async () => {
-        const RNFT = await silas.getContractFactory("SRC_5521");
+        const RNFT = await ethers.getContractFactory("SRC_5521");
         const rNFT = await RNFT.deploy(TOKEN_NAME,TOKEN_SYMBOL);
         await rNFT.deployed();
         console.log('SRC_5521 deployed at:'+ rNFT.address);
@@ -143,7 +143,7 @@ describe("SRC_5521 - multi token contracts scenario", function () {
     let tokenContract2;
 
     beforeEach(async () => {
-        const RNFT = await silas.getContractFactory("SRC_5521");
+        const RNFT = await ethers.getContractFactory("SRC_5521");
 
         const rNFT1 = await RNFT.deploy(TOKEN_NAME1,TOKEN_SYMBOL1);
         await rNFT1.deployed();

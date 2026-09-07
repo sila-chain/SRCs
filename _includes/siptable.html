@@ -16,14 +16,14 @@
       <thead>
         {% if status == "Last Call" %}
           <tr>
-          <th class="sipnum">Number</th><th class="date">Review ends</th><th class="title">Title</th><th class="author">Author</th></tr>
+          <th class="eipnum">Number</th><th class="date">Review ends</th><th class="title">Title</th><th class="author">Author</th></tr>
         {% else %}
-          <tr><th class="sipnum">Number</th><th class="title">Title</th><th class="author">Author</th></tr>
+          <tr><th class="eipnum">Number</th><th class="title">Title</th><th class="author">Author</th></tr>
         {% endif %}
       </thead>
       {% for page in sips %}
         <tr>
-          <td class="sipnum"><a href="{{page.url|relative_url}}">{{page.sip|xml_escape}}</a></td>
+          <td class="eipnum"><a href="{{page.url|relative_url}}">{{page.sip|xml_escape}}</a></td>
           {% if status == "Last Call" and page.last-call-deadline != undefined %}
             <td class="date">{{ page.last-call-deadline | xml_escape }}</td>
           {% endif %}

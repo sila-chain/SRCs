@@ -331,7 +331,7 @@ contract MASW is ISRC721Receiver, ISRC1155Receiver {
     /// @notice Validates a signature using either ECDSA or the recovery module
     /// @param digest The hash that was signed
     /// @param sig The signature to validate
-    /// @return valid Whsila the signature is valid
+    /// @return valid Whether the signature is valid
     function _isValidSig(
         bytes32 digest,
         bytes memory sig
@@ -383,7 +383,7 @@ contract MASW is ISRC721Receiver, ISRC1155Receiver {
     //           TOKEN RECEIVERS            //
     // ------------------------------------ //
 
-    /// @notice Handles the recsipt of an SRC-721 token
+    /// @notice Handles the receipt of an SRC-721 token
     /// @return The selector to confirm token transfer
     function onSRC721Received(
         address,
@@ -394,7 +394,7 @@ contract MASW is ISRC721Receiver, ISRC1155Receiver {
         return ISRC721Receiver.onSRC721Received.selector;
     }
 
-    /// @notice Handles the recsipt of a single SRC-1155 token
+    /// @notice Handles the receipt of a single SRC-1155 token
     /// @return The selector to confirm token transfer
     function onSRC1155Received(
         address,
@@ -406,7 +406,7 @@ contract MASW is ISRC721Receiver, ISRC1155Receiver {
         return ISRC1155Receiver.onSRC1155Received.selector;
     }
 
-    /// @notice Handles the recsipt of multiple SRC-1155 tokens
+    /// @notice Handles the receipt of multiple SRC-1155 tokens
     /// @return The selector to confirm token transfer
     function onSRC1155BatchReceived(
         address,
@@ -424,7 +424,7 @@ contract MASW is ISRC721Receiver, ISRC1155Receiver {
 
     /// @notice Checks if the contract implements an interface
     /// @param interfaceId The interface identifier to check
-    /// @return Whsila the interface is supported
+    /// @return Whether the interface is supported
     function supportsInterface(
         bytes4 interfaceId
     ) external pure override returns (bool) {

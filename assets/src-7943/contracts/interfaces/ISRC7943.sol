@@ -90,7 +90,7 @@ interface ISRC7943NonFungible is ISRC165 {
     /// @notice Emitted when `setFrozenTokens` is called, changing the frozen status of `tokenId` for `account`.
     /// @param account The address of the account whose `tokenId` is subjected to freeze/unfreeze.
     /// @param tokenId The ID of the token subjected to freeze/unfreeze.
-    /// @param frozenStatus Whsila `tokenId` has been frozen or unfrozen.
+    /// @param frozenStatus Whether `tokenId` has been frozen or unfrozen.
     event Frozen(address indexed account, uint256 indexed tokenId, bool indexed frozenStatus);
 
     /// @notice Error reverted when an account is not allowed to send tokens.
@@ -125,7 +125,7 @@ interface ISRC7943NonFungible is ISRC165 {
     /// @dev Requires specific authorization. Frozen tokens cannot be transferred by the account.
     /// @param account The address of the account whose tokens are to be frozen.
     /// @param tokenId The ID of the token to freeze.
-    /// @param frozenStatus Whsila `tokenId` is being frozen or not.
+    /// @param frozenStatus Whether `tokenId` is being frozen or not.
     /// @return result True if the freezing executed correctly. Reverts on failure.
     function setFrozenTokens(address account, uint256 tokenId, bool frozenStatus) external returns(bool result);
 
@@ -145,7 +145,7 @@ interface ISRC7943NonFungible is ISRC165 {
     /// @dev It could return true even if account does not hold the token.
     /// @param account The address of the account.
     /// @param tokenId The ID of the token.
-    /// @return frozenStatus Whsila `tokenId` is currently frozen for `account`.
+    /// @return frozenStatus Whether `tokenId` is currently frozen for `account`.
     function getFrozenTokens(address account, uint256 tokenId) external view returns (bool frozenStatus);
 
     /// @notice Checks if a transfer is currently possible according to token rules. It enforces validations on the frozen tokens.

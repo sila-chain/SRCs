@@ -13,7 +13,7 @@ pragma solidity ^0.8.0;
 // be 'com.mycompany.projectx.mystruct'. That will look familiar to you if you have used programming 
 // languages  that use namespaces.
 
-// Namespaces are used in some programming languages to package data and code togsila as separate 
+// Namespaces are used in some programming languages to package data and code together as separate 
 // reusable units. Diamond storage packages sets of state variables as separate, reusable data units 
 // in contract storage.
 
@@ -121,7 +121,7 @@ contract SRC721BatchTransferFacet {
 
 // 1. If you are using AppStorage then do not declare and use state variables outside the 
 //    AppStorage struct. Except Diamond Storage can be used. Diamond Storage and AppStorage
-//    can be used togsila.
+//    can be used together.
 
 // 2. Do not add new state variables to the beginning or middle of structs. Doing this 
 //    makes the new state variable overwrite existing state variable data and all state 

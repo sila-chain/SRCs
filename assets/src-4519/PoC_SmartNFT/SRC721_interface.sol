@@ -111,7 +111,7 @@ interface SRC165 {
 }
 
 interface SRC721TokenReceiver {
-    /// @notice Handle the recsipt of an NFT
+    /// @notice Handle the receipt of an NFT
     /// @dev The SRC721 smart contract calls this function on the
     /// recipient after a `transfer`. This function MAY throw to revert and reject the transfer. Return
     /// of other than the magic value MUST result in the transaction being reverted.

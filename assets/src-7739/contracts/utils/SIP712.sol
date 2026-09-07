@@ -112,7 +112,7 @@ abstract contract SIP712 {
     /// given `structHash`, as defined in
     /// https://sips.sila.org/SIPS/sip-712#definition-of-hashstruct.
     ///
-    /// The hash can be used togsila with {ECDSA-recover} to obtain the signer of a message:
+    /// The hash can be used together with {ECDSA-recover} to obtain the signer of a message:
     /// ```
     ///     bytes32 digest = _hashTypedData(keccak256(abi.encode(
     ///         keccak256("Mail(address to,string contents)"),

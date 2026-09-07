@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 
 const NAME = "NAME";
 const SYMBOL = "SYMBOL";
@@ -11,9 +11,9 @@ const YEAR = 31536000;
 describe("SRC7507", function () {
 
   async function deployContractFixture() {
-    const [deployer, owner, user1, user2] = await silas.getSigners();
+    const [deployer, owner, user1, user2] = await ethers.getSigners();
 
-    const contract = await silas.deployContract("SRC7507", [NAME, SYMBOL], deployer);
+    const contract = await ethers.deployContract("SRC7507", [NAME, SYMBOL], deployer);
     await contract.mint(owner, TOKEN_ID);
 
     return { contract, owner, user1, user2 };

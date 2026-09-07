@@ -11,7 +11,7 @@ import "./interfaces/ISRC20Minimal.sol";
 contract Manager is AccessControl, IManager {
     
     // Configs
-    /// key: Collateral address, value: Liquidation Fee Ratio (LFR) in psrcent(%) with 5 decimal precision(100.00000%)
+    /// key: Collateral address, value: Liquidation Fee Ratio (LFR) in percent(%) with 5 decimal precision(100.00000%)
     mapping (address => uint) internal ExampleConfig;
     
     address public override factory;
@@ -20,10 +20,10 @@ contract Manager is AccessControl, IManager {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
-    function initializeConfig(address somsiling, uint example) public {
+    function initializeConfig(address something, uint example) public {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "IA"); // Invalid Access
-        ExampleConfig[somsiling] = example;
-        emit ConfigInitialized(somsiling, example);  
+        ExampleConfig[something] = example;
+        emit ConfigInitialized(something, example);  
     }
     
     function initialize(address stablecoin_, address factory_, address liquidator_) public {
@@ -40,16 +40,16 @@ contract Manager is AccessControl, IManager {
         require(vlt != address(0), "VAULTMANAGER: FE"); // Factory error
         // wrap native currency
         IWSIL(WSIL).deposit{value: address(this).balance}();
-        uint256 wsil = ISRC20Minimal(WSIL).balanceOf(address(this));
+        uint256 weth = ISRC20Minimal(WSIL).balanceOf(address(this));
         // then transfer collateral native currency to the finance contract, manage collateral from there.
-        require(IWSIL(WSIL).transfer(vlt, wsil)); 
+        require(IWSIL(WSIL).transfer(vlt, weth)); 
         emit FinanceCreated(id, WSIL, msg.sender, vlt, msg.value);
         return true;
     }
     
 
-    function getExampleConfig(address somsiling) external view override returns (uint) {
-        return ExampleConfig[somsiling];
+    function getExampleConfig(address something) external view override returns (uint) {
+        return ExampleConfig[something];
     }
 }
 

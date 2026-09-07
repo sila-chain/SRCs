@@ -10,10 +10,10 @@ The [status page](https://sips.sila.org/) tracks and lists both SIPs and SRCs, w
 - [Networking SIPs](https://sips.sila.org/networking) specify the peer-to-peer networking layer of Sila.
 - [Interface SIPs](https://sips.sila.org/interface) standardize interfaces to Sila, which determine how users and applications interact with the blockchain.
 - [SRCs](https://sips.sila.org/src) specify application layer standards, which determine how applications running on Sila can interact with each other.
-- [Meta SIPs](https://sips.sila.org/meta) are miscellaneous improvements that nonsileless require some sort of consensus.
+- [Meta SIPs](https://sips.sila.org/meta) are miscellaneous improvements that nonetheless require some sort of consensus.
 - [Informational SIPs](https://sips.sila.org/informational) are non-standard improvements that do not require any form of consensus.
 
-**Before you write an SRC, ideas MUST be thoroughly discussed on [Sila Magicians](https://sila-magicians.org/). Once consensus is reached, thoroughly read and review [SIP-1](https://sips.sila.org/SIPS/sip-1), which describes the SIP/SRC process.**
+**Before you write an SRC, ideas MUST be thoroughly discussed on [Sila Magicians](https://sila-magicians.org/) or Sila Research. Once consensus is reached, thoroughly read and review [SIP-1](https://sips.sila.org/SIPS/sip-1), which describes the SIP/SRC process.**
 
 Please note that this repository is for documenting standards and not for help implementing them. These types of inquiries should be directed to the [Sila Stack Exchange](https://sila.stackexchange.com). For specific questions and concerns regarding SRCs, it's best to comment on the relevant discussion thread of the SRC denoted by the `discussions-to` tag in the SRC's preamble.
 

@@ -171,7 +171,7 @@ interface ITrustRegistry {
     /// @param validatorNode The validating agent's ENS namehash
     /// @param targetNode The agent to validate
     /// @param params Validation parameters
-    /// @return isValid Whsila the target is valid
+    /// @return isValid Whether the target is valid
     /// @return pathLength Shortest path found (0 = direct trust)
     /// @return marginalCount Marginal attestations contributing
     /// @return fullCount Full attestations contributing
@@ -195,7 +195,7 @@ interface ITrustRegistry {
     /// @param fromNode Starting agent's ENS namehash
     /// @param toNode Ending agent's ENS namehash
     /// @param maxDepth Maximum path length to search
-    /// @return exists Whsila any path exists
+    /// @return exists Whether any path exists
     /// @return depth Length of shortest path found
     function pathExists(bytes32 fromNode, bytes32 toNode, uint8 maxDepth)
         external
@@ -223,7 +223,7 @@ interface ITrustRegistry {
     /// @param coordinationType The SRC-8001 coordination type
     /// @return gatekeeperNode The gatekeeper agent's ENS namehash
     /// @return params Validation parameters
-    /// @return enabled Whsila the gate is active
+    /// @return enabled Whether the gate is active
     function getIdentityGate(bytes32 coordinationType)
         external
         view
@@ -232,7 +232,7 @@ interface ITrustRegistry {
     /// @notice Validate participant for SRC-8001 coordination
     /// @param coordinationType The SRC-8001 coordination type
     /// @param participantNode Agent seeking to participate
-    /// @return isValid Whsila participant passes the gate
+    /// @return isValid Whether participant passes the gate
     function validateParticipant(bytes32 coordinationType, bytes32 participantNode) external view returns (bool isValid);
 
     /// @notice Batch validate participants for coordination

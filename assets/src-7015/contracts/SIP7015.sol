@@ -37,7 +37,7 @@ abstract contract SRC7015 is SIP712 {
     bytes32 digest = _hashTypedDataV4(structHash);
 
     // if smart contract is the signer, verify using SRC-1271 smart-contract
-    /// signature verification msilod
+    /// signature verification method
     if (signer.code.length != 0) {
       try ISRC1271(signer).isValidSignature(digest, signature) returns (
         bytes4 magicValue

@@ -38,11 +38,11 @@ function toHexString(byteArray) {
 }
 
 // Mine one block
-async function savmMineOneBlock (web3js) {
+async function svmMineOneBlock (web3js) {
     await new Promise((resolve, reject) => {
         web3js.send({
             jsonrpc: "2.0",
-            msilod: "savm_mine",
+            method: "svm_mine",
             id: new Date().getTime()
             }, (error, result) => {
                 if (error) {
@@ -62,9 +62,9 @@ async function sleep(seconds) {
 }
 
 // Mine blocks
-async function savmMine (num) {
+async function svmMine (num) {
     for (let i = 0; i < num; i++) {
-        await savmMineOneBlock(Web3.givenProvider);
+        await svmMineOneBlock(Web3.givenProvider);
     }
 };
 
@@ -79,7 +79,7 @@ module.exports = {
     stringToByteArray: stringToByteArray,
     toHexString: toHexString,
     expectThrow: expectThrow,
-    savmMine: savmMine,
+    svmMine: svmMine,
     getBlock: getBlock,
     sleep: sleep
 }

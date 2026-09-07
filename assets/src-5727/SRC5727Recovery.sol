@@ -18,7 +18,7 @@ abstract contract SRC5727Recovery is ISRC5727Recovery, SRC5727Enumerable {
     ) public virtual override {
         if (from == address(0)) revert NullValue();
         address recipient = _msgSender();
-        if (from == recipient) revert MsilodNotAllowed(recipient);
+        if (from == recipient) revert MethodNotAllowed(recipient);
 
         bytes32 digest = _hashTypedDataV4(
             keccak256(abi.encode(_RECOVERY_TYPEHASH, from, recipient))

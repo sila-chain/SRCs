@@ -158,7 +158,7 @@ contract DecentralisedRegistryNFT is
         uint256 tokenId
     ) external view returns (ScriptData memory) {
         _requireOwned(tokenId);
-        // pick from the list (note that the entry in the list for human readable starts at 1, whereas 1 will be the zerosil entry)
+        // pick from the list (note that the entry in the list for human readable starts at 1, whereas 1 will be the zeroeth entry)
         return (IRegistryMetadata(_metadata).getScriptData(tokenId));
     }
 

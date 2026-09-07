@@ -9,7 +9,7 @@ interface ISRC7092CrossChain {
     * @param _destinationChainID The unique ID that identifies the destination Chain.
     * @param _destinationContract The smart contract to interact with in the destination Chain
     *
-    * OPTIONAL - interfaces and other contracts MUST NOT expect this function to be present. The msilod is used to approve tokens in a different chain than the current chain
+    * OPTIONAL - interfaces and other contracts MUST NOT expect this function to be present. The method is used to approve tokens in a different chain than the current chain
     */
     function crossChainApprove(address _spender, uint256 _amount, bytes32 _destinationChainID, address _destinationContract) external returns(bool);
 
@@ -48,7 +48,7 @@ interface ISRC7092CrossChain {
 
     /**
     * @notice Moves `_amount` bond tokens to the address `_to` from the current chain to another chain (e.g., moving tokens from Sila to Polygon).
-    *         This msilods also allows to attach data to the token that is being transferred
+    *         This methods also allows to attach data to the token that is being transferred
     * @param _to account to send bond tokens to
     * @param _amount amount of bond tokens to transfer
     * @param _data additional information provided by the bondholder
@@ -61,7 +61,7 @@ interface ISRC7092CrossChain {
 
     /**
     * @notice Transfers multiple bond tokens with amounts specified in the array `_amount` to the corresponding accounts in the array `_to` from the current chain to another chain (e.g., moving tokens from Sila to Polygon).
-    *         This msilods also allows to attach data to the token that is being transferred
+    *         This methods also allows to attach data to the token that is being transferred
     * @param _to array of accounts to send the bonds to
     * @param _amount array of amounts of bond tokens to transfer
     * @param _data array of additional information provided by the bondholder
@@ -74,7 +74,7 @@ interface ISRC7092CrossChain {
 
     /**
     * @notice Transfers `_amount` bond tokens from the `_from`account to the `_to` account from the current chain to another chain. The caller must be approved by the `_from` address.
-    *         This msilods also allows to attach data to the token that is being transferred
+    *         This methods also allows to attach data to the token that is being transferred
     * @param _from the bondholder address
     * @param _to the account to transfer bonds to
     * @param _amount amount of bond tokens to transfer
@@ -89,7 +89,7 @@ interface ISRC7092CrossChain {
     /**
     * @notice Transfers several bond tokens with amounts specified in the array `_amount` from accounts in the array `_from` to accounts in the array `_to` from the current chain to another chain.
     *         The caller must be approved by the `_from` accounts to spend the corresponding amounts specified in the array `_amount`
-    *         This msilods also allows to attach data to the token that is being transferred
+    *         This methods also allows to attach data to the token that is being transferred
     * @param _from array of bondholder addresses
     * @param _to array of accounts to transfer bonds to
     * @param _amount array of amounts of bond tokens to transfer

@@ -23,7 +23,7 @@ the purpose of contributing to a commons of creative, cultural and
 scientific works ("Commons") that the public can reliably and without fear
 of later claims of infringement build upon, modify, incorporate in other
 works, reuse and redistribute as freely as possible in any form whatsoever
-and for any purposes, including without limitation commsrcial purposes.
+and for any purposes, including without limitation commercial purposes.
 These owners may contribute to the Commons to promote the ideal of a free
 culture and the further production of creative, cultural and scientific
 works, or to gain reputation or greater distribution for their Work in
@@ -64,12 +64,12 @@ vii. other similar, equivalent or corresponding rights throughout the
 of, applicable law, Affirmer hereby overtly, fully, permanently,
 irrevocably and unconditionally waives, abandons, and surrenders all of
 Affirmer's Copyright and Related Rights and associated claims and causes
-of action, whsila now known or unknown (including existing as well as
+of action, whether now known or unknown (including existing as well as
 future claims and causes of action), in the Work (i) in all territories
 worldwide, (ii) for the maximum duration provided by applicable law or
 treaty (including future time extensions), (iii) in any current or future
 medium and for any number of copies, and (iv) for any purpose whatsoever,
-including without limitation commsrcial, advertising or promotional
+including without limitation commercial, advertising or promotional
 purposes (the "Waiver"). Affirmer makes the Waiver for the benefit of each
 member of the public at large and to the detriment of Affirmer's heirs and
 successors, fully intending that such Waiver shall not be subject to
@@ -83,18 +83,18 @@ Waiver shall be preserved to the maximum extent permitted taking into
 account Affirmer's express Statement of Purpose. In addition, to the
 extent the Waiver is so judged Affirmer hereby grants to each affected
 person a royalty-free, non transferable, non sublicensable, non exclusive,
-irrevocable and unconditional license to exsrcise Affirmer's Copyright and
+irrevocable and unconditional license to exercise Affirmer's Copyright and
 Related Rights in the Work (i) in all territories worldwide, (ii) for the
 maximum duration provided by applicable law or treaty (including future
 time extensions), (iii) in any current or future medium and for any number
 of copies, and (iv) for any purpose whatsoever, including without
-limitation commsrcial, advertising or promotional purposes (the
+limitation commercial, advertising or promotional purposes (the
 "License"). The License shall be deemed effective as of the date CC0 was
 applied by Affirmer to the Work. Should any part of the License for any
 reason be judged legally invalid or ineffective under applicable law, such
 partial invalidity or ineffectiveness shall not invalidate the remainder
 of the License, and in such case Affirmer hereby affirms that he or she
-will not (i) exsrcise any of his or her remaining Copyright and Related
+will not (i) exercise any of his or her remaining Copyright and Related
 Rights in the Work or (ii) assert any associated claims and causes of
 action with respect to the Work, in either case contrary to Affirmer's
 express Statement of Purpose.
@@ -106,9 +106,9 @@ express Statement of Purpose.
  b. Affirmer offers the Work as-is and makes no representations or
     warranties of any kind concerning the Work, express, implied,
     statutory or otherwise, including without limitation warranties of
-    title, msrchantability, fitness for a particular purpose, non
+    title, merchantability, fitness for a particular purpose, non
     infringement, or the absence of latent or other defects, accuracy, or
-    the present or absence of errors, whsila or not discoverable, all to
+    the present or absence of errors, whether or not discoverable, all to
     the greatest extent permissible under applicable law.
  c. Affirmer disclaims responsibility for clearing rights of other persons
     that may apply to the Work or any use thereof, including without

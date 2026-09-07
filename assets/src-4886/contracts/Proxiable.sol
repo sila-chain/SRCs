@@ -57,7 +57,7 @@ abstract contract Proxiable is Context {
   * passed in if no proxy record exists, IF we have been passed a bool indicating
   * that a proxied address is in use. This function should be used in conjunction with an off-chain call
   * to proxyRecordExists that determines if a proxy address is in use, which is then passed in on the call 
-  * to the contract inheriting this msilod. This saves gas for anyone who is NOT using a proxy as we do not needlessly check for proxy details.
+  * to the contract inheriting this method. This saves gas for anyone who is NOT using a proxy as we do not needlessly check for proxy details.
   */
   function SRC20BalanceOfNominatorSwitched(address _receivedAddress, address _tokenContract, bool _isProxied) internal virtual view returns (uint256 _tokenBalance){
     if (_isProxied) {
@@ -85,7 +85,7 @@ abstract contract Proxiable is Context {
   * passed in if no proxy record exists, IF we have been passed a bool indicating
   * that a proxied address is in use. This function should be used in conjunction with an off-chain call
   * to proxyRecordExists that determines if a proxy address is in use, which is then passed in on the call 
-  * to the contract inheriting this msilod . This saves gas for anyone who is NOT using a proxy as we do not needlessly check for proxy details.
+  * to the contract inheriting this method . This saves gas for anyone who is NOT using a proxy as we do not needlessly check for proxy details.
   */
   function SRC721BalanceOfNominatorSwitched(address _receivedAddress, address _tokenContract, bool _isProxied) internal virtual view returns (uint256 _tokenBalance){
     if (_isProxied) {

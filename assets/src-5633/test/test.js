@@ -1,12 +1,12 @@
 const { expect } = require("chai");
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 
 describe("SRC5633Demo contract", function () {
 
   it("InterfaceId should equals 0x911ec470", async function () {
-    const [owner, addr1, addr2] = await silas.getSigners();
+    const [owner, addr1, addr2] = await ethers.getSigners();
 
-    const SRC5633Demo = await silas.getContractFactory("SRC5633Demo");
+    const SRC5633Demo = await ethers.getContractFactory("SRC5633Demo");
 
     const demo = await SRC5633Demo.deploy();
     await demo.deployed();
@@ -15,9 +15,9 @@ describe("SRC5633Demo contract", function () {
   });
 
   it("Test soulbound", async function () {
-    const [owner, addr1, addr2] = await silas.getSigners();
+    const [owner, addr1, addr2] = await ethers.getSigners();
 
-    const SRC5633Demo = await silas.getContractFactory("SRC5633Demo");
+    const SRC5633Demo = await ethers.getContractFactory("SRC5633Demo");
 
     const demo = await SRC5633Demo.deploy();
     await demo.deployed();

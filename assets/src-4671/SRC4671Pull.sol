@@ -21,7 +21,7 @@ abstract contract SRC4671Pull is SRC4671, ISRC4671Pull {
 
         address recipient = msg.sender;
         bytes32 messageHash = keccak256(abi.encodePacked(tokenId, owner, recipient));
-        bytes32 signedHash = messageHash.toSilSignedMessageHash();
+        bytes32 signedHash = messageHash.toEthSignedMessageHash();
         require(signedHash.recover(signature) == owner, "Invalid signature");
 
         bool valid = token.valid;

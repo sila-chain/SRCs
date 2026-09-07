@@ -121,7 +121,7 @@ contract('SRC6358Fungible', function() {
         let txData = encodeMint(from, toPk, amount, nonce);
         await fungible.sendOmniverseTransaction(txData);
         await utils.sleep(COOL_DOWN);
-        await utils.savmMine(1, web3js.currentProvider);
+        await utils.svmMine(1, web3js.currentProvider);
         let ret = await fungible.triggerExecution();
     }
     
@@ -165,7 +165,7 @@ contract('SRC6358Fungible', function() {
                 let count = await fungible.getTransactionCount(ownerPk);
                 assert(count == 0, "The count should be zero");
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 ret = await fungible.triggerExecution();
                 count = await fungible.getTransactionCount(ownerPk);
                 assert(count == 1, "The count should be one");
@@ -193,10 +193,10 @@ contract('SRC6358Fungible', function() {
         describe('Cooled down', function() {
             it('should succeed', async () => {
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 let nonce = await fungible.getTransactionCount(ownerPk);
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 ret = await fungible.triggerExecution();
                 let count = await fungible.getTransactionCount(ownerPk);
                 assert(count == 2);
@@ -231,7 +231,7 @@ contract('SRC6358Fungible', function() {
                 let count = await fungible.getTransactionCount(ownerPk);
                 assert(count == 0, "The count should be zero");
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 ret = await fungible.triggerExecution();
                 count = await fungible.getTransactionCount(ownerPk);
                 assert(count == 1, "The count should be one");
@@ -261,7 +261,7 @@ contract('SRC6358Fungible', function() {
                 let count = await fungible.getDelayedTxCount();
                 assert(count == 1, 'The number of delayed txs should be one');
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 ret = await fungible.triggerExecution();
             });
         });
@@ -303,7 +303,7 @@ contract('SRC6358Fungible', function() {
         describe('Cooled down', function() {
             it('should be one transaction', async () => {
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 let tx = await fungible.getExecutableDelayedTx();
                 assert(tx.sender == ownerPk, 'There should be one transaction');
             });
@@ -350,7 +350,7 @@ contract('SRC6358Fungible', function() {
                 let txData = encodeMint({pk: ownerPk, sk: ownerSk}, user1Pk, ONE_TOKEN, nonce);
                 await fungible.sendOmniverseTransaction(txData);
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 let ret = await fungible.triggerExecution();
                 assert(ret.logs[0].event == 'OmniverseTokenTransfer');
                 let balance = await fungible.omniverseBalanceOf(user1Pk);
@@ -387,7 +387,7 @@ contract('SRC6358Fungible', function() {
                 let txData = encodeBurn({pk: ownerPk, sk: ownerSk}, user1Pk, ONE_TOKEN, nonce);
                 await fungible.sendOmniverseTransaction(txData);
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 let ret = await fungible.triggerExecution();
                 assert(ret.logs[0].event == 'OmniverseTokenTransfer');
                 let balance = await fungible.omniverseBalanceOf(user1Pk);
@@ -416,7 +416,7 @@ contract('SRC6358Fungible', function() {
                 let txData = encodeTransfer({pk: user1Pk, sk: user1Sk}, user2Pk, ONE_TOKEN, nonce);
                 await fungible.sendOmniverseTransaction(txData);
                 await utils.sleep(COOL_DOWN);
-                await utils.savmMine(1, web3js.currentProvider);
+                await utils.svmMine(1, web3js.currentProvider);
                 let ret = await fungible.triggerExecution();
                 assert(ret.logs[0].event == 'OmniverseTokenTransfer');
                 let balance = await fungible.omniverseBalanceOf(user1Pk);

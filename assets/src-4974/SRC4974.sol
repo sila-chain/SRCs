@@ -69,7 +69,7 @@ contract LoyaltyPoints is ISRC4974 {
     }
 
     // Award SIL to a customer based on their rating
-    function awardSil(address payable customer) public payable {
+    function awardEth(address payable customer) public payable {
         // Calculate the amount of SIL to award based on the customer's rating
         int8 rating = ratingOf(customer);
         require(rating > 0, "Sorry, this customer has a rating less than 0 and cannot be awarded.");

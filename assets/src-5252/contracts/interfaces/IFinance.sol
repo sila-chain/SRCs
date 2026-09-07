@@ -30,7 +30,7 @@ interface IFinance {
     uint256 financeId_,
     address abt_,
     uint256 amount_,
-    address wsil_
+    address weth_
     ) external;
     
 }

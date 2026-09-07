@@ -1,17 +1,17 @@
 const { expect } = require("chai");
-const { silas } = require("hardhat");
+const { ethers } = require("hardhat");
 
 describe("SRC-7621 Basket Token", function () {
   let basket;
   let tokenA, tokenB, tokenC;
   let owner, alice, bob;
 
-  const SUPPLY = silas.parseSila("1000000");
+  const SUPPLY = ethers.parseEther("1000000");
   const DEAD_SHARES = 1000n;
 
   async function deployBasket(tokens, weights, signer) {
     const s = signer || owner;
-    const BasketToken = await silas.getContractFactory("BasketToken", s);
+    const BasketToken = await ethers.getContractFactory("BasketToken", s);
     return BasketToken.deploy("Test Basket", "TBSK", s.address, tokens, weights);
   }
 
@@ -20,7 +20,7 @@ describe("SRC-7621 Basket Token", function () {
     const weights = [6000n, 4000n];
     basket = await deployBasket(tokens, weights);
 
-    const amounts = [silas.parseSila("100"), silas.parseSila("50")];
+    const amounts = [ethers.parseEther("100"), ethers.parseEther("50")];
     await tokenA.approve(await basket.getAddress(), amounts[0]);
     await tokenB.approve(await basket.getAddress(), amounts[1]);
     const minShares = 0n;
@@ -29,8 +29,8 @@ describe("SRC-7621 Basket Token", function () {
   }
 
   beforeEach(async function () {
-    [owner, alice, bob] = await silas.getSigners();
-    const MockSRC20 = await silas.getContractFactory("MockSRC20");
+    [owner, alice, bob] = await ethers.getSigners();
+    const MockSRC20 = await ethers.getContractFactory("MockSRC20");
     tokenA = await MockSRC20.deploy("Token A", "TKA", SUPPLY);
     tokenB = await MockSRC20.deploy("Token B", "TKB", SUPPLY);
     tokenC = await MockSRC20.deploy("Token C", "TKC", SUPPLY);
@@ -42,7 +42,7 @@ describe("SRC-7621 Basket Token", function () {
     it("mints shares proportionally and emits Contributed with caller, receiver, amounts", async function () {
       await deployAndSeed();
 
-      const amounts = [silas.parseSila("10"), silas.parseSila("5")];
+      const amounts = [ethers.parseEther("10"), ethers.parseEther("5")];
       await tokenA.transfer(alice.address, amounts[0]);
       await tokenB.transfer(alice.address, amounts[1]);
       await tokenA.connect(alice).approve(await basket.getAddress(), amounts[0]);
@@ -60,13 +60,13 @@ describe("SRC-7621 Basket Token", function () {
     it("reverts with InsufficientShares when shares minted is below minShares", async function () {
       await deployAndSeed();
 
-      const amounts = [silas.parseSila("10"), silas.parseSila("5")];
+      const amounts = [ethers.parseEther("10"), ethers.parseEther("5")];
       await tokenA.transfer(alice.address, amounts[0]);
       await tokenB.transfer(alice.address, amounts[1]);
       await tokenA.connect(alice).approve(await basket.getAddress(), amounts[0]);
       await tokenB.connect(alice).approve(await basket.getAddress(), amounts[1]);
 
-      const hugeMin = silas.parseSila("999999");
+      const hugeMin = ethers.parseEther("999999");
       await expect(
         basket.connect(alice).contribute(amounts, alice.address, hugeMin)
       ).to.be.revertedWithCustomError(basket, "InsufficientShares");
@@ -75,7 +75,7 @@ describe("SRC-7621 Basket Token", function () {
     it("reverts with LengthMismatch when amounts length mismatches constituents", async function () {
       await deployAndSeed();
       await expect(
-        basket.contribute([silas.parseSila("1")], owner.address, 0n)
+        basket.contribute([ethers.parseEther("1")], owner.address, 0n)
       ).to.be.revertedWithCustomError(basket, "LengthMismatch");
     });
 
@@ -114,7 +114,7 @@ describe("SRC-7621 Basket Token", function () {
       await deployAndSeed();
 
       const lpBal = await basket.balanceOf(owner.address);
-      const hugeMin = [silas.parseSila("999999"), 0n];
+      const hugeMin = [ethers.parseEther("999999"), 0n];
 
       await expect(
         basket.withdraw(lpBal / 2n, owner.address, hugeMin)
@@ -202,7 +202,7 @@ describe("SRC-7621 Basket Token", function () {
       await deployAndSeed();
 
       await expect(
-        basket.rebalance([silas.ZeroAddress, await tokenB.getAddress()], [5000n, 5000n])
+        basket.rebalance([ethers.ZeroAddress, await tokenB.getAddress()], [5000n, 5000n])
       ).to.be.revertedWithCustomError(basket, "ZeroAddress");
     });
   });
@@ -213,7 +213,7 @@ describe("SRC-7621 Basket Token", function () {
     it("previewContribute returns values consistent with contribute", async function () {
       await deployAndSeed();
 
-      const amounts = [silas.parseSila("10"), silas.parseSila("5")];
+      const amounts = [ethers.parseEther("10"), ethers.parseEther("5")];
       const preview = await basket.previewContribute(amounts);
 
       await tokenA.transfer(alice.address, amounts[0]);
@@ -321,8 +321,8 @@ describe("SRC-7621 Basket Token", function () {
     it("ownership renunciation makes rebalance permanently unavailable", async function () {
       await deployAndSeed();
 
-      await basket.transferOwnership(silas.ZeroAddress);
-      expect(await basket.owner()).to.equal(silas.ZeroAddress);
+      await basket.transferOwnership(ethers.ZeroAddress);
+      expect(await basket.owner()).to.equal(ethers.ZeroAddress);
 
       const tokens = [await tokenA.getAddress(), await tokenB.getAddress()];
       await expect(
@@ -333,18 +333,18 @@ describe("SRC-7621 Basket Token", function () {
     it("emits OwnershipTransferred(address(0), initialOwner) at creation", async function () {
       const tokens = [await tokenA.getAddress()];
       const weights = [10000n];
-      const BasketToken = await silas.getContractFactory("BasketToken");
+      const BasketToken = await ethers.getContractFactory("BasketToken");
       const b = await BasketToken.deploy("Test", "T", owner.address, tokens, weights);
-      const recsipt = await b.deploymentTransaction().wait();
+      const receipt = await b.deploymentTransaction().wait();
 
       // Check logs for OwnershipTransferred event
       const iface = b.interface;
-      const event = recsipt.logs
+      const event = receipt.logs
         .map(log => { try { return iface.parseLog(log); } catch { return null; } })
         .find(e => e && e.name === "OwnershipTransferred");
 
       expect(event).to.not.be.undefined;
-      expect(event.args.previousOwner).to.equal(silas.ZeroAddress);
+      expect(event.args.previousOwner).to.equal(ethers.ZeroAddress);
       expect(event.args.newOwner).to.equal(owner.address);
     });
   });
@@ -357,7 +357,7 @@ describe("SRC-7621 Basket Token", function () {
       const weights = [5000n, 5000n];
       basket = await deployBasket(tokens, weights);
 
-      const amounts = [silas.parseSila("100"), silas.parseSila("100")];
+      const amounts = [ethers.parseEther("100"), ethers.parseEther("100")];
       const preview = await basket.previewContribute(amounts);
 
       await tokenA.approve(await basket.getAddress(), amounts[0]);

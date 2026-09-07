@@ -1,8 +1,8 @@
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { expect } from "chai";
-import { BigNumber, Contract } from "silas";
+import { BigNumber, Contract } from "ethers";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { SRC721Mock, EmotableRepository } from "../typechain-types";
 
 function bn(x: number): BigNumber {
@@ -10,7 +10,7 @@ function bn(x: number): BigNumber {
 }
 
 async function tokenFixture() {
-  const factory = await silas.getContractFactory("SRC721Mock");
+  const factory = await ethers.getContractFactory("SRC721Mock");
   const token = await factory.deploy("Chunky", "CHNK");
   await token.deployed();
 
@@ -18,7 +18,7 @@ async function tokenFixture() {
 }
 
 async function emotableRepositoryFixture() {
-  const factory = await silas.getContractFactory("EmotableRepository");
+  const factory = await ethers.getContractFactory("EmotableRepository");
   const repository = await factory.deploy();
   await repository.deployed();
 
@@ -35,7 +35,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
   const emoji2 = Buffer.from("😁");
 
   beforeEach(async function () {
-    [owner, ...addrs] = await silas.getSigners();
+    [owner, ...addrs] = await ethers.getSigners();
     token = await loadFixture(tokenFixture);
     repository = await loadFixture(emotableRepositoryFixture);
   });
@@ -402,7 +402,7 @@ describe("RMRKEmotableRepositoryMock", async function () {
         bn(9999999999)
       );
 
-      const signature = await owner.signMessage(silas.utils.arrayify(message));
+      const signature = await owner.signMessage(ethers.utils.arrayify(message));
 
       const r: string = signature.substring(0, 66);
       const s: string = "0x" + signature.substring(66, 130);
@@ -443,10 +443,10 @@ describe("RMRKEmotableRepositoryMock", async function () {
       );
 
       const signature1 = await owner.signMessage(
-        silas.utils.arrayify(messages[0])
+        ethers.utils.arrayify(messages[0])
       );
       const signature2 = await owner.signMessage(
-        silas.utils.arrayify(messages[1])
+        ethers.utils.arrayify(messages[1])
       );
 
       const r1: string = signature1.substring(0, 66);

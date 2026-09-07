@@ -58,7 +58,7 @@ test("0xD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb")
 
 ```
 
-In English, convert the address to hex, but if the `i`th digit is a letter (ie. it's one of `abcdef`) print it in uppsrcase if the `4*i`th bit of the hash of the lowsrcase hexadecimal address is 1 otherwise print it in lowsrcase.
+In English, convert the address to hex, but if the `i`th digit is a letter (ie. it's one of `abcdef`) print it in uppercase if the `4*i`th bit of the hash of the lowercase hexadecimal address is 1 otherwise print it in lowercase.
 
 # Rationale
 
@@ -96,7 +96,7 @@ function toChecksumAddress (address) {
 '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359'
 ```
 
-Note that the input to the Keccak256 hash is the lowsrcase hexadecimal string (i.e. the hex address encoded as ASCII):
+Note that the input to the Keccak256 hash is the lowercase hexadecimal string (i.e. the hex address encoded as ASCII):
 
 ```
     var hash = createKeccakHash('keccak256').update(Buffer.from(address.toLowerCase(), 'ascii')).digest()

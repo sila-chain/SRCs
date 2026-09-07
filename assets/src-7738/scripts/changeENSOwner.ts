@@ -1,5 +1,5 @@
-import { silas } from "hardhat";
-const { getContractAddress } = require('@silasproject/address')
+import { ethers } from "hardhat";
+const { getContractAddress } = require('@ethersproject/address')
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -19,15 +19,15 @@ async function main() {
         throw new Error("ENS_NAME not set in .env");
     }
 
-    const ownerKey = new silas.Wallet(privateKey, silas.provider);
-    const deployKey = new silas.Wallet(secondaryKey, silas.provider);
-    const ensOwnerKey = new silas.Wallet(ensHolderKey, silas.provider);
+    const ownerKey = new ethers.Wallet(privateKey, ethers.provider);
+    const deployKey = new ethers.Wallet(secondaryKey, ethers.provider);
+    const ensOwnerKey = new ethers.Wallet(ensHolderKey, ethers.provider);
     console.log(`ADDR: ${ownerKey.address}`);
     console.log(`2nd deploy addr: ${deployKey.address}`);
     console.log(`ENS OWNER: ${ensOwnerKey.address}`);
 
     //calculate ENS Assigner deployment address
-    const transactionCount = await silas.provider.getTransactionCount(deployKey.address);
+    const transactionCount = await ethers.provider.getTransactionCount(deployKey.address);
 
     //calculate ENSAssign proxy address: NB ensure you wait a sufficiently long time for any transaction on the deployKey wallet to be reflected on the node.
     let ensDeployAddr = getContractAddress({
@@ -49,7 +49,7 @@ async function main() {
         "function setOwner(bytes32 node, address owner) external"
     ];
 
-    const ensContract = new silas.Contract(ensAddress, ensAbi, ensOwnerKey);
+    const ensContract = new ethers.Contract(ensAddress, ensAbi, ensOwnerKey);
 
     try {
         console.log(`Current Owner: ${await ensContract.owner(node)}`);
@@ -70,8 +70,8 @@ async function main() {
 
 function getName(label: string): string {
     const SIL_NODE = "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae";
-    const labelhash = silas.keccak256(silas.toUtf8Bytes(label));
-    const node = silas.keccak256(silas.AbiCoder.defaultAbiCoder().encode(
+    const labelhash = ethers.keccak256(ethers.toUtf8Bytes(label));
+    const node = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(
         ["bytes32", "bytes32"],
         [SIL_NODE, labelhash]
     ));

@@ -15,7 +15,7 @@ interface ISRC5727Expirable is ISRC5727, ISRC5643 {
      *      MUST revert if the `date` is in the past.
      * @param tokenId The token whose expiry date is set
      * @param expiration The expire date to set
-     * @param isRenewable Whsila the token is renewable
+     * @param isRenewable Whether the token is renewable
      */
     function setExpiration(
         uint256 tokenId,

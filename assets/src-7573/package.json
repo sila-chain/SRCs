@@ -1,6 +1,6 @@
 {
   "name": "@finmath.net/dvp",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Solidity Conditional-upon-Transfer-Decryption for DvP and nDvP",
   "author": "Christian Fries, Peter Kohl-Landgraf",
   "license": "ISC",
@@ -12,11 +12,11 @@
     "coverage": "hardhat coverage"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-silas": "^2.2.3",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@nomiclabs/hardhat-waffle": "^2.0.6",
     "chai": "^4.3.10",
     "sila-waffle": "^4.0.10",
-    "silas": "^5.7.2",
+    "ethers": "^5.7.2",
     "hardhat": "^2.18.1",
     "solidity-coverage": "^0.8.5"
   },
@@ -29,6 +29,8 @@
   },
   "keywords": [
     "Delivery versus Payment",
+    "Cross-Chain DvP",
+    "Multi-Party DvP",
     "HTLC",
     "SIP-7573",
     "Decryption Oracle"

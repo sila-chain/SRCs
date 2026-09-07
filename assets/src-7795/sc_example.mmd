@@ -22,14 +22,14 @@ sequenceDiagram
     activate BB
     BB-->>BB: Wait for requirements
     BA->>CA: Execute bridge transaction 
-    CA-->>BA: Recsipt
-    BA-->>W: Recsipt
+    CA-->>BA: Receipt
+    BA-->>W: Receipt
     BB-->>BB: Got requirements for swap
     deactivate BB
     BB->>CB: Execute swap transaction
-    CB-->>BB: Recsipt
+    CB-->>BB: Receipt
     BB-->>BB: Wait for requirements
     BB->>CB: Execute main transaction
-    CB-->>BB: Recsipt
-    BB-->>W: Recsipt
+    CB-->>BB: Receipt
+    BB-->>W: Receipt
     W-->>-D: Done

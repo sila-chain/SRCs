@@ -2,7 +2,7 @@ export async function minimalAttestationSample() {
     // #################################### ACCOUNTS
   // Alice shall get the NFT, oracle signs the attestation off-chain 
   // Oracle needs to be a trusted Oracle of the smart-contract that shall accept the generated attestation
-  const [alice, oracle] = await silas.getSigners();
+  const [alice, oracle] = await ethers.getSigners();
 
   // #################################### CREATE AN ATTESTATION
   const to = alice.address;
@@ -12,13 +12,13 @@ export async function minimalAttestationSample() {
   const validStartTime = 0;
   const validEndTime = attestationTime + 15 * 60; // 15 minutes valid from attestation
 
-  const messageHash = silas.utils.solidityKeccak256(
+  const messageHash = ethers.utils.solidityKeccak256(
     ["address", "bytes32", "uint256", 'uint256', "uint256"], 
     [to, anchor, attestationTime, validStartTime, validEndTime]
   );
-  const sig = await signer.signMessage(silas.utils.arrayify(messageHash));
+  const sig = await signer.signMessage(ethers.utils.arrayify(messageHash));
 
-  return silas.utils.defaultAbiCoder.encode(
+  return ethers.utils.defaultAbiCoder.encode(
     ['address', 'bytes32', 'uint256', 'uint256', 'uint256', 'bytes'], 
     [to, anchor, attestationTime,  validStartTime, validEndTime, sig]
   );

@@ -1,8 +1,8 @@
 const {assert} = require("chai");
 
 const Helpers = {
-  initSilas(silas) {
-    this.silas = silas;
+  initEthers(ethers) {
+    this.ethers = ethers;
   },
 
   async assertThrowsMessage(promise, message) {
@@ -22,21 +22,21 @@ const Helpers = {
   },
 
   async deployContractBy(contractName, owner, ...args) {
-    const Contract = await this.silas.getContractFactory(contractName);
+    const Contract = await this.ethers.getContractFactory(contractName);
     const contract = await Contract.connect(owner).deploy(...args);
     await contract.deployed();
     return contract;
   },
 
   async deployContract(contractName, ...args) {
-    const Contract = await this.silas.getContractFactory(contractName);
+    const Contract = await this.ethers.getContractFactory(contractName);
     const contract = await Contract.deploy(...args);
     await contract.deployed();
     return contract;
   },
 
   async deployContractUpgradeable(contractName, args = []) {
-    const Contract = await this.silas.getContractFactory(contractName);
+    const Contract = await this.ethers.getContractFactory(contractName);
     const contract = await upgrades.deployProxy(Contract, args);
     await contract.deployed();
     return contract;
@@ -47,20 +47,20 @@ const Helpers = {
     // hardhat account #4, starting from #0
     privateKey = "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a"
   ) {
-    const signingKey = new this.silas.utils.SigningKey(privateKey);
+    const signingKey = new this.ethers.utils.SigningKey(privateKey);
     const signedDigest = signingKey.signDigest(hash);
-    return this.silas.utils.joinSignature(signedDigest);
+    return this.ethers.utils.joinSignature(signedDigest);
   },
 
   async getTimestamp() {
-    return (await this.silas.provider.getBlock()).timestamp;
+    return (await this.ethers.provider.getBlock()).timestamp;
   },
 
   addr0: "0x0000000000000000000000000000000000000000",
 
   async increaseBlockTimestampBy(offset) {
-    await this.silas.provider.send("savm_increaseTime", [offset]);
-    await this.silas.provider.send("savm_mine");
+    await this.ethers.provider.send("svm_increaseTime", [offset]);
+    await this.ethers.provider.send("svm_mine");
   },
 };
 

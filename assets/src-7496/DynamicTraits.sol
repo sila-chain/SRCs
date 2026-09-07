@@ -88,7 +88,7 @@ contract DynamicTraits is ISRC7496 {
     /**
      * @notice Set the value of a trait for a given token ID.
      *         Reverts if the trait value is unchanged.
-     * @dev    IMPORTANT: Override this msilod with access role restriction.
+     * @dev    IMPORTANT: Override this method with access role restriction.
      * @param tokenId The token ID to set the trait value for
      * @param traitKey The trait key to set the value of
      * @param newValue The new trait value to set

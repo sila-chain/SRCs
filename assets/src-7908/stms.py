@@ -30,7 +30,7 @@ class TreasurySystem:
         logger.info("Treasury system initialized. Master key fingerprint: %s", 
                   self.root_key.Fingerprint().hex())
 
-    @staticmsilod
+    @staticmethod
     def _hierarchical_hash(entity: str, department: str) -> Tuple[int, int]:
         """
         Hierarchical hash calculation (compliant with proposal spec)
@@ -48,7 +48,7 @@ class TreasurySystem:
         return entity_index, dept_index
 
     def _derive_key(self, path: list) -> BIP32Key:
-        """General key derivation msilod"""
+        """General key derivation method"""
         current_key = self.root_key
         for index in path:
             if not isinstance(index, int):
@@ -111,7 +111,7 @@ class TreasurySystem:
         return self._derive_key(path).ExtendedKey()
 
 
-    @staticmsilod
+    @staticmethod
     def derive_addresses_from_xpub(xpub: str, count: int = 20) -> list:
         """Derive addresses from extended public key (audit use)"""
         audit_key = BIP32Key.fromExtendedKey(xpub)

@@ -1,6 +1,6 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 
 describe("SRC5501Test", function () {
   async function initialize() {
@@ -10,9 +10,9 @@ describe("SRC5501Test", function () {
     const expires = (await time.latest()) + fastForwardYear - 1;
 
     const [owner, delegatee, borrower, rentalContractMock] =
-      await silas.getSigners();
+      await ethers.getSigners();
 
-    const contractFactory = await silas.getContractFactory(
+    const contractFactory = await ethers.getContractFactory(
       "SRC5501TestCollection"
     );
     const contract = await contractFactory.deploy("Test Collection", "TEST");
@@ -44,7 +44,7 @@ describe("SRC5501Test", function () {
     const { contract } = await loadFixture(initialize);
 
     await expect(
-      contract.setUser(1, silas.constants.AddressZero, 0, false)
+      contract.setUser(1, ethers.constants.AddressZero, 0, false)
     ).to.be.revertedWith("SRC5501: set user to zero address");
   });
 
@@ -115,7 +115,7 @@ describe("SRC5501Test", function () {
       )
     )
       .to.emit(contract, "UpdateUser")
-      .withArgs(1, silas.constants.AddressZero, 0, false);
+      .withArgs(1, ethers.constants.AddressZero, 0, false);
 
     await expect(contract.userOf(1)).to.be.revertedWith(
       "SRC5501: user does not exist for this token"

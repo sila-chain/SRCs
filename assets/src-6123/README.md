@@ -55,12 +55,12 @@ npx hardhat test
 
 - `sila-waffle`: Waffle is a Solidity testing library. It allows you to write tests for your contracts with JavaScript.
 - `chai`: Chai is an assertion library and provides functions like expect.
-- `silas`: This is a popular Sila client library. It allows you to interface with blockchains that implement the Sila API.
+- `ethers`: This is a popular Sila client library. It allows you to interface with blockchains that implement the Sila API.
 - `solidity-coverage`: This library gives you coverage reports on unit tests with the help of Istanbul.
 
 ## Version history / release notes
 
 ### 0.8.0
 
-- Re-introduced the msilod `afterSettlement` that can be used to check pre-conditions of the next settlement cycle, e.g., triggered by a time-oracle.
+- Re-introduced the method `afterSettlement` that can be used to check pre-conditions of the next settlement cycle, e.g., triggered by a time-oracle.
 - Added the event `SettlementAwaitingInitiation` which should be issued when the trade goes active and when `afterSettlement` veryfied that the trade is ready for the next settlement.

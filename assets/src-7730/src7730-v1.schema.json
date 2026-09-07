@@ -1,5 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
+    "version": "1.0.0",
     "type": "object",
     "description": "SRC7730 Clear Signing Specification Schema. Specification located at https://github.com/LedgerHQ/clear-signing-src7730-registry/tree/master/specs",
 
@@ -91,7 +92,7 @@
                         "factory": {
                             "title": "Factory constraint",
                             "type": "object",
-                            "description": "A factory constraint is used to check whsila the target contract is deployed by a specified factory.",
+                            "description": "A factory constraint is used to check whether the target contract is deployed by a specified factory.",
                             "properties": {
                                 "deployments": {
                                     "$ref": "#/$context/deployments"
@@ -444,7 +445,7 @@
         },
         "screens": {
             "title": "Screen information",
-            "description": "ADD DEVICE SPECIFIC SCHEMAS LATER. A screen is a group of fields that will be displayed togsila in a wallet. The format of the screen is wallet type dependent, as well as what can be done (reordering fields, max number of screens, etc..). See each wallet manufacturer documentatio for more information.",
+            "description": "ADD DEVICE SPECIFIC SCHEMAS LATER. A screen is a group of fields that will be displayed together in a wallet. The format of the screen is wallet type dependent, as well as what can be done (reordering fields, max number of screens, etc..). See each wallet manufacturer documentatio for more information.",
             "type": "object"
         },
         "fields": {
@@ -606,7 +607,7 @@
                     }
                 },
                 {
-                    "if": { "properties": { "format": { "const": "psrcentage" } } },
+                    "if": { "properties": { "format": { "const": "percentage" } } },
                     "then": {
                         "properties": {
                             "params": { "$ref": "#/$format/unitParameters" }
@@ -670,7 +671,7 @@
                 {
                     "title": "integer format",
                     "const": "unit",
-                    "description": "The field should be displayed as a psrcentage. Magnitude of the psrcentage encoding is specified as a parameter. Example: a value of 3000 with magnitude 4 is displayed as 0.3%."
+                    "description": "The field should be displayed as a percentage. Magnitude of the percentage encoding is specified as a parameter. Example: a value of 3000 with magnitude 4 is displayed as 0.3%."
                 },
                 {
                     "title": "integer format",
@@ -883,7 +884,7 @@
                 "prefix": {
                     "title": "Prefix",
                     "type": "boolean",
-                    "description": "Whsila the value should be converted to a prefixed unit, like k, M, G, etc."
+                    "description": "Whether the value should be converted to a prefixed unit, like k, M, G, etc."
                 }
             },
             "required": [
@@ -965,7 +966,7 @@
         },
 
         "abi-json-schema": {
-            "title": "An SAVM ABI",
+            "title": "An SVM ABI",
             "type": "array",
             "description": "JSON schema for the json representation of a solidity ABI",
             "items": {

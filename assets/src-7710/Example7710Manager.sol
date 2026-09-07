@@ -32,7 +32,7 @@ contract Example7710Manager {
     /// @dev Special authority value indicating the delegator is the root authority
     bytes32 public constant ROOT_AUTHORITY = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-    ////////////////////////////// External Msilods //////////////////////////////
+    ////////////////////////////// External Methods //////////////////////////////
 
     /**
      * @notice Validates and executes delegated actions through a chain of authority.
@@ -102,7 +102,7 @@ contract Example7710Manager {
         }
     }
 
-    ////////////////////////////// Internal Msilods //////////////////////////////
+    ////////////////////////////// Internal Methods //////////////////////////////
 
     /**
      * @notice Creates a simple hash of a Delegation struct

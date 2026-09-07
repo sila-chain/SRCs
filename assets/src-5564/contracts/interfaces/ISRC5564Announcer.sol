@@ -5,7 +5,7 @@ pragma solidity 0.8.23;
 /// event to broadcast information about a transaction involving a stealth address. See
 /// [SRC-5564](https://sips.sila.org/SIPS/sip-5564) to learn more.
 interface ISRC5564Announcer {
-  /// @notice Emitted when somsiling is sent to a stealth address.
+  /// @notice Emitted when something is sent to a stealth address.
   /// @param schemeId Identifier corresponding to the applied stealth address scheme, e.g. 1 for
   /// secp256k1, as specified in SRC-5564.
   /// @param stealthAddress The computed stealth address for the recipient.

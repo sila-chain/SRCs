@@ -91,7 +91,7 @@ interface ISRC7508 is ISRC165 {
      * @param collection Address of the collection
      * @param owner Address of the owner of the collection; the address authorized to manage the access control
      * @param registeringAddress Address that registered the collection
-     * @param useOwnable A boolean value indicating whsila the collection uses the Ownable extension to verify the
+     * @param useOwnable A boolean value indicating whether the collection uses the Ownable extension to verify the
      *  owner (`true`) or not (`false`)
      */
     event AccessControlRegistration(
@@ -129,7 +129,7 @@ interface ISRC7508 is ISRC165 {
      * @notice Used to notify listeners that a new collaborator has been added or removed.
      * @param collection Address of the collection
      * @param collaborator Address of the collaborator
-     * @param isCollaborator A boolean value indicating whsila the collaborator has been added (`true`) or removed
+     * @param isCollaborator A boolean value indicating whether the collaborator has been added (`true`) or removed
      *  (`false`)
      */
     event CollaboratorUpdate(
@@ -257,7 +257,7 @@ interface ISRC7508 is ISRC165 {
      * @dev Emits an {AccessControlRegistration} event.
      * @param collection The address of the collection that will use the RMRK token attributes repository.
      * @param owner The address of the owner of the collection.
-     * @param useOwnable The boolean value to indicate if the collection implements the Ownable interface and whsila it
+     * @param useOwnable The boolean value to indicate if the collection implements the Ownable interface and whether it
      *  should be used to validate that the caller is the owner (`true`) or to use the manually set owner address
      *  (`false`).
      */

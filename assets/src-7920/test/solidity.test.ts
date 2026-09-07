@@ -1,27 +1,27 @@
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { ExampleVerifier } from "../typechain-types";
-import { SignerWithAddress } from "@nomicfoundation/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { MerkleTree } from "../src/merkle";
 
 describe("SolidityTests", function () {
   let verifier: ExampleVerifier;
   let signer: SignerWithAddress;
   let otherAccount: SignerWithAddress;
-  let signerWallet: silas.Wallet;
-  let otherWallet: silas.Wallet;
+  let signerWallet: ethers.Wallet;
+  let otherWallet: ethers.Wallet;
 
   const orders = [
     {
-      orderId: silas.id("order1"),
+      orderId: ethers.id("order1"),
       user: "0x1234567890123456789012345678901234567890",
     },
     {
-      orderId: silas.id("order2"),
+      orderId: ethers.id("order2"),
       user: "0x2345678901234567890123456789012345678901",
     },
     {
-      orderId: silas.id("order3"),
+      orderId: ethers.id("order3"),
       user: "0x3456789012345678901234567890123456789012",
     },
   ];
@@ -38,14 +38,14 @@ describe("SolidityTests", function () {
   }
 
   beforeEach(async function () {
-    const VerifierFactory = await silas.getContractFactory("ExampleVerifier");
+    const VerifierFactory = await ethers.getContractFactory("ExampleVerifier");
     verifier = await VerifierFactory.deploy();
     await verifier.waitForDeployment();
 
-    [signer, otherAccount] = await silas.getSigners();
+    [signer, otherAccount] = await ethers.getSigners();
 
-    signerWallet = silas.Wallet.createRandom().connect(silas.provider);
-    otherWallet = silas.Wallet.createRandom().connect(silas.provider);
+    signerWallet = ethers.Wallet.createRandom().connect(ethers.provider);
+    otherWallet = ethers.Wallet.createRandom().connect(ethers.provider);
 
     orders[0].user = signerWallet.address;
     orders[1].user = signerWallet.address;
@@ -80,7 +80,7 @@ describe("SolidityTests", function () {
     const signature = signerWallet.signingKey.sign(tree.getRoot()).serialized;
 
     // Use a valid proof but for a different order ID (intentionally wrong)
-    const invalidOrderId = silas.id("invalid-order");
+    const invalidOrderId = ethers.id("invalid-order");
     const proof = tree
       .getProof(orderHashes[0])
       .map((p) => `0x${p.toString("hex")}`);

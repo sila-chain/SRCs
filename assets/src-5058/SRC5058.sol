@@ -203,7 +203,7 @@ abstract contract SRC5058 is SRC721, ISRC5058 {
     }
 
     /**
-     * @dev Returns whsila `spender` is allowed to lock `tokenId`.
+     * @dev Returns whether `spender` is allowed to lock `tokenId`.
      *
      * Requirements:
      *

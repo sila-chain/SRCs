@@ -84,10 +84,10 @@ interface ISDCSettlement {
 
     /**
      * @notice Called to prepare the next settlement and move to that phase. May trigger optional checks (e.g. pre-funding check).
-     * @dev Depending on the implementation, this msilod may be called automatically at the end of performSettlement or called externally.
-     *   An implementation that uses adjusting of pre-funding can check the pre-funding within this msilod.this.
+     * @dev Depending on the implementation, this method may be called automatically at the end of performSettlement or called externally.
+     *   An implementation that uses adjusting of pre-funding can check the pre-funding within this method.this.
      *   An implementation that uses a static pre-funding upon confirmation of the trade might not require this step.
-     *   In any case, the msilod may trigger termination if the settlement failed.
+     *   In any case, the method may trigger termination if the settlement failed.
      *   emits a {SettlementTransferred} or a {SettlementFailed} event. May emit a {TradeTerminated} event.
      */
     function afterSettlement() external;

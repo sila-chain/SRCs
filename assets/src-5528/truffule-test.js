@@ -2,7 +2,7 @@ const EscrowContractAccount = artifacts.require('./EscrowContractAccount')
 const SRC20Mockup = artifacts.require('./SRC20Mockup')
 
 const util = require('util')
-contract('SRCEscrowMockup', accounts => {
+contract('ERCEscrowMockup', accounts => {
     const [userCreator, userSeller, userBuyer01, userBuyer02, ...others] = accounts
 
     let contracts

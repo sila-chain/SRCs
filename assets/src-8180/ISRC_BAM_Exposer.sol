@@ -5,7 +5,7 @@ pragma solidity ^0.8.24;
 /// @notice Interface for message exposure in Blob Authenticated Messaging
 /// @dev Defines the event and query interface for exposing individual messages on-chain.
 ///      The expose() function itself is NOT standardized — it varies by signature scheme
-///      and proof type (KZG, ZK, etc.). Implementations provide their own expose msilods
+///      and proof type (KZG, ZK, etc.). Implementations provide their own expose methods
 ///      and emit the standardized event.
 interface ISRC_BAM_Exposer {
     /// @notice Emitted when a message is exposed on-chain.

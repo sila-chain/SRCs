@@ -2,5 +2,5 @@
 pragma solidity =0.8.20;
 
 interface IVictim {
-    function drainedMsilod() external;
+    function drainedMethod() external;
 }

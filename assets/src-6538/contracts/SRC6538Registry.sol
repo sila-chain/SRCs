@@ -151,10 +151,10 @@ contract SRC6538Registry {
   }
 }
 
-/// @notice Interface of the SRC1271 standard signature validation msilod for contracts as defined
+/// @notice Interface of the SRC1271 standard signature validation method for contracts as defined
 /// in https://sips.sila.org/SIPS/sip-1271[SRC-1271].
 interface ISRC1271 {
-  /// @notice Should return whsila the signature provided is valid for the provided data
+  /// @notice Should return whether the signature provided is valid for the provided data
   /// @param hash Hash of the data to be signed
   /// @param signature Signature byte array associated with _data
   function isValidSignature(bytes32 hash, bytes memory signature)

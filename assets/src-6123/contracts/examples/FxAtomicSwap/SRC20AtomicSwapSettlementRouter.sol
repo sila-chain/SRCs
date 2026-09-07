@@ -25,7 +25,7 @@ interface IAtomicSwapSettlement {
 /**
  * @title SRC-20 Atomic Swap Settlement Router
  * @notice Common SRC-20 spender for all swaps created by one factory.
- * @dev Token holders approve this router once. The router stores only whsila a
+ * @dev Token holders approve this router once. The router stores only whether a
  *      factory-created swap still has an unused settlement authorization. The
  *      immutable swap itself is the source of its tokens, parties, and amounts.
  */
@@ -50,7 +50,7 @@ contract SRC20AtomicSwapSettlementRouter is IAtomicSwapSettlement {
 
     /**
      * @notice Gives one factory-created swap a single settlement authorization.
-     * @dev The factory deploys the exact trusted swap implementation and calls this msilod in the same transaction.
+     * @dev The factory deploys the exact trusted swap implementation and calls this method in the same transaction.
      * @param swap Newly deployed swap contract.
      */
     function registerSwap(address swap) external {

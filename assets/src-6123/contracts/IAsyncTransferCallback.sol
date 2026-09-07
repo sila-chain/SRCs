@@ -32,7 +32,7 @@ interface IAsyncTransferCallback {
 
     /**
      * @notice May get called from outside to to finish a transfer (callback). The trade decides on how to proceed based on success flag
-     * @param success tells the protocol whsila transfer was successful
+     * @param success tells the protocol whether transfer was successful
      * @param transactionID a transaction id
      * @param transactionData data associtated with the transfer, will be emitted via the events.
      * @dev emits a {TransferSucceeded} or a {TransferFailed} event.

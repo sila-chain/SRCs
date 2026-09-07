@@ -24,7 +24,7 @@ const tree = new MerkleTree(leaves,keccak256);
 
 
 /**
- * this checks the ownership of the information from requirement (stored onchain) and then verify whsila the keccak256 representation is a member of the given proof. 
+ * this checks the ownership of the information from requirement (stored onchain) and then verify whether the keccak256 representation is a member of the given proof. 
  * we follow the checkProof  
  */
 async function verifyRequirement(verifyingAddress,leafNodes) {

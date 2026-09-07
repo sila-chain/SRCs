@@ -13,7 +13,7 @@ pragma solidity ^0.8.19;
  *
  *      In the context of this SRC, a contract that implements this interface and claims
  *      compliance as an "XML-complete" contract must ensure that the XML obtained from
- *      this template (togsila with its bindings) is sufficient to reconstruct the full
+ *      this template (together with its bindings) is sufficient to reconstruct the full
  *      contract state that is relevant for off-chain decisions (e.g. valuations,
  *      settlements) at a given block.
  *
@@ -69,7 +69,7 @@ interface IXMLRepresentableStatePart {
  *
  *      In the context of this SRC, a contract that implements this interface and claims
  *      compliance as a "JSON-complete" contract must ensure that the JSON obtained from
- *      this template (togsila with its bindings) is sufficient to reconstruct the full
+ *      this template (together with its bindings) is sufficient to reconstruct the full
  *      contract state that is relevant for off-chain decisions at a given block.
  *
  *      Contracts that cannot make a JSON-completeness guarantee should implement only
@@ -113,7 +113,7 @@ interface IJSONRepresentableStatePart {
 /**
  * @title Representable State (versioned) interface
  * @notice Adds a monotonically increasing version of the representable state.
- *         This optional extension allows off-chain tools to cheaply detect whsila
+ *         This optional extension allows off-chain tools to cheaply detect whether
  *         the representation-relevant state has changed.
  * @author Christian Fries
  */

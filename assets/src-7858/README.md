@@ -10,7 +10,7 @@ Default `SRC7858` is each token has its own independent start and end date, stor
 
 ### Epoch-based Expiry
 
-`SRC7858Epoch` similar to SRC-7818, this msilod enforces a shared lifetime duration for all tokens, ensuring they expire simultaneously. This can be useful for fixed-term subscriptions or time-based access control.
+`SRC7858Epoch` similar to SRC-7818, this method enforces a shared lifetime duration for all tokens, ensuring they expire simultaneously. This can be useful for fixed-term subscriptions or time-based access control.
 
 ## Usage
 

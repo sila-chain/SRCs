@@ -1,5 +1,5 @@
-import { Contract, Signer } from "silas";
-import { silas } from "hardhat";
+import { Contract, Signer } from "ethers";
+import { ethers } from "hardhat";
 import {
   SRC20_NAME,
   SRC20_SYMBOL,
@@ -35,9 +35,9 @@ export const deploySRC7818 = async function ({
   blockTime = 400, // assume 400ms block time
   windowSize = 2, // widow width size 2 epoch
 } = {}) {
-  const [deployer, alice, bob, jame] = await silas.getSigners();
+  const [deployer, alice, bob, jame] = await ethers.getSigners();
 
-  const SRC7818 = await silas.getContractFactory(
+  const SRC7818 = await ethers.getContractFactory(
     SRC20_EXPIRABLE_CONTRACT,
     deployer
   );

@@ -14,14 +14,14 @@ contract MyNFT is SRC721URIStorage, Ownable, nFR {
 
     constructor() SRC721("MyNFT", "NFT") {}
 
-    function mintNFT(address recipient, uint8 numGenerations, uint256 psrcentOfProfit, uint256 successiveRatio, string memory tokenURI)
+    function mintNFT(address recipient, uint8 numGenerations, uint256 percentOfProfit, uint256 successiveRatio, string memory tokenURI)
         public onlyOwner
         returns (uint256)
     {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId, numGenerations, psrcentOfProfit, successiveRatio);
+        _mint(recipient, newItemId, numGenerations, percentOfProfit, successiveRatio);
         _setTokenURI(newItemId, tokenURI);
 
         return newItemId;
@@ -35,8 +35,8 @@ contract MyNFT is SRC721URIStorage, Ownable, nFR {
         _setTokenURI(newItemId, tokenURI);
     }
 
-    function setDefaultFRInfo(uint8 numGenerations, uint256 psrcentOfProfit, uint256 successiveRatio) public onlyOwner {
-        _setDefaultFRInfo(numGenerations, psrcentOfProfit, successiveRatio);
+    function setDefaultFRInfo(uint8 numGenerations, uint256 percentOfProfit, uint256 successiveRatio) public onlyOwner {
+        _setDefaultFRInfo(numGenerations, percentOfProfit, successiveRatio);
     }
 
     function burnNFT(uint256 tokenId) public onlyOwner {

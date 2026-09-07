@@ -14,7 +14,7 @@ interface ICatalog is ISRC165 {
      * @notice Event to announce addition of a new part.
      * @dev It is emitted when a new part is added.
      * @param partId ID of the part that was added
-     * @param itemType Enum value specifying whsila the part is `None`, `Slot` and `Fixed`
+     * @param itemType Enum value specifying whether the part is `None`, `Slot` and `Fixed`
      * @param zIndex An uint specifying the z value of the part. It is used to specify the depth which the part should
      *  be rendered at
      * @param equippableAddresses An array of addresses that can equip this part
@@ -122,11 +122,11 @@ interface ICatalog is ISRC165 {
     function getType() external view returns (string memory);
 
     /**
-     * @notice Used to check whsila the given address is allowed to equip the desired `Part`.
+     * @notice Used to check whether the given address is allowed to equip the desired `Part`.
      * @dev Returns true if a collection may equip asset with `partId`.
      * @param partId The ID of the part that we are checking
-     * @param targetAddress The address that we are checking for whsila the part can be equipped into it or not
-     * @return bool The status indicating whsila the `targetAddress` can be equipped into `Part` with `partId` or not
+     * @param targetAddress The address that we are checking for whether the part can be equipped into it or not
+     * @return bool The status indicating whether the `targetAddress` can be equipped into `Part` with `partId` or not
      */
     function checkIsEquippable(uint64 partId, address targetAddress)
         external
@@ -137,7 +137,7 @@ interface ICatalog is ISRC165 {
      * @notice Used to check if the part is equippable by all addresses.
      * @dev Returns true if part is equippable to all.
      * @param partId ID of the part that we are checking
-     * @return bool The status indicating whsila the part with `partId` can be equipped by any address or not
+     * @return bool The status indicating whether the part with `partId` can be equipped by any address or not
      */
     function checkIsEquippableToAll(uint64 partId) external view returns (bool);
 

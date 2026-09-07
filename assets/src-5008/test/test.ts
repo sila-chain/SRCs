@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 
 describe("Test SRC5008 ",  function () {
 
     it("test nonce", async function () {
-    let [alice, bob] = await silas.getSigners();
+    let [alice, bob] = await ethers.getSigners();
 
-    const SRC5008Demo = await silas.getContractFactory("SRC5008Demo");
+    const SRC5008Demo = await ethers.getContractFactory("SRC5008Demo");
 
     let contract = await SRC5008Demo.deploy("SRC5008Demo","SRC5008Demo");
 

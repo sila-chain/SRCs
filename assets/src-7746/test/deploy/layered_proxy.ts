@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { MockSRC20, RateLimitLayer } from "../types";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 import { LibAccessLayers } from "../types/src/MockSRC20";
 
 const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
@@ -11,7 +11,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployer, owner } = await getNamedAccounts();
 
   const simpleLayer = await deployments.get("RateLimitLayer");
-  const simpleLayerContract = (await silas.getContractAt(simpleLayer.abi, simpleLayer.address)) as RateLimitLayer;
+  const simpleLayerContract = (await ethers.getContractAt(simpleLayer.abi, simpleLayer.address)) as RateLimitLayer;
 
   let layer: LibAccessLayers.LayerStructStruct = {
     layerAddess: simpleLayer.address,
@@ -19,7 +19,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     afterSig: simpleLayerContract.interface.getSighash(
       simpleLayerContract.interface.functions["afterCallValidation(bytes,bytes4,address,uint256,bytes,bytes)"]
     ),
-    layerConfigData: silas.utils.defaultAbiCoder.encode(["uint256"], [10]),
+    layerConfigData: ethers.utils.defaultAbiCoder.encode(["uint256"], [10]),
   };
 
   const result = await deploy("MockSRC20", {

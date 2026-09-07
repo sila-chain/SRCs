@@ -109,7 +109,7 @@ contract ContractTest is Test {
     rm.revokeLicense(1);
     vm.stopPrank();
 
-    vm.expectRevert("The token has no active license tsilaed to it");
+    vm.expectRevert("The token has no active license tethered to it");
     rm.safeTransferFrom(address(this), add1, 1);
 
     vm.expectEmit(true,true,true,true); // put this two lines before you actually call the function

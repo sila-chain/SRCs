@@ -1,8 +1,8 @@
-import { silas } from "hardhat";
-import { BigNumber } from "silas";
+import { ethers } from "hardhat";
+import { BigNumber } from "ethers";
 import { expect } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { SRC20Mock } from "../typechain-types";
 
 const ISRC165 = "0x01ffc9a7";
@@ -10,14 +10,14 @@ const IRMRKSRC20Holder = "0x6f87c75c";
 const IOtherInterface = "0xffffffff";
 
 async function tokenHolderFixture() {
-  const tokenHolderFactory = await silas.getContractFactory("SRC7590Mock");
+  const tokenHolderFactory = await ethers.getContractFactory("SRC7590Mock");
   const tokenHolder = await tokenHolderFactory.deploy(
     "Secure Token Transfer Protocol",
     "STTP"
   );
   await tokenHolder.deployed();
 
-  const src20Factory = await silas.getContractFactory("SRC20Mock");
+  const src20Factory = await ethers.getContractFactory("SRC20Mock");
   const src20A = await src20Factory.deploy();
   await src20A.deployed();
 
@@ -41,10 +41,10 @@ describe("SRC7590", async function () {
   const tokenHolderId = BigNumber.from(1);
   const otherTokenHolderId = BigNumber.from(2);
   const tokenId = BigNumber.from(1);
-  const mockValue = silas.utils.parseSila("10");
+  const mockValue = ethers.utils.parseEther("10");
 
   beforeEach(async function () {
-    [holder, otherHolder, ...addrs] = await silas.getSigners();
+    [holder, otherHolder, ...addrs] = await ethers.getSigners();
     ({ tokenHolder, src20A, src20B } = await loadFixture(tokenHolderFixture));
   });
 
@@ -140,7 +140,7 @@ describe("SRC7590", async function () {
         tokenHolder.transferHeldSRC20FromToken(
           src20A.address,
           tokenId,
-          silas.constants.AddressZero,
+          ethers.constants.AddressZero,
           1,
           "0x00"
         )
@@ -150,7 +150,7 @@ describe("SRC7590", async function () {
     it("cannot transfer a token at address 0", async function () {
       await expect(
         tokenHolder.transferHeldSRC20FromToken(
-          silas.constants.AddressZero,
+          ethers.constants.AddressZero,
           tokenId,
           holder.address,
           1,
@@ -160,7 +160,7 @@ describe("SRC7590", async function () {
 
       await expect(
         tokenHolder.transferSRC20ToToken(
-          silas.constants.AddressZero,
+          ethers.constants.AddressZero,
           tokenId,
           1,
           "0x00"
@@ -227,22 +227,22 @@ describe("SRC7590", async function () {
       await tokenHolder.transferSRC20ToToken(
         src20A.address,
         tokenHolderId,
-        silas.utils.parseSila("3"),
+        ethers.utils.parseEther("3"),
         "0x00"
       );
       await tokenHolder.transferSRC20ToToken(
         src20B.address,
         tokenHolderId,
-        silas.utils.parseSila("5"),
+        ethers.utils.parseEther("5"),
         "0x00"
       );
 
       expect(
         await tokenHolder.balanceOfSRC20(src20A.address, tokenHolderId)
-      ).to.equal(silas.utils.parseSila("3"));
+      ).to.equal(ethers.utils.parseEther("3"));
       expect(
         await tokenHolder.balanceOfSRC20(src20B.address, tokenHolderId)
-      ).to.equal(silas.utils.parseSila("5"));
+      ).to.equal(ethers.utils.parseEther("5"));
     });
   });
 });

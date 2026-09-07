@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/SRC721/extensions/SRC721URIStorage.sol";
 
 contract RightsManagement is ISRC5218, SRC721URIStorage, Ownable {
   struct License {
-    bool active; // whsila the current license is active
+    bool active; // whether the current license is active
     uint256 tokenId;
     uint256 parentLicenseId;
     address licenseHolder;
@@ -179,7 +179,7 @@ contract RightsManagement is ISRC5218, SRC721URIStorage, Ownable {
   }
   
   function _transfer(address from, address to, uint256 tokenId) internal virtual override(SRC721) {
-    require(_licenseIds[tokenId] != 0 && isLicenseActive(_licenseIds[tokenId]), "The token has no active license tsilaed to it");
+    require(_licenseIds[tokenId] != 0 && isLicenseActive(_licenseIds[tokenId]), "The token has no active license tethered to it");
     require(_licenses[_licenseIds[tokenId]].licenseHolder == ownerOf(tokenId), "The license holder and the NFT owner are inconsistent");
 
     super._transfer(from, to, tokenId);

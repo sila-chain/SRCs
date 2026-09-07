@@ -13,20 +13,20 @@ describe("Genesis1155", function () {
   let addrs
 
   beforeEach(async function () {
-    ;[owner, addr1, addr2, addr3, treasury, ...addrs] = await silas.getSigners()
+    ;[owner, addr1, addr2, addr3, treasury, ...addrs] = await ethers.getSigners()
 
-    const ProxyRegister = await silas.getContractFactory("ProxyRegister")
+    const ProxyRegister = await ethers.getContractFactory("ProxyRegister")
     hardhatProxyRegister = await ProxyRegister.deploy(
-      silas.utils.parseSila(registerFee.toString()),
+      ethers.utils.parseEther(registerFee.toString()),
       treasury.address,
     )
 
-    const mockSRC721 = await silas.getContractFactory("mockSRC721")
+    const mockSRC721 = await ethers.getContractFactory("mockSRC721")
     hardhatBoredApes = await mockSRC721.deploy()
     hardhatLazyLions = await mockSRC721.deploy()
     hardhatLoomlockNFT = await mockSRC721.deploy()
 
-    const EPSGenOne = await silas.getContractFactory("EPSGenesis")
+    const EPSGenOne = await ethers.getContractFactory("EPSGenesis")
     hardhatEPSGenOne = await EPSGenOne.deploy(
       hardhatProxyRegister.address,
       hardhatBoredApes.address,
@@ -64,7 +64,7 @@ describe("Genesis1155", function () {
       var tx1 = await hardhatProxyRegister
       .connect(addr1)
       .makeNomination( addr2.address, 1,  {
-        value: silas.utils.parseSila(registerFee.toString()),
+        value: ethers.utils.parseEther(registerFee.toString()),
       })
       expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -106,10 +106,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, false)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -136,10 +136,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -156,10 +156,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, false)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -171,10 +171,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(false, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(1)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(1)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 1)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 1)).to.equal(0)
@@ -196,10 +196,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -216,10 +216,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, false)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -231,10 +231,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(false, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(1)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(1)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 1)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 1)).to.equal(0)
@@ -256,10 +256,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -276,10 +276,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, false)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -291,10 +291,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(false, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(1)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(1)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 1)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 1)).to.equal(0)
@@ -316,10 +316,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -340,10 +340,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(true, false)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(0)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(0)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 0)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 0)).to.equal(0)
@@ -359,10 +359,10 @@ describe("Genesis1155", function () {
         .mintEPSGenesis(false, true)
         expect(tx1).to.emit(hardhatEPSGenOne, "TransferSingle")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.to).to.equal(addr3.address)  
-        expect(recsipt.events[0].args.id).to.equal(1)  
-        expect(recsipt.events[0].args.value).to.equal(1)  
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.to).to.equal(addr3.address)  
+        expect(receipt.events[0].args.id).to.equal(1)  
+        expect(receipt.events[0].args.value).to.equal(1)  
 
         expect(await hardhatEPSGenOne.balanceOf(addr1.address, 1)).to.equal(0)
         expect(await hardhatEPSGenOne.balanceOf(addr2.address, 1)).to.equal(0)
@@ -386,11 +386,11 @@ describe("ProxyRegister", function () {
   let addrs
 
   beforeEach(async function () {
-    ;[owner, addr1, addr2, addr3, treasury, ...addrs] = await silas.getSigners()
+    ;[owner, addr1, addr2, addr3, treasury, ...addrs] = await ethers.getSigners()
 
-    const ProxyRegister = await silas.getContractFactory("ProxyRegister")
+    const ProxyRegister = await ethers.getContractFactory("ProxyRegister")
     hardhatProxyRegister = await ProxyRegister.deploy(
-      silas.utils.parseSila(registerFee.toString()),
+      ethers.utils.parseEther(registerFee.toString()),
       treasury.address,
     )
   })
@@ -398,7 +398,7 @@ describe("ProxyRegister", function () {
   context("Contract Setup", function () {
     describe("Constructor", function () {
       it("Has a contract balance of 0", async () => {
-        const contractBalance = await silas.provider.getBalance(
+        const contractBalance = await ethers.provider.getBalance(
           hardhatProxyRegister.address,
         )
         expect(contractBalance).to.equal(0)
@@ -412,13 +412,13 @@ describe("ProxyRegister", function () {
       it("Set registerFee", async () => {
         var tx1 = await hardhatProxyRegister
           .connect(owner)
-          .setRegisterFee(silas.utils.parseSila("0.01"))
+          .setRegisterFee(ethers.utils.parseEther("0.01"))
         expect(tx1).to.emit(hardhatProxyRegister, "RegisterFeeSet")
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.registerFee).to.equal(BigInt(silas.utils.parseSila("0.01")))
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.registerFee).to.equal(BigInt(ethers.utils.parseEther("0.01")))
 
         const registerFeeParameter = await hardhatProxyRegister.getRegisterFee()
-        expect(registerFeeParameter).to.equal(silas.utils.parseSila("0.01"))
+        expect(registerFeeParameter).to.equal(ethers.utils.parseEther("0.01"))
       })
 
       it("Set treasuryAddress", async () => {
@@ -426,8 +426,8 @@ describe("ProxyRegister", function () {
           .connect(owner)
           .setTreasuryAddress(addr3.address)
         expect(tx1).to.emit(hardhatProxyRegister, "TreasuryAddressSet")
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.treasuryAddress).to.equal(addr3.address)
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.treasuryAddress).to.equal(addr3.address)
 
         const treasuryAddressParameter = await hardhatProxyRegister.getTreasuryAddress()
         expect(treasuryAddressParameter).to.equal(addr3.address)
@@ -437,7 +437,7 @@ describe("ProxyRegister", function () {
     describe("Non-owner cannot execute", function () {
       it("Set registerFee", async () => {
         await expect(
-          hardhatProxyRegister.connect(addr1).setRegisterFee(silas.utils.parseSila("0.01")),
+          hardhatProxyRegister.connect(addr1).setRegisterFee(ethers.utils.parseEther("0.01")),
         ).to.be.revertedWith("Ownable: caller is not the owner")
       })
 
@@ -454,33 +454,33 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
       })
 
       it("fails if not owner", async () => {
         await expect(
-          hardhatProxyRegister.connect(addr1).withdraw(silas.utils.parseSila(registerFee.toString())),
+          hardhatProxyRegister.connect(addr1).withdraw(ethers.utils.parseEther(registerFee.toString())),
         ).to.be.revertedWith("Ownable: caller is not the owner")
       })
 
       it("allows owner to withdraw to the treasury", async () => {
-        const withdrawalAmount = silas.utils.parseSila(registerFee.toString())
+        const withdrawalAmount = ethers.utils.parseEther(registerFee.toString())
         
         expect(
-          await silas.provider.getBalance(hardhatProxyRegister.address),
+          await ethers.provider.getBalance(hardhatProxyRegister.address),
         ).to.equal(withdrawalAmount)
      
-        const initialTreasuryBalance = await silas.provider.getBalance(
+        const initialTreasuryBalance = await ethers.provider.getBalance(
           treasury.address,
         )
         tx = await hardhatProxyRegister.connect(owner).withdraw(withdrawalAmount)
-        const recsipt = await tx.wait()
-        const finalTreasuryBalance = await silas.provider.getBalance(
+        const receipt = await tx.wait()
+        const finalTreasuryBalance = await ethers.provider.getBalance(
           treasury.address,
         )
-        const finalContractBalance = await silas.provider.getBalance(
+        const finalContractBalance = await ethers.provider.getBalance(
           hardhatProxyRegister.address,
         )
 
@@ -498,14 +498,14 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.nominator).to.equal(addr1.address)
-        expect(recsipt.events[0].args.proxy).to.equal(addr2.address)
-        currentTime = (await silas.provider.getBlock("latest")).timestamp
-        expect(recsipt.events[0].args.timestamp).to.equal(currentTime)
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.nominator).to.equal(addr1.address)
+        expect(receipt.events[0].args.proxy).to.equal(addr2.address)
+        currentTime = (await ethers.provider.getBlock("latest")).timestamp
+        expect(receipt.events[0].args.timestamp).to.equal(currentTime)
 
         const registerEntry = await hardhatProxyRegister.connect(addr1).getNominationForCaller()
         expect(registerEntry).to.equal(addr2.address)
@@ -515,12 +515,12 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
         await expect(
         hardhatProxyRegister.connect(addr1).makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),})
+          value: ethers.utils.parseEther(registerFee.toString()),})
         ).to.be.revertedWith("Address has an existing nomination")
       })
 
@@ -528,13 +528,13 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
         await expect(
 
         hardhatProxyRegister.connect(addr1).makeNomination( addr3.address, 1, {
-          value: silas.utils.parseSila(registerFee.toString()),})
+          value: ethers.utils.parseEther(registerFee.toString()),})
         ).to.be.revertedWith("Address has an existing nomination")
       })
 
@@ -542,7 +542,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -553,7 +553,7 @@ describe("ProxyRegister", function () {
 
         await expect(
           hardhatProxyRegister.connect(addr2).makeNomination( addr3.address, 1, {
-            value: silas.utils.parseSila(registerFee.toString()),})
+            value: ethers.utils.parseEther(registerFee.toString()),})
           ).to.be.revertedWith("Address is already acting as a proxy")
 
       })
@@ -562,7 +562,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -573,14 +573,14 @@ describe("ProxyRegister", function () {
 
         await expect(
           hardhatProxyRegister.connect(addr3).makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),})
+            value: ethers.utils.parseEther(registerFee.toString()),})
           ).to.be.revertedWith("Address is already acting as a proxy")
       })
 
       it("Address cannot be proxied to itself", async () => {
         await expect(
           hardhatProxyRegister.connect(addr1).makeNomination( addr1.address, 1, {
-            value: silas.utils.parseSila(registerFee.toString()),})
+            value: ethers.utils.parseEther(registerFee.toString()),})
           ).to.be.revertedWith("Proxy address cannot be the same as Nominator address")
       })
     })
@@ -593,7 +593,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -624,7 +624,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr3)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -637,14 +637,14 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
         var tx2 = await hardhatProxyRegister
         .connect(addr3)
         .makeNomination( addr1.address, 1, {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx2).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -662,14 +662,14 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
         var tx2 = await hardhatProxyRegister
         .connect(addr3)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -694,7 +694,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -725,13 +725,13 @@ describe("ProxyRegister", function () {
         .updateDeliveryAddress( addr1.address, 1,)
         expect(tx1).to.emit(hardhatProxyRegister, "DeliveryUpdated")
 
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.nominator).to.equal(addr1.address)
-        expect(recsipt.events[0].args.proxy).to.equal(addr2.address)
-        expect(recsipt.events[0].args.delivery).to.equal(addr1.address)
-        expect(recsipt.events[0].args.oldDelivery).to.equal(addr3.address)
-        currentTime = (await silas.provider.getBlock("latest")).timestamp
-        expect(recsipt.events[0].args.timestamp).to.equal(currentTime)
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.nominator).to.equal(addr1.address)
+        expect(receipt.events[0].args.proxy).to.equal(addr2.address)
+        expect(receipt.events[0].args.delivery).to.equal(addr1.address)
+        expect(receipt.events[0].args.oldDelivery).to.equal(addr3.address)
+        currentTime = (await ethers.provider.getBlock("latest")).timestamp
+        expect(receipt.events[0].args.timestamp).to.equal(currentTime)
 
         const newRegistryEntry = await hardhatProxyRegister.connect(addr1).getNominatorRecordForCaller()
         expect(newRegistryEntry[0]).to.equal(addr1.address)
@@ -771,14 +771,14 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.nominator).to.equal(addr1.address)
-        expect(recsipt.events[0].args.proxy).to.equal(addr2.address)
-        currentTime = (await silas.provider.getBlock("latest")).timestamp
-        expect(recsipt.events[0].args.timestamp).to.equal(currentTime)
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.nominator).to.equal(addr1.address)
+        expect(receipt.events[0].args.proxy).to.equal(addr2.address)
+        currentTime = (await ethers.provider.getBlock("latest")).timestamp
+        expect(receipt.events[0].args.timestamp).to.equal(currentTime)
 
         const registerEntry = await hardhatProxyRegister.connect(addr1).getNominationForCaller()
         expect(registerEntry).to.equal(addr2.address)
@@ -810,10 +810,10 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr3)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
-        var recsipt = await tx1.wait()
+        var receipt = await tx1.wait()
 
         var tx2 = await hardhatProxyRegister
         .connect(addr2)
@@ -890,14 +890,14 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
-        var recsipt = await tx1.wait()
-        expect(recsipt.events[0].args.nominator).to.equal(addr1.address)
-        expect(recsipt.events[0].args.proxy).to.equal(addr2.address)
-        currentTime = (await silas.provider.getBlock("latest")).timestamp
-        expect(recsipt.events[0].args.timestamp).to.equal(currentTime)
+        var receipt = await tx1.wait()
+        expect(receipt.events[0].args.nominator).to.equal(addr1.address)
+        expect(receipt.events[0].args.proxy).to.equal(addr2.address)
+        currentTime = (await ethers.provider.getBlock("latest")).timestamp
+        expect(receipt.events[0].args.timestamp).to.equal(currentTime)
 
         const registerEntry = await hardhatProxyRegister.connect(addr1).getNominationForCaller()
         expect(registerEntry).to.equal(addr2.address)
@@ -995,7 +995,7 @@ describe("ProxyRegister", function () {
     describe("Fee and Treasury", function () {   
       it("getRegisterFee", async () => {
         const fee = await hardhatProxyRegister.getRegisterFee()
-        expect(fee).to.equal(silas.utils.parseSila(registerFee.toString()));
+        expect(fee).to.equal(ethers.utils.parseEther(registerFee.toString()));
       })
 
       it("getTreasuryAddress", async () => {
@@ -1110,7 +1110,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
       })
@@ -1220,7 +1220,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
         .connect(addr1)
         .makeNomination( addr2.address, 1,  {
-          value: silas.utils.parseSila(registerFee.toString()),
+          value: ethers.utils.parseEther(registerFee.toString()),
         })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -1356,7 +1356,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
 
@@ -1371,7 +1371,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
         
@@ -1391,7 +1391,7 @@ describe("ProxyRegister", function () {
         var tx1 = await hardhatProxyRegister
           .connect(addr1)
           .makeNomination( addr2.address, 1,  {
-            value: silas.utils.parseSila(registerFee.toString()),
+            value: ethers.utils.parseEther(registerFee.toString()),
           })
         expect(tx1).to.emit(hardhatProxyRegister, "NominationMade")
         

@@ -1,8 +1,8 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-silas/signers";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { BigNumber } from "silas";
-import { silas } from "hardhat";
+import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
 import {
   CatalogMock,
   EquippableTokenMock,
@@ -80,7 +80,7 @@ async function setupContextForParts(
   neon: EquippableTokenMock,
   mask: EquippableTokenMock
 ) {
-  [, ...addrs] = await silas.getSigners();
+  [, ...addrs] = await ethers.getSigners();
   await setupCatalog();
 
   await mintNeons();
@@ -444,9 +444,9 @@ async function partsFixture() {
   const baseSymbol = "NCB";
   const baseType = "mixed";
 
-  const baseFactory = await silas.getContractFactory("CatalogMock");
-  const equipFactory = await silas.getContractFactory("EquippableTokenMock");
-  const viewFactory = await silas.getContractFactory("EquipRenderUtils");
+  const baseFactory = await ethers.getContractFactory("CatalogMock");
+  const equipFactory = await ethers.getContractFactory("EquippableTokenMock");
+  const viewFactory = await ethers.getContractFactory("EquipRenderUtils");
 
   // Catalog
   const catalog = <CatalogMock>await baseFactory.deploy(baseSymbol, baseType);
@@ -481,7 +481,7 @@ describe("EquippableTokenMock with Parts", async () => {
   let addrs: SignerWithAddress[];
 
   beforeEach(async function () {
-    [, ...addrs] = await silas.getSigners();
+    [, ...addrs] = await ethers.getSigners();
     ({ catalog, neon, mask, view } = await loadFixture(partsFixture));
   });
 
@@ -644,7 +644,7 @@ describe("EquippableTokenMock with Parts", async () => {
       await mask.addEquippableAssetEntry(
         noCatalogAssetId,
         0, // Not meant to equip
-        silas.constants.AddressZero, // Not meant to equip
+        ethers.constants.AddressZero, // Not meant to equip
         `ipfs:weapon/full/customAsset.png`,
         []
       );

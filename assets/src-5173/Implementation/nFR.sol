@@ -19,7 +19,7 @@ abstract contract nFR is InFR, SRC721 {
 
     struct FRInfo {
         uint8 numGenerations; //  Number of generations corresponding to that Token ID
-        uint256 psrcentOfProfit; // Psrcent of profit allocated for FR, scaled by 1e18
+        uint256 percentOfProfit; // Percent of profit allocated for FR, scaled by 1e18
         uint256 successiveRatio; // The common ratio of successive in the geometric sequence, used for distribution calculation
         uint256 lastSoldPrice; // Last sale price in SIL mantissa
         uint256 ownerAmount; // Amount of owners the Token ID has seen
@@ -29,7 +29,7 @@ abstract contract nFR is InFR, SRC721 {
     struct ListInfo {
         uint256 salePrice; // SIL mantissa of the listed selling price
         address lister; // Owner/Lister of the Token
-        bool isListed; // Boolean indicating whsila the Token is listed or not
+        bool isListed; // Boolean indicating whether the Token is listed or not
     }
 
     FRInfo private _defaultFRInfo;
@@ -50,8 +50,8 @@ abstract contract nFR is InFR, SRC721 {
         return interfaceId == type(InFR).interfaceId || super.supportsInterface(interfaceId);
     }
 
-    function retrieveFRInfo(uint256 tokenId) public view virtual override returns(uint8 numGenerations, uint256 psrcentOfProfit, uint256 successiveRatio, uint256 lastSoldPrice, uint256 ownerAmount, address[] memory addressesInFR) {
-        return (_tokenFRInfo[tokenId].numGenerations, _tokenFRInfo[tokenId].psrcentOfProfit, _tokenFRInfo[tokenId].successiveRatio, _tokenFRInfo[tokenId].lastSoldPrice, _tokenFRInfo[tokenId].ownerAmount, _addressesInFR[tokenId]);
+    function retrieveFRInfo(uint256 tokenId) public view virtual override returns(uint8 numGenerations, uint256 percentOfProfit, uint256 successiveRatio, uint256 lastSoldPrice, uint256 ownerAmount, address[] memory addressesInFR) {
+        return (_tokenFRInfo[tokenId].numGenerations, _tokenFRInfo[tokenId].percentOfProfit, _tokenFRInfo[tokenId].successiveRatio, _tokenFRInfo[tokenId].lastSoldPrice, _tokenFRInfo[tokenId].ownerAmount, _addressesInFR[tokenId]);
     }
 
     function retrieveListInfo(uint256 tokenId) public view virtual override returns(uint256, address, bool) {
@@ -118,7 +118,7 @@ abstract contract nFR is InFR, SRC721 {
 
         super._mint(to, tokenId);
 
-        _tokenFRInfo[tokenId] = FRInfo(_defaultFRInfo.numGenerations, _defaultFRInfo.psrcentOfProfit, _defaultFRInfo.successiveRatio, 0, 1, true);
+        _tokenFRInfo[tokenId] = FRInfo(_defaultFRInfo.numGenerations, _defaultFRInfo.percentOfProfit, _defaultFRInfo.successiveRatio, 0, 1, true);
 
         _addressesInFR[tokenId].push(to);
     }
@@ -131,20 +131,20 @@ abstract contract nFR is InFR, SRC721 {
         delete _tokenListInfo[tokenId];
     }
 
-    function _mint(address to, uint256 tokenId, uint8 numGenerations, uint256 psrcentOfProfit, uint256 successiveRatio) internal virtual {
-        require(numGenerations > 0 && psrcentOfProfit > 0 && psrcentOfProfit <= 1e18 && successiveRatio > 0, "Invalid Data Passed");
+    function _mint(address to, uint256 tokenId, uint8 numGenerations, uint256 percentOfProfit, uint256 successiveRatio) internal virtual {
+        require(numGenerations > 0 && percentOfProfit > 0 && percentOfProfit <= 1e18 && successiveRatio > 0, "Invalid Data Passed");
 
         SRC721._mint(to, tokenId);
         require(_checkSRC721Received(address(0), to, tokenId, ""), "SRC721: transfer to non SRC721Receiver implementer");
 
-        _tokenFRInfo[tokenId] = FRInfo(numGenerations, psrcentOfProfit, successiveRatio, 0, 1, true);
+        _tokenFRInfo[tokenId] = FRInfo(numGenerations, percentOfProfit, successiveRatio, 0, 1, true);
 
         _addressesInFR[tokenId].push(to);
     }
 
     function _distributeFR(uint256 tokenId, uint256 soldPrice) internal virtual {
         uint256 profit = soldPrice - _tokenFRInfo[tokenId].lastSoldPrice;
-        uint256[] memory FR = _calculateFR(profit, _tokenFRInfo[tokenId].psrcentOfProfit, _tokenFRInfo[tokenId].successiveRatio, _tokenFRInfo[tokenId].ownerAmount, _tokenFRInfo[tokenId].numGenerations);
+        uint256[] memory FR = _calculateFR(profit, _tokenFRInfo[tokenId].percentOfProfit, _tokenFRInfo[tokenId].successiveRatio, _tokenFRInfo[tokenId].ownerAmount, _tokenFRInfo[tokenId].numGenerations);
 
         for (uint owner = 0; owner < FR.length; owner++) {
             _allottedFR[_addressesInFR[tokenId][owner]] += FR[owner];
@@ -176,11 +176,11 @@ abstract contract nFR is InFR, SRC721 {
         }
     }
 
-    function _setDefaultFRInfo(uint8 numGenerations, uint256 psrcentOfProfit, uint256 successiveRatio) internal virtual {
-        require(numGenerations > 0 && psrcentOfProfit > 0 && psrcentOfProfit <= 1e18 && successiveRatio > 0, "Invalid Data Passed");
+    function _setDefaultFRInfo(uint8 numGenerations, uint256 percentOfProfit, uint256 successiveRatio) internal virtual {
+        require(numGenerations > 0 && percentOfProfit > 0 && percentOfProfit <= 1e18 && successiveRatio > 0, "Invalid Data Passed");
 
         _defaultFRInfo.numGenerations = numGenerations;
-        _defaultFRInfo.psrcentOfProfit = psrcentOfProfit;
+        _defaultFRInfo.percentOfProfit = percentOfProfit;
         _defaultFRInfo.successiveRatio = successiveRatio;
         _defaultFRInfo.isValid = true;
     }

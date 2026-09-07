@@ -50,20 +50,20 @@ contract MinimalInstrument is IXMLRepresentableStateVersionedHashed {
         // Note: formatted as a single string for simplicity; newlines are optional.
         return
                     "<Contract xmlns='urn:example:contract'"
-                    " xmlns:savmstate='urn:savm:state:1.0'"
-                    " savmstate:chain-id=''"
-                    " savmstate:contract-address=''"
-                    " savmstate:block-number=''>"
+                    " xmlns:svmstate='urn:svm:state:1.0'"
+                    " svmstate:chain-id=''"
+                    " svmstate:contract-address=''"
+                    " svmstate:block-number=''>"
 
                     "<Instrument xmlns='urn:example:format-showcase'>"
-                    " xmlns:savmstate='urn:savm:state:1.0'>"
-                    "<Owner savmstate:call='owner()(address)' savmstate:format='address'/>"
+                    " xmlns:svmstate='urn:svm:state:1.0'>"
+                    "<Owner svmstate:call='owner()(address)' svmstate:format='address'/>"
                     "<Notional"
-                    " savmstate:calls='notional()(uint256);currency()(string)'"
-                    " savmstate:formats='decimal;string'"
-                    " savmstate:targets=';currency'/>"
-                    "<MaturityDate savmstate:call='maturityDate()(uint256)' savmstate:format='iso8601-date'/>"
-                    "<Active savmstate:call='active()(bool)' savmstate:format='boolean'/>"
+                    " svmstate:calls='notional()(uint256);currency()(string)'"
+                    " svmstate:formats='decimal;string'"
+                    " svmstate:targets=';currency'/>"
+                    "<MaturityDate svmstate:call='maturityDate()(uint256)' svmstate:format='iso8601-date'/>"
+                    "<Active svmstate:call='active()(bool)' svmstate:format='boolean'/>"
                     "</Instrument>"
                     "</Contract>";
     }

@@ -1,6 +1,6 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { silas } from "hardhat";
+import { ethers } from "hardhat";
 
 describe("SRC5501EnumerableTest", function () {
   async function initialize() {
@@ -11,9 +11,9 @@ describe("SRC5501EnumerableTest", function () {
 
     const expires = (await time.latest()) + fastForwardYear + fastForwardYear;
 
-    const [owner, delegatee] = await silas.getSigners();
+    const [owner, delegatee] = await ethers.getSigners();
 
-    const contractFactory = await silas.getContractFactory(
+    const contractFactory = await ethers.getContractFactory(
       "SRC5501EnumerableTestCollection"
     );
     const contract = await contractFactory.deploy("Test Collection", "TEST");
@@ -66,7 +66,7 @@ describe("SRC5501EnumerableTest", function () {
     const { contract } = await loadFixture(initialize);
 
     await expect(
-      contract.tokenOfUserByIndex(silas.constants.AddressZero, 0)
+      contract.tokenOfUserByIndex(ethers.constants.AddressZero, 0)
     ).to.be.revertedWith("SRC5501Enumerable: address zero is not a valid owner");
   });
 

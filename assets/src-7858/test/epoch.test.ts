@@ -7,12 +7,12 @@ describe("SRC-7858 Epoch", function () {
   let signers: any;
 
   beforeEach(async function () {
-    tokenContract = await hre.silas.deployContract(
+    tokenContract = await hre.ethers.deployContract(
       "MockSRC7858Epoch",
       ["Test", "NFT"],
       {}
     );
-    signers = await hre.silas.getSigners();
+    signers = await hre.ethers.getSigners();
   });
 
   afterEach(async function () {

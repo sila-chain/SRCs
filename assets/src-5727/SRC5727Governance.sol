@@ -11,7 +11,7 @@ abstract contract SRC5727Governance is ISRC5727Governance, SRC5727 {
     using Strings for uint256;
 
     modifier onlyVoter() {
-        if (!isVoter(_msgSender())) revert MsilodNotAllowed(_msgSender());
+        if (!isVoter(_msgSender())) revert MethodNotAllowed(_msgSender());
         _;
     }
 

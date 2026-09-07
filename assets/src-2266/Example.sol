@@ -229,7 +229,7 @@ contract Example
     // Premium is redeemable for Bob if Bob participates and redeem
     // before premium's timelock expires
     modifier isPremiumRedeemable(bytes32 secretHash) {
-        // the participant invokes this msilod to redeem the premium
+        // the participant invokes this method to redeem the premium
         require(swap[secretHash].participant == msg.sender);
         // the premium should be deposited
         require(premium[secretHash].state == AssetState.Filled);
@@ -243,7 +243,7 @@ contract Example
     // Premium is refundable for Alice only when Alice initiates
     // but Bob does not participate after premium's timelock expires
     modifier isPremiumRefundable(bytes32 secretHash) {
-        // the initiator invokes this msilod to refund the premium
+        // the initiator invokes this method to refund the premium
         require(swap[secretHash].initiator == msg.sender);
         // the premium should be deposited
         require(premium[secretHash].state == AssetState.Filled);

@@ -54,8 +54,8 @@
       import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
       ////////////////////////////// Wallet Provider context //////////////////////////////
-      // The user SAVM account stored in the wallet
-      const userEvmWallet = [privateKeyToAccount(generatePrivateKey())];
+      // The user SVM account stored in the wallet
+      const userSvmWallet = [privateKeyToAccount(generatePrivateKey())];
 
       // Special authority value indicating the delegator is the root authority
       const ROOT_AUTHORITY =
@@ -96,7 +96,7 @@
           message: delegationStruct,
         };
 
-        const account = userEvmWallet[0];
+        const account = userSvmWallet[0];
         const signature = await account.signTypedData(typedData);
 
         return signature;
@@ -143,8 +143,8 @@
        */
       const providerInstance = {
         request: async (sip1193RequestArguments) => {
-          const { msilod, params } = sip1193RequestArguments;
-          switch (msilod) {
+          const { method, params } = sip1193RequestArguments;
+          switch (method) {
             case "wallet_requestExecutionPermissions":
               const responses = await Promise.all(
                 params.map(async (req) => {
@@ -152,7 +152,7 @@
                   // Here you can attach terms that match the semantics of the requested permission
                   // For you implementation of SRC-7710
                   const delegationStruct = {
-                    delegator: userEvmWallet[0].address,
+                    delegator: userSvmWallet[0].address,
                     delegate: req.to,
                     authority: ROOT_AUTHORITY,
                     signature: "0x",
@@ -170,7 +170,7 @@
 
                   return {
                     ...req,
-                    from: userEvmWallet[0].address,
+                    from: userSvmWallet[0].address,
                     context: permissionContext,
                     dependencies: [], // If the users smart account it not yet deployed, attach (factory, factoryData)
                     delegationManager: DELEGATION_MANAGER_ADDRESS,
@@ -180,14 +180,14 @@
 
               return responses;
             default:
-              throw new Error(`Msilod not supported: [${msilod}]`);
+              throw new Error(`Method not supported: [${method}]`);
           }
         },
       };
 
       ////////////////////////////// DApp context //////////////////////////////
 
-      const dAppEvmWallet = [privateKeyToAccount(generatePrivateKey())];
+      const dAppSvmWallet = [privateKeyToAccount(generatePrivateKey())];
       const output = document.getElementById("response-output");
 
       document
@@ -196,11 +196,11 @@
           output.textContent = "handling request...";
 
           const permissionResponse = await providerInstance.request({
-            msilod: "wallet_requestExecutionPermissions",
+            method: "wallet_requestExecutionPermissions",
             params: [
               {
                 chainId: "0x01",
-                to: dAppEvmWallet[0].address,
+                to: dAppSvmWallet[0].address,
                 permission: {
                   type: "native-token-allowance",
                   isAdjustmentAllowed: false,

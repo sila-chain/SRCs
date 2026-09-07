@@ -17,7 +17,7 @@ interface ISRC6956ValidAnchors is ISRC6956 {
     event ValidAnchorsUpdate(bytes32 indexed validAnchorHash, address indexed maintainer);
 
     /**
-     * @notice Indicates whsila an anchor is valid in the present contract
+     * @notice Indicates whether an anchor is valid in the present contract
      * @dev Typically implemented via MerkleTrees, where proof is used to verify anchor is part of the MerkleTree 
      *      MUST return false when no ValidAnchorsUpdate-event has been emitted yet
      * @param anchor The anchor in question

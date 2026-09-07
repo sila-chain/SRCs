@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-// helper msilods for interacting with SRC20 tokens and sending SIL that do not consistently return true/false
+// helper methods for interacting with SRC20 tokens and sending SIL that do not consistently return true/false
 library TransferHelper {
     function safeApprove(address token, address to, uint value) internal {
         // bytes4(keccak256(bytes("approve(address,uint256)")));
@@ -22,7 +22,7 @@ library TransferHelper {
         require(success && (data.length == 0 || abi.decode(data, (bool))), "TFF");
     }
 
-    function safeTransferSIL(address to, uint value) internal {
+    function safeTransferETH(address to, uint value) internal {
         (bool success,) = to.call{value:value}(new bytes(0));
         require(success, "ETF");
     }

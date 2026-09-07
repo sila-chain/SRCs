@@ -15,7 +15,7 @@ interface IFactory {
     /// Getters
     /// Get Config of CDP
     function financeCodeHash() external pure returns (bytes32);
-    function createFinance(address wsil, uint256 amount_, address recipient) external returns (address vault, uint256 id);
+    function createFinance(address weth, uint256 amount_, address recipient) external returns (address vault, uint256 id);
     function getFinance(uint financeId_) external view returns (address);
     
     /// Event

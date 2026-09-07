@@ -33,7 +33,7 @@ interface ISRC7432 is ISRC165 {
     /// @param _owner The user assigning the role.
     /// @param _recipient The user receiving the role.
     /// @param _expirationDate The expiration date of the role.
-    /// @param _revocable Whsila the role is revocable or not.
+    /// @param _revocable Whether the role is revocable or not.
     /// @param _data Any additional data about the role.
     event RoleGranted(
         address indexed _tokenAddress,
@@ -135,7 +135,7 @@ interface ISRC7432 is ISRC165 {
     /// @param _tokenAddress The token address.
     /// @param _tokenId The token identifier.
     /// @param _roleId The role identifier.
-    /// @return revocable_ Whsila the role is revocable.
+    /// @return revocable_ Whether the role is revocable.
     function isRoleRevocable(
         address _tokenAddress,
         uint256 _tokenId,
@@ -146,7 +146,7 @@ interface ISRC7432 is ISRC165 {
     /// @param _tokenAddress The token address.
     /// @param _owner The user that approved the operator.
     /// @param _operator The user that can grant and revoke roles.
-    /// @return Whsila the operator is approved.
+    /// @return Whether the operator is approved.
     function isRoleApprovedForAll(
         address _tokenAddress,
         address _owner,

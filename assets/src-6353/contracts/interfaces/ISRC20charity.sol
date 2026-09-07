@@ -11,8 +11,8 @@ interface ISRC20charity is ISRC165 {
     /// implementing this standard
     ///
     ///type(ISRC20charity).interfaceId.interfaceId == 0x557512b6
-    /// bytes4 private constant _INTERFACE_ID_SRCcharity = 0x557512b6;
-    /// _registerInterface(_INTERFACE_ID_SRCcharity);
+    /// bytes4 private constant _INTERFACE_ID_ERCcharity = 0x557512b6;
+    /// _registerInterface(_INTERFACE_ID_ERCcharity);
 
     
     /**
