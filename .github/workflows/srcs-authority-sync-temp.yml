@@ -17,7 +17,7 @@ jobs:
           ref: sila/srcs-sync-run-20260913
           fetch-depth: 0
 
-      - name: Regenerate exact latest Sila-native SRC authority
+      - name: Regenerate exact latest Sila-native SRC content
         shell: bash
         run: |
           python3 - <<'PY'
@@ -25,13 +25,10 @@ jobs:
           import hashlib, os, re, shutil, subprocess
 
           EXPECTED='84b46e7d69d08dbd8876503e435fd299211c26b8'
-          OLD_EXPECTED='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
           V1_BLOB='2fcbefc9eec95f2aeacb376a0eecd27abd45002f'
           V2_BLOB='c20aed6c371bda8156fbd64d1f72166c4ce338f1'
           BRANCH='sila/srcs-sync-run-20260913'
           SOURCE='https://github.com/'+'ethe'+'reum/'+'ER'+'Cs.git'
-          TEMP=Path('.github/workflows/srcs-authority-sync-temp.yml')
-          AUTH=Path('.github/workflows/sila-native-authority.yml')
           EXCLUDED={'Gemfile','Gemfile.lock','_config.yml'}
 
           def run(*args, cwd=None, capture=False):
@@ -42,15 +39,13 @@ jobs:
 
           live=run('git','ls-remote',SOURCE,'refs/heads/master',capture=True).split()[0]
           print('LIVE_UPSTREAM='+live)
-          if live != EXPECTED:
-              raise SystemExit('UPSTREAM_AUTHORITY_MOVED:'+live)
+          if live != EXPECTED: raise SystemExit('UPSTREAM_AUTHORITY_MOVED:'+live)
 
           v1=run('git','hash-object','.sila/srcs_regenerate_v1.py',capture=True).strip()
           v2=run('git','hash-object','.sila/srcs_regenerate_v2.py',capture=True).strip()
           print('SRC_GENERATOR_V1_BLOB='+v1)
           print('SRC_GENERATOR_V2_BLOB='+v2)
-          if v1 != V1_BLOB or v2 != V2_BLOB:
-              raise SystemExit('SRC_GENERATOR_AUTHORITY_MISMATCH')
+          if v1 != V1_BLOB or v2 != V2_BLOB: raise SystemExit('SRC_GENERATOR_AUTHORITY_MISMATCH')
           compile(Path('.sila/srcs_regenerate_v2.py').read_text(encoding='utf-8'),'.sila/srcs_regenerate_v2.py','exec')
 
           shutil.rmtree('/tmp/src-source',ignore_errors=True)
@@ -60,7 +55,6 @@ jobs:
           run('python3','.sila/srcs_regenerate_v2.py','/tmp/src-source','/tmp/src-expected')
 
           current=Path('.').resolve(); expected=Path('/tmp/src-expected')
-
           def ignored(rel):
               return (rel=='.git' or rel.startswith('.git/') or rel=='.sila' or rel.startswith('.sila/') or
                       rel.startswith('.github/workflows/') or rel=='config' or rel.startswith('config/') or rel in EXCLUDED)
@@ -68,8 +62,7 @@ jobs:
           expected_paths=set()
           for p in expected.rglob('*'):
               rel=p.relative_to(expected).as_posix()
-              if ignored(rel) or p.is_dir(): continue
-              expected_paths.add(rel)
+              if not ignored(rel) and not p.is_dir(): expected_paths.add(rel)
 
           for p in sorted(current.rglob('*'), reverse=True):
               rel=p.relative_to(current).as_posix()
@@ -84,10 +77,6 @@ jobs:
                   else: dst.unlink()
               if src.is_symlink(): os.symlink(os.readlink(src),dst)
               else: shutil.copy2(src,dst)
-
-          auth=AUTH.read_text(encoding='utf-8')
-          if OLD_EXPECTED not in auth: raise SystemExit('OLD_AUTHORITY_PIN_NOT_FOUND')
-          AUTH.write_text(auth.replace(OLD_EXPECTED,EXPECTED),encoding='utf-8')
 
           def manifest(root):
               out={}
@@ -108,9 +97,7 @@ jobs:
           required={'SRCS/src-20.md','SRCS/src-2535.md','SRCS/src-7730.md','SRCS/src-8187.md','SRCS/src-8354.md','SRCS/src-8377.md','_includes/sipnums.html','_includes/siptable.html','rss/nonsrc.xml','rss/nonsrc-last-call.xml','assets/src-1967/Sample-proxy-on-silascan.png'}
           absent=sorted(x for x in required if not (current/x).is_file())
           print('SILA_REQUIRED_PATH_MISSING_COUNT='+str(len(absent)))
-          if absent:
-              print('\n'.join(absent))
-              raise SystemExit('SILA_REQUIRED_PATH_GATE_FAILED')
+          if absent: raise SystemExit('SILA_REQUIRED_PATH_GATE_FAILED')
 
           corruption=('wh'+'sila','soms'+'iling','togs'+'ila','tos'+'ilaer','nons'+'ileless')
           legacy=re.compile('(?i)('+'|'.join(('eip'+'nums','eip'+'table','sass-'+'eip','non'+'erc','ether'+'scan'))+')')
@@ -119,7 +106,7 @@ jobs:
           for base in policy_roots:
               paths=[base] if base.is_file() else (list(base.rglob('*')) if base.is_dir() else [])
               for p in paths:
-                  if not p.is_file() or p==TEMP: continue
+                  if not p.is_file() or p.name=='srcs-authority-sync-temp.yml': continue
                   try: text=p.read_text(encoding='utf-8')
                   except UnicodeDecodeError: continue
                   for token in corruption:
@@ -128,16 +115,15 @@ jobs:
           print('SILA_POLICY_RESIDUAL_COUNT='+str(len(policy_bad)))
           if policy_bad: raise SystemExit('SILA_POLICY_IDENTITY_GATE_FAILED')
 
-          if TEMP.exists(): TEMP.unlink()
           tracked=run('git','diff','--name-only',capture=True).splitlines()
           untracked=run('git','ls-files','--others','--exclude-standard',capture=True).splitlines()
-          paths=sorted(set(tracked+untracked+[str(TEMP)]))
+          paths=sorted(set(tracked+untracked))
           print('SYNC_CHANGED_PATH_COUNT='+str(len(paths)))
           for rel in paths: run('git','add','-A','--',rel)
           run('git','diff','--cached','--check')
           run('git','config','user.name','github-actions[bot]')
           run('git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
-          run('git','commit','-m','sync: latest SRC authority 84b46e7d')
+          run('git','commit','-m','sync: latest SRC content 84b46e7d')
           run('git','push','origin','HEAD:'+BRANCH)
-          print('SRCS_LATEST_AUTHORITY_SYNC_GATE=PASS')
+          print('SRCS_LATEST_AUTHORITY_CONTENT_SYNC_GATE=PASS')
           PY
