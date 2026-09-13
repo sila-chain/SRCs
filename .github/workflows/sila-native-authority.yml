@@ -36,7 +36,7 @@ jobs:
           import shutil
           import subprocess
 
-          EXPECTED='f4c23717b6a6fc48436bb6778dcecce29cc5345c'
+          EXPECTED='84b46e7d69d08dbd8876503e435fd299211c26b8'
           V1_BLOB='2fcbefc9eec95f2aeacb376a0eecd27abd45002f'
           V2_BLOB='c20aed6c371bda8156fbd64d1f72166c4ce338f1'
           SOURCE='https://github.com/' + 'ethe' + 'reum/' + 'ER' + 'Cs.git'
@@ -126,8 +126,6 @@ jobs:
               print('\n'.join(absent))
               raise SystemExit('SILA_REQUIRED_PATH_GATE_FAILED')
 
-          # Sila-owned policy overlays must not reintroduce known historical corruption
-          # or the classified legacy identity compounds closed by generator v2.
           corruption=('wh'+'sila','soms'+'iling','togs'+'ila','tos'+'ilaer','nons'+'ileless')
           legacy=re.compile('(?i)(' + '|'.join((
               'eip'+'nums','eip'+'table','sass-'+'eip','non'+'erc','ether'+'scan'
